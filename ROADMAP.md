@@ -11,7 +11,7 @@
  
 - [X] Define `Variable` struct
 - [X] Define `LiteralExpression` struct
-- [ ] Define `RequiredInput` and `RequiredDecision` structs with `ResolvedID()`
+- [X] Define `RequiredInput` and `RequiredDecision` structs with `ResolvedID()`
 - [X] Define `InformationRequirement` struct
 - [X] Define `InputData` struct
 - [X] Define `Decision` struct with `*LiteralExpression` (pointer, more expression types come later)

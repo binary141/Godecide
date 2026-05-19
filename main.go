@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
 	"strings"
 
 	feel "github.com/superisaac/FEEL.go"
@@ -81,10 +82,125 @@ type InputData struct {
 
 var ErrMissingInput = errors.New("missing required input")
 
+type node struct {
+	Decision Decision
+	Pre      int
+	Post     int
+	Visited  bool
+}
+
+type edge struct {
+	From string
+	To   string
+}
+
+func (d *Definitions) TopologicalSort() {
+	nodes := map[string]node{}
+
+	edges := map[string][]edge{}
+
+	for _, d := range d.Decisions {
+		n := node{
+			Decision: d,
+			Visited:  false,
+		}
+
+		nodes[d.ID] = n
+	}
+
+	leafDecisions := []Decision{}
+
+	for _, d := range d.Decisions {
+		hasDecision := false
+		for _, i := range d.InformationRequirements {
+			if i.RequiredDecision == nil {
+				continue
+			}
+
+			sourceID := i.RequiredDecision.ResolvedID()
+
+			e := edge{
+				From: sourceID,
+				To:   d.ID,
+			}
+
+			edges[sourceID] = append(edges[sourceID], e)
+
+			hasDecision = true
+		}
+
+		if !hasDecision {
+			leafDecisions = append(leafDecisions, d)
+		}
+	}
+
+	dfsNodes := dfs(nodes, edges)
+
+	slices.SortFunc(dfsNodes, func(a, b node) int {
+		return b.Post - a.Post
+	})
+
+	log.Println(leafDecisions)
+
+	decisionNodes := []Decision{}
+
+	for _, v := range dfsNodes {
+		decisionNodes = append(decisionNodes, v.Decision)
+	}
+
+	d.Decisions = append(leafDecisions, decisionNodes...)
+}
+
+var counter = 0
+
+func explore(nodes map[string]node, edges map[string][]edge, k string) map[string]node {
+	n := nodes[k]
+	n.Visited = true
+	n.Pre = counter
+	counter++
+	nodes[k] = n
+
+	for _, nn := range edges {
+		for _, e := range nn {
+			if !nodes[e.To].Visited {
+				explore(nodes, edges, e.To)
+			}
+		}
+	}
+
+	n = nodes[k]
+	n.Post = counter
+	counter++
+	nodes[k] = n
+
+	return nodes
+}
+
+func dfs(nodes map[string]node, edges map[string][]edge) []node {
+
+	for k, n := range nodes {
+		if n.Visited {
+			continue
+		}
+
+		explore(nodes, edges, k)
+	}
+
+	nodeList := []node{}
+
+	for _, v := range nodes {
+		nodeList = append(nodeList, v)
+	}
+
+	return nodeList
+}
+
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	if len(d.InputData) != 0 && len(context) == 0 {
 		return nil, ErrMissingInput
 	}
+
+	d.TopologicalSort()
 
 	// the string key is the variable name of the input
 	inputMap := make(map[string]Variable, len(context))
@@ -170,13 +286,14 @@ func Parse(data []byte) (Definitions, error) {
 }
 
 func main() {
-	_, err := os.Stat("./file3.dmn")
+	filename := "./out-of-order.dmn"
+	_, err := os.Stat(filename)
 	if err != nil {
 		log.Println("Couldn't find file.dmn")
 		return
 	}
 
-	f, err := os.Open("./file3.dmn")
+	f, err := os.Open(filename)
 	if err != nil {
 		log.Println("Couldn't open file.dmn")
 		return
