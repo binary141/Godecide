@@ -104,7 +104,6 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	decisionOutputs := map[string]any{}
 
 	for _, d := range d.Decisions {
-		log.Println(d)
 		for _, i := range d.InformationRequirements {
 			if i.RequiredInput == nil && i.RequiredDecision == nil {
 				return nil, fmt.Errorf("information requirement: %s needs either an input or decision", i.ID)
@@ -131,8 +130,6 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			}
 		}
 
-		log.Println(ctx)
-
 		if d.LiteralExpression != nil {
 			ctxBytes, err := json.Marshal(ctx)
 			if err != nil {
@@ -144,19 +141,12 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 				return nil, err
 			}
 
-			log.Println(ret)
-
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
-			log.Printf("Setting output: %+v for key: %+v", ret, d.ID)
 		}
 	}
 
-	log.Println(inputMap)
-
-	// fmt.Println(d.Decisions[0].LiteralExpression.Text)
-
-	return nil, nil
+	return decisionOutputs, nil
 }
 
 func Parse(data []byte) (Definitions, error) {
@@ -180,13 +170,13 @@ func Parse(data []byte) (Definitions, error) {
 }
 
 func main() {
-	_, err := os.Stat("./file2.dmn")
+	_, err := os.Stat("./file3.dmn")
 	if err != nil {
 		log.Println("Couldn't find file.dmn")
 		return
 	}
 
-	f, err := os.Open("./file2.dmn")
+	f, err := os.Open("./file3.dmn")
 	if err != nil {
 		log.Println("Couldn't open file.dmn")
 		return
@@ -204,13 +194,14 @@ func main() {
 		return
 	}
 
-	log.Printf("Definitions: %+v", d)
-
 	inputs := map[string]any{
-		"First Name": "myFirst",
-		"Last Name":  "myLast",
-		"Age":        69,
-		"City":       "aCity",
+		"First Name":  "Jane",
+		"Last Name":   "Smith",
+		"Department":  "Engineering",
+		"Base Salary": 90000,
+		"Bonus Rate":  0.1,
+		"Tax Rate":    0.25,
+		"Job Title":   "Engineer",
 	}
 
 	evaluation, err := d.Evaluate(inputs)

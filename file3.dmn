@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions
+    namespace="https://github.com/agilepro/dmn-tck"
+    name="simple-employee"
+    id="_simple-employee"
+    xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/"
+    xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+    xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/"
+    xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/">
+
+    <!-- INPUTS -->
+    <inputData name="First Name" id="i_FirstName">
+        <variable typeRef="string" name="First Name"/>
+    </inputData>
+    <inputData name="Last Name" id="i_LastName">
+        <variable typeRef="string" name="Last Name"/>
+    </inputData>
+    <inputData name="Department" id="i_Department">
+        <variable typeRef="string" name="Department"/>
+    </inputData>
+    <inputData name="Base Salary" id="i_BaseSalary">
+        <variable typeRef="number" name="Base Salary"/>
+    </inputData>
+    <inputData name="Bonus Rate" id="i_BonusRate">
+        <variable typeRef="number" name="Bonus Rate"/>
+    </inputData>
+    <inputData name="Tax Rate" id="i_TaxRate">
+        <variable typeRef="number" name="Tax Rate"/>
+    </inputData>
+    <inputData name="Job Title" id="i_JobTitle">
+        <variable typeRef="string" name="Job Title"/>
+    </inputData>
+
+    <!-- 1: Full Name -->
+    <decision name="Full Name" id="d_FullName">
+        <variable typeRef="string" name="Full Name"/>
+        <informationRequirement id="_req_d1_first">
+            <requiredInput href="#i_FirstName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d1_last">
+            <requiredInput href="#i_LastName"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>First Name + " " + Last Name</text>
+        </literalExpression>
+    </decision>
+
+    <!-- 2: Bonus Amount -->
+    <decision name="Bonus Amount" id="d_BonusAmount">
+        <variable typeRef="number" name="Bonus Amount"/>
+        <informationRequirement id="_req_d2_salary">
+            <requiredInput href="#i_BaseSalary"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d2_rate">
+            <requiredInput href="#i_BonusRate"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Base Salary * Bonus Rate</text>
+        </literalExpression>
+    </decision>
+
+    <!-- 3: Gross Pay (Base + Bonus) -->
+    <decision name="Gross Pay" id="d_GrossPay">
+        <variable typeRef="number" name="Gross Pay"/>
+        <informationRequirement id="_req_d3_salary">
+            <requiredInput href="#i_BaseSalary"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d3_bonus">
+            <requiredDecision href="#d_BonusAmount"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Base Salary + Bonus Amount</text>
+        </literalExpression>
+    </decision>
+
+    <!-- 4: Net Pay (Gross - Tax) -->
+    <decision name="Net Pay" id="d_NetPay">
+        <variable typeRef="number" name="Net Pay"/>
+        <informationRequirement id="_req_d4_gross">
+            <requiredDecision href="#d_GrossPay"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d4_taxrate">
+            <requiredInput href="#i_TaxRate"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Gross Pay - (Gross Pay * Tax Rate)</text>
+        </literalExpression>
+    </decision>
+
+    <!-- 5: Employee Tag -->
+    <decision name="Employee Tag" id="d_EmployeeTag">
+        <variable typeRef="string" name="Employee Tag"/>
+        <informationRequirement id="_req_d5_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d5_dept">
+            <requiredInput href="#i_Department"/>
+        </informationRequirement>
+        <informationRequirement id="_req_d5_jobtitle">
+            <requiredInput href="#i_JobTitle"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Full Name + " | " + Job Title + " | " + Department</text>
+        </literalExpression>
+    </decision>
+
+</definitions>
