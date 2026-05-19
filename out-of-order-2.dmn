@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions
+    namespace="https://github.com/agilepro/dmn-tck"
+    name="scrambled-employee"
+    id="_scrambled-employee"
+    xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/"
+    xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+    xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/"
+    xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/">
+
+    <!-- INPUTS -->
+    <inputData name="First Name" id="i_FirstName">
+        <variable typeRef="string" name="First Name"/>
+    </inputData>
+    <inputData name="Last Name" id="i_LastName">
+        <variable typeRef="string" name="Last Name"/>
+    </inputData>
+    <inputData name="Department" id="i_Department">
+        <variable typeRef="string" name="Department"/>
+    </inputData>
+    <inputData name="Job Title" id="i_JobTitle">
+        <variable typeRef="string" name="Job Title"/>
+    </inputData>
+    <inputData name="City" id="i_City">
+        <variable typeRef="string" name="City"/>
+    </inputData>
+    <inputData name="Country" id="i_Country">
+        <variable typeRef="string" name="Country"/>
+    </inputData>
+    <inputData name="Company" id="i_Company">
+        <variable typeRef="string" name="Company"/>
+    </inputData>
+    <inputData name="Team" id="i_Team">
+        <variable typeRef="string" name="Team"/>
+    </inputData>
+
+    <!-- ======================================================= -->
+    <!-- DECISIONS — intentionally out of dependency order in XML -->
+    <!-- ======================================================= -->
+
+    <!-- Depends on: Full Name, Job Label -->
+    <decision name="Profile Header" id="d_ProfileHeader">
+        <variable typeRef="string" name="Profile Header"/>
+        <informationRequirement id="_req_ph_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_ph_joblabel">
+            <requiredDecision href="#d_JobLabel"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Full Name + " — " + Job Label</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Profile Header, Location Tag -->
+    <decision name="Directory Entry" id="d_DirectoryEntry">
+        <variable typeRef="string" name="Directory Entry"/>
+        <informationRequirement id="_req_de_profileheader">
+            <requiredDecision href="#d_ProfileHeader"/>
+        </informationRequirement>
+        <informationRequirement id="_req_de_locationtag">
+            <requiredDecision href="#d_LocationTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Profile Header + " | " + Location Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Directory Entry, Team Tag -->
+    <decision name="Staff Record" id="d_StaffRecord">
+        <variable typeRef="string" name="Staff Record"/>
+        <informationRequirement id="_req_sr_directoryentry">
+            <requiredDecision href="#d_DirectoryEntry"/>
+        </informationRequirement>
+        <informationRequirement id="_req_sr_teamtag">
+            <requiredDecision href="#d_TeamTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Directory Entry + " | " + Team Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Staff Record, Company Tag -->
+    <decision name="Full Record" id="d_FullRecord">
+        <variable typeRef="string" name="Full Record"/>
+        <informationRequirement id="_req_fr_staffrecord">
+            <requiredDecision href="#d_StaffRecord"/>
+        </informationRequirement>
+        <informationRequirement id="_req_fr_companytag">
+            <requiredDecision href="#d_CompanyTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Staff Record + " | " + Company Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Full Record, Department Tag -->
+    <decision name="Employee Summary" id="d_EmployeeSummary">
+        <variable typeRef="string" name="Employee Summary"/>
+        <informationRequirement id="_req_es_fullrecord">
+            <requiredDecision href="#d_FullRecord"/>
+        </informationRequirement>
+        <informationRequirement id="_req_es_depttag">
+            <requiredDecision href="#d_DepartmentTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Full Record + " | " + Department Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Employee Summary, Badge Code -->
+    <decision name="ID Card" id="d_IDCard">
+        <variable typeRef="string" name="ID Card"/>
+        <informationRequirement id="_req_idc_summary">
+            <requiredDecision href="#d_EmployeeSummary"/>
+        </informationRequirement>
+        <informationRequirement id="_req_idc_badgecode">
+            <requiredDecision href="#d_BadgeCode"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Employee Summary + " | Badge: " + Badge Code</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: ID Card, Welcome Line -->
+    <decision name="Onboarding Pack" id="d_OnboardingPack">
+        <variable typeRef="string" name="Onboarding Pack"/>
+        <informationRequirement id="_req_op_idcard">
+            <requiredDecision href="#d_IDCard"/>
+        </informationRequirement>
+        <informationRequirement id="_req_op_welcomeline">
+            <requiredDecision href="#d_WelcomeLine"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Welcome Line + " || " + ID Card</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Onboarding Pack, Contact Line -->
+    <decision name="Final Output" id="d_FinalOutput">
+        <variable typeRef="string" name="Final Output"/>
+        <informationRequirement id="_req_fo_onboardingpack">
+            <requiredDecision href="#d_OnboardingPack"/>
+        </informationRequirement>
+        <informationRequirement id="_req_fo_contactline">
+            <requiredDecision href="#d_ContactLine"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Onboarding Pack + " || " + Contact Line</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: City, Country (leaf) -->
+    <decision name="Location Tag" id="d_LocationTag">
+        <variable typeRef="string" name="Location Tag"/>
+        <informationRequirement id="_req_lt_city">
+            <requiredInput href="#i_City"/>
+        </informationRequirement>
+        <informationRequirement id="_req_lt_country">
+            <requiredInput href="#i_Country"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>City + ", " + Country</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Full Name, Location Tag -->
+    <decision name="Contact Line" id="d_ContactLine">
+        <variable typeRef="string" name="Contact Line"/>
+        <informationRequirement id="_req_cl_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_cl_locationtag">
+            <requiredDecision href="#d_LocationTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Full Name + " | " + Location Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: First Name, Last Name (leaf) -->
+    <decision name="Full Name" id="d_FullName">
+        <variable typeRef="string" name="Full Name"/>
+        <informationRequirement id="_req_fn_first">
+            <requiredInput href="#i_FirstName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_fn_last">
+            <requiredInput href="#i_LastName"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>First Name + " " + Last Name</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Job Title, Department (leaf) -->
+    <decision name="Job Label" id="d_JobLabel">
+        <variable typeRef="string" name="Job Label"/>
+        <informationRequirement id="_req_jl_jobtitle">
+            <requiredInput href="#i_JobTitle"/>
+        </informationRequirement>
+        <informationRequirement id="_req_jl_dept">
+            <requiredInput href="#i_Department"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Job Title + " (" + Department + ")"</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Team (leaf) -->
+    <decision name="Team Tag" id="d_TeamTag">
+        <variable typeRef="string" name="Team Tag"/>
+        <informationRequirement id="_req_tt_team">
+            <requiredInput href="#i_Team"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>"Team: " + Team</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Company (leaf) -->
+    <decision name="Company Tag" id="d_CompanyTag">
+        <variable typeRef="string" name="Company Tag"/>
+        <informationRequirement id="_req_ct_company">
+            <requiredInput href="#i_Company"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>"Company: " + Company</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Department (leaf) -->
+    <decision name="Department Tag" id="d_DepartmentTag">
+        <variable typeRef="string" name="Department Tag"/>
+        <informationRequirement id="_req_dt_dept">
+            <requiredInput href="#i_Department"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>"Dept: " + Department</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Full Name, Department Tag -->
+    <decision name="Welcome Line" id="d_WelcomeLine">
+        <variable typeRef="string" name="Welcome Line"/>
+        <informationRequirement id="_req_wl_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_wl_depttag">
+            <requiredDecision href="#d_DepartmentTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>"Welcome " + Full Name + " to " + Department Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Job Label, Company Tag -->
+    <decision name="Role Summary" id="d_RoleSummary">
+        <variable typeRef="string" name="Role Summary"/>
+        <informationRequirement id="_req_rs_joblabel">
+            <requiredDecision href="#d_JobLabel"/>
+        </informationRequirement>
+        <informationRequirement id="_req_rs_companytag">
+            <requiredDecision href="#d_CompanyTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Job Label + " at " + Company Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Full Name, Job Title (leaf) -->
+    <decision name="Badge Code" id="d_BadgeCode">
+        <variable typeRef="string" name="Badge Code"/>
+        <informationRequirement id="_req_bc_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_bc_jobtitle">
+            <requiredInput href="#i_JobTitle"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>First Name + "-" + Job Title</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Role Summary, Location Tag -->
+    <decision name="Role Location" id="d_RoleLocation">
+        <variable typeRef="string" name="Role Location"/>
+        <informationRequirement id="_req_rl_rolesummary">
+            <requiredDecision href="#d_RoleSummary"/>
+        </informationRequirement>
+        <informationRequirement id="_req_rl_locationtag">
+            <requiredDecision href="#d_LocationTag"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Role Summary + " | " + Location Tag</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Depends on: Team Tag, Role Location -->
+    <decision name="Team Role" id="d_TeamRole">
+        <variable typeRef="string" name="Team Role"/>
+        <informationRequirement id="_req_tr_teamtag">
+            <requiredDecision href="#d_TeamTag"/>
+        </informationRequirement>
+        <informationRequirement id="_req_tr_rolelocation">
+            <requiredDecision href="#d_RoleLocation"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>Team Tag + " | " + Role Location</text>
+        </literalExpression>
+    </decision>
+
+</definitions>

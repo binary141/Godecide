@@ -130,6 +130,10 @@ func (d *Definitions) TopologicalSort() {
 		}
 
 		if !hasDecision {
+			n := nodes[d.ID]
+			n.Visited = true // because it is a leaf
+
+			nodes[d.ID] = n
 			leafDecisions = append(leafDecisions, d)
 		}
 	}
@@ -140,11 +144,18 @@ func (d *Definitions) TopologicalSort() {
 		return b.Post - a.Post
 	})
 
-	log.Println(leafDecisions)
+	// log.Println(leafDecisions)
 
 	decisionNodes := []Decision{}
 
+	for _, ln := range leafDecisions {
+		log.Println(ln.ID)
+	}
+
 	for _, v := range dfsNodes {
+		log.Printf("ID: %s Pre: %d Post: %d", v.Decision.ID, v.Pre, v.Post)
+
+		// log.Println(v.Decision.ID)
 		decisionNodes = append(decisionNodes, v.Decision)
 	}
 
@@ -160,11 +171,9 @@ func explore(nodes map[string]node, edges map[string][]edge, k string) map[strin
 	counter++
 	nodes[k] = n
 
-	for _, nn := range edges {
-		for _, e := range nn {
-			if !nodes[e.To].Visited {
-				explore(nodes, edges, e.To)
-			}
+	for _, e := range edges[k] {
+		if !nodes[e.To].Visited {
+			explore(nodes, edges, e.To)
 		}
 	}
 
@@ -257,6 +266,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 				return nil, err
 			}
 
+			log.Printf("Adding output for key: %+v", d.ID)
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -286,7 +296,7 @@ func Parse(data []byte) (Definitions, error) {
 }
 
 func main() {
-	filename := "./out-of-order.dmn"
+	filename := "./out-of-order-2.dmn"
 	_, err := os.Stat(filename)
 	if err != nil {
 		log.Println("Couldn't find file.dmn")
@@ -312,13 +322,14 @@ func main() {
 	}
 
 	inputs := map[string]any{
-		"First Name":  "Jane",
-		"Last Name":   "Smith",
-		"Department":  "Engineering",
-		"Base Salary": 90000,
-		"Bonus Rate":  0.1,
-		"Tax Rate":    0.25,
-		"Job Title":   "Engineer",
+		"First Name": "Jane",
+		"Last Name":  "Smith",
+		"Department": "Engineering",
+		"Job Title":  "Engineer",
+		"City":       "Austin",
+		"Country":    "USA",
+		"Company":    "Acme",
+		"Team":       "Platform",
 	}
 
 	evaluation, err := d.Evaluate(inputs)
