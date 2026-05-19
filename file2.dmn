@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions
+    namespace="https://github.com/agilepro/dmn-tck"
+    name="multi-decision-example"
+    id="_multi-decision-example"
+    xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/"
+    xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+    xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/"
+    xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/">
+
+    <!-- Inputs -->
+    <inputData name="First Name" id="i_FirstName">
+        <variable typeRef="string" name="First Name"/>
+    </inputData>
+    <inputData name="Last Name" id="i_LastName">
+        <variable typeRef="string" name="Last Name"/>
+    </inputData>
+    <inputData name="Age" id="i_Age">
+        <variable typeRef="number" name="Age"/>
+    </inputData>
+    <inputData name="City" id="i_City">
+        <variable typeRef="string" name="City"/>
+    </inputData>
+
+    <!-- Decision 1: Full Name (combines First + Last) -->
+    <decision name="Full Name" id="d_FullName">
+        <variable typeRef="string" name="Full Name"/>
+        <informationRequirement id="_req_firstname">
+            <requiredInput href="#i_FirstName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_lastname">
+            <requiredInput href="#i_LastName"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>First Name + " " + Last Name</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Decision 2: Greeting Message (chains from Decision 1, adds City) -->
+    <decision name="Greeting Message" id="d_GreetingMessage">
+        <variable typeRef="string" name="Greeting Message"/>
+        <informationRequirement id="_req_fullname">
+            <requiredDecision href="#d_FullName"/>
+        </informationRequirement>
+        <informationRequirement id="_req_city">
+            <requiredInput href="#i_City"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>"Hello " + Full Name + " from " + City</text>
+        </literalExpression>
+    </decision>
+
+    <!-- Decision 3: Senior Greeting (uses Greeting Message + Age) -->
+    <decision name="Senior Greeting" id="d_SeniorGreeting">
+        <variable typeRef="string" name="Senior Greeting"/>
+        <informationRequirement id="_req_greeting">
+            <requiredDecision href="#d_GreetingMessage"/>
+        </informationRequirement>
+        <informationRequirement id="_req_age">
+            <requiredInput href="#i_Age"/>
+        </informationRequirement>
+        <literalExpression>
+            <text>if Age >= 65 then Greeting Message + ", senior discount applied!" else Greeting Message</text>
+        </literalExpression>
+    </decision>
+
+    <dmndi:DMNDI>
+        <dmndi:DMNDiagram id="_multi-decision-example_D1">
+            <dmndi:Size height="800.0" width="800.0"/>
+
+            <!-- Decision shapes -->
+            <dmndi:DMNShape dmnElementRef="d_FullName" id="_s_FullName">
+                <dc:Bounds height="61.0" width="154.0" x="300.0" y="100.0"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape dmnElementRef="d_GreetingMessage" id="_s_GreetingMessage">
+                <dc:Bounds height="61.0" width="154.0" x="300.0" y="250.0"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape dmnElementRef="d_SeniorGreeting" id="_s_SeniorGreeting">
+                <dc:Bounds height="61.0" width="154.0" x="300.0" y="400.0"/>
+            </dmndi:DMNShape>
+
+            <!-- Input shapes -->
+            <dmndi:DMNShape dmnElementRef="i_FirstName" id="_s_FirstName">
+                <dc:Bounds height="60.0" width="153.0" x="100.0" y="100.0"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape dmnElementRef="i_LastName" id="_s_LastName">
+                <dc:Bounds height="60.0" width="153.0" x="500.0" y="100.0"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape dmnElementRef="i_City" id="_s_City">
+                <dc:Bounds height="60.0" width="153.0" x="100.0" y="250.0"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape dmnElementRef="i_Age" id="_s_Age">
+                <dc:Bounds height="60.0" width="153.0" x="500.0" y="400.0"/>
+            </dmndi:DMNShape>
+
+            <!-- Edges -->
+            <dmndi:DMNEdge dmnElementRef="_req_firstname" id="_e_firstname">
+                <di:waypoint x="177.0" y="130.0"/>
+                <di:waypoint x="300.0" y="130.0"/>
+            </dmndi:DMNEdge>
+            <dmndi:DMNEdge dmnElementRef="_req_lastname" id="_e_lastname">
+                <di:waypoint x="500.0" y="130.0"/>
+                <di:waypoint x="454.0" y="130.0"/>
+            </dmndi:DMNEdge>
+            <dmndi:DMNEdge dmnElementRef="_req_fullname" id="_e_fullname">
+                <di:waypoint x="377.0" y="161.0"/>
+                <di:waypoint x="377.0" y="250.0"/>
+            </dmndi:DMNEdge>
+            <dmndi:DMNEdge dmnElementRef="_req_city" id="_e_city">
+                <di:waypoint x="177.0" y="280.0"/>
+                <di:waypoint x="300.0" y="280.0"/>
+            </dmndi:DMNEdge>
+            <dmndi:DMNEdge dmnElementRef="_req_greeting" id="_e_greeting">
+                <di:waypoint x="377.0" y="311.0"/>
+                <di:waypoint x="377.0" y="400.0"/>
+            </dmndi:DMNEdge>
+            <dmndi:DMNEdge dmnElementRef="_req_age" id="_e_age">
+                <di:waypoint x="500.0" y="430.0"/>
+                <di:waypoint x="454.0" y="430.0"/>
+            </dmndi:DMNEdge>
+        </dmndi:DMNDiagram>
+    </dmndi:DMNDI>
+</definitions>
