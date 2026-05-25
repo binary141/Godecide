@@ -17,13 +17,26 @@ import (
 
 // Definitions is the root element of a DMN file
 type Definitions struct {
-	XMLName   xml.Name    `xml:"definitions"`
-	ID        string      `xml:"id,attr"`
-	Name      string      `xml:"name,attr"`
-	Namespace string      `xml:"namespace,attr"`
-	Decisions []Decision  `xml:"decision"`
-	InputData []InputData `xml:"inputData"`
-	Version   string
+	XMLName        xml.Name         `xml:"definitions"`
+	ID             string           `xml:"id,attr"`
+	Name           string           `xml:"name,attr"`
+	Namespace      string           `xml:"namespace,attr"`
+	Decisions      []Decision       `xml:"decision"`
+	InputData      []InputData      `xml:"inputData"`
+	ItemDefinition []ItemDefinition `xml:"itemDefinition"`
+	Version        string
+}
+
+type ItemDefinition struct {
+	Name          string           `xml:"name,attr"`
+	IsCollection  string           `xml:"isCollection,attr"`
+	TypeRef       string           `xml:"typeRef"`
+	AllowedValues *AllowedValues   `xml:"allowedValues"`
+	ItemComponent []ItemDefinition `xml:"itemComponent"`
+}
+
+type AllowedValues struct {
+	Text string `xml:"text"`
 }
 
 // Decision represents a single decision node in the DRG
@@ -81,6 +94,7 @@ type InputData struct {
 }
 
 var ErrMissingInput = errors.New("missing required input")
+var ErrMisMatchTypes = errors.New("mismatch types")
 
 type node struct {
 	Decision Decision
@@ -210,17 +224,25 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 		return nil, ErrMissingInput
 	}
 
+	itemDefinitionMap := make(map[string]ItemDefinition, 0)
+
+	log.Println(len(d.Decisions))
 	d.TopologicalSort()
+	log.Println(len(d.Decisions))
+
+	for _, v := range d.ItemDefinition {
+		itemDefinitionMap[v.Name] = v
+	}
 
 	// the string key is the variable name of the input
 	inputMap := make(map[string]Variable, len(context))
 
 	for _, i := range d.InputData {
 		if _, found := context[i.Name]; !found {
-			return nil, fmt.Errorf("%w: %s not found", ErrMissingInput, i.Name)
+			return nil, fmt.Errorf("%w: %s not found for input: %+v", ErrMissingInput, i.Name, i.ID)
 		}
 
-		// todo make sure the types are the same
+		// todo make sure the types are the same between input data and the context
 
 		inputMap[i.ID] = i.Variable
 	}
@@ -242,7 +264,40 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			if i.RequiredInput != nil {
 				variable, hasInput := inputMap[i.RequiredInput.ResolvedID()]
 				if !hasInput {
-					return nil, fmt.Errorf("%w: %s not found", ErrMissingInput, i.ID)
+					return nil, fmt.Errorf("%w: %s not found for input: %+v", ErrMissingInput, i.RequiredInput.Href, i.ID)
+				}
+
+				ctxVar := context[variable.Name]
+
+				itemDef, hasDefinition := itemDefinitionMap[variable.TypeRef]
+				if hasDefinition {
+					if itemDef.AllowedValues != nil {
+						// todo move this to be go logic
+						allowedVars := map[string]any{
+							"Allowed Var":  ctxVar,
+							"Allowed Vars": strings.Split(itemDef.AllowedValues.Text, ","),
+						}
+
+						ctxBytes, err := json.Marshal(allowedVars)
+						if err != nil {
+							return nil, err
+						}
+
+						ret, err := feel.EvalString("list contains(Allowed Vars, Allowed Var)", string(ctxBytes))
+						if err != nil {
+							log.Printf("err: %+v", err)
+						}
+
+						r, ok := ret.(bool)
+						if !ok {
+							return nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
+						}
+
+						if !r {
+							return nil, fmt.Errorf("expected input: %v to be one of %v", ctxVar, itemDef.AllowedValues.Text)
+						}
+
+					}
 				}
 
 				ctx[variable.Name] = context[variable.Name]
@@ -251,7 +306,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			if i.RequiredDecision != nil {
 				_, hasDecision := decisionOutputs[i.RequiredDecision.ResolvedID()]
 				if !hasDecision {
-					return nil, fmt.Errorf("%w: %s not found", ErrMissingInput, i.ID)
+					return nil, fmt.Errorf("%w: %s not found for decision: %v", ErrMissingInput, i.ID, d.ID)
 				}
 			}
 		}
@@ -267,7 +322,6 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 				return nil, err
 			}
 
-			log.Printf("Adding output for key: %+v", d.ID)
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -298,15 +352,20 @@ func Parse(data []byte) (Definitions, error) {
 
 func main() {
 	filename := "./out-of-order-2.dmn"
+
+	if len(os.Args) == 2 {
+		filename = os.Args[1]
+	}
+
 	_, err := os.Stat(filename)
 	if err != nil {
-		log.Println("Couldn't find file.dmn")
+		log.Println("Couldn't find " + filename)
 		return
 	}
 
 	f, err := os.Open(filename)
 	if err != nil {
-		log.Println("Couldn't open file.dmn")
+		log.Println("Couldn't open " + filename)
 		return
 	}
 
@@ -323,14 +382,15 @@ func main() {
 	}
 
 	inputs := map[string]any{
-		"First Name": "Jane",
-		"Last Name":  "Smith",
-		"Department": "Engineering",
-		"Job Title":  "Engineer",
-		"City":       "Austin",
-		"Country":    "USA",
-		"Company":    "Acme",
-		"Team":       "Platform",
+		"First Name":        "Jane",
+		"Last Name":         "Smith",
+		"Department":        "Engineering",
+		"Job Title":         "Engineer",
+		"City":              "Austin",
+		"Country":           "USA",
+		"Company":           "Acme",
+		"Team":              "Platform",
+		"Employment Status": "\"EMPLOYED\"",
 	}
 
 	evaluation, err := d.Evaluate(inputs)
@@ -339,5 +399,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Evaluated: %+v", evaluation)
+	for k, v := range evaluation {
+		fmt.Printf("%s -> %+v\n", k, v)
+	}
 }
