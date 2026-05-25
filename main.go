@@ -1,4 +1,6 @@
 // main is main
+//
+//go:generate go run ./cmd/gentests
 package main
 
 import (
@@ -10,6 +12,7 @@ import (
 	"log"
 	"os"
 	"slices"
+	"strconv"
 	"strings"
 
 	feel "github.com/superisaac/FEEL.go"
@@ -226,9 +229,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 
 	itemDefinitionMap := make(map[string]ItemDefinition, 0)
 
-	log.Println(len(d.Decisions))
 	d.TopologicalSort()
-	log.Println(len(d.Decisions))
 
 	for _, v := range d.ItemDefinition {
 		itemDefinitionMap[v.Name] = v
@@ -272,10 +273,21 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 				itemDef, hasDefinition := itemDefinitionMap[variable.TypeRef]
 				if hasDefinition {
 					if itemDef.AllowedValues != nil {
+						allowedList := strings.Split(itemDef.AllowedValues.Text, ",")
+
+						for i, v := range allowedList {
+							v, err := strconv.Unquote(v)
+							if err != nil {
+								log.Printf("unable to unquote '%s': %v\n", v, err)
+							}
+
+							allowedList[i] = v
+						}
+
 						// todo move this to be go logic
 						allowedVars := map[string]any{
 							"Allowed Var":  ctxVar,
-							"Allowed Vars": strings.Split(itemDef.AllowedValues.Text, ","),
+							"Allowed Vars": allowedList,
 						}
 
 						ctxBytes, err := json.Marshal(allowedVars)
@@ -294,7 +306,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 						}
 
 						if !r {
-							return nil, fmt.Errorf("expected input: %v to be one of %v", ctxVar, itemDef.AllowedValues.Text)
+							return nil, fmt.Errorf("expected input: %v to be one of %v", ctxVar, allowedList)
 						}
 
 					}
@@ -320,6 +332,13 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			ret, err := feel.EvalString(d.LiteralExpression.Text, string(ctxBytes))
 			if err != nil {
 				return nil, err
+			}
+
+			feelNum, isNum := ret.(*feel.Number)
+			if isNum {
+				decisionOutputs[d.ID] = feelNum.Float64()
+				ctx[d.Variable.Name] = feelNum.Float64
+				continue
 			}
 
 			decisionOutputs[d.ID] = ret
