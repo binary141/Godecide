@@ -1,0 +1,3 @@
+[submodule "testdata/tck"]
+	path = testdata/tck
+	url = https://github.com/dmn-tck/tck
