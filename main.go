@@ -337,7 +337,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			feelNum, isNum := ret.(*feel.Number)
 			if isNum {
 				decisionOutputs[d.ID] = feelNum.Float64()
-				ctx[d.Variable.Name] = feelNum.Float64
+				ctx[d.Variable.Name] = feelNum.Float64()
 				continue
 			}
 
