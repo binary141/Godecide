@@ -108,7 +108,7 @@ func (d *Definitions) TopologicalSort() {
 		nodes[d.ID] = n
 	}
 
-	leafDecisions := []Decision{}
+	leafNodes := map[string]node{}
 
 	for _, d := range d.Decisions {
 		hasDecision := false
@@ -134,7 +134,7 @@ func (d *Definitions) TopologicalSort() {
 			n.Visited = true // because it is a leaf
 
 			nodes[d.ID] = n
-			leafDecisions = append(leafDecisions, d)
+			leafNodes[d.ID] = n
 		}
 	}
 
@@ -144,22 +144,23 @@ func (d *Definitions) TopologicalSort() {
 		return b.Post - a.Post
 	})
 
-	// log.Println(leafDecisions)
-
 	decisionNodes := []Decision{}
 
-	for _, ln := range leafDecisions {
-		log.Println(ln.ID)
-	}
-
-	for _, v := range dfsNodes {
-		log.Printf("ID: %s Pre: %d Post: %d", v.Decision.ID, v.Pre, v.Post)
-
-		// log.Println(v.Decision.ID)
+	for _, v := range leafNodes {
 		decisionNodes = append(decisionNodes, v.Decision)
 	}
 
-	d.Decisions = append(leafDecisions, decisionNodes...)
+	for _, v := range dfsNodes {
+		_, isLeaf := leafNodes[v.Decision.ID]
+		if isLeaf {
+			// node was already added elsewhere
+			continue
+		}
+
+		decisionNodes = append(decisionNodes, v.Decision)
+	}
+
+	d.Decisions = decisionNodes
 }
 
 var counter = 0
