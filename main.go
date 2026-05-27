@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"strings"
 
-	feel "github.com/superisaac/FEEL.go"
+	feel "github.com/binary141/FEEL.go"
 )
 
 // Definitions is the root element of a DMN file
@@ -401,11 +401,6 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 					return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
 				}
 
-				// for _, input := range dt.Input {
-				// 	log.Println(input.InputExpression)
-				// 	log.Println(input)
-				// }
-
 				// todo find better type?
 				hits := map[string]any{}
 
@@ -568,6 +563,7 @@ func main() {
 		"Age":               18,
 		"RiskCategory":      "Medium",
 		"isAffordable":      true,
+		"loan":              map[string]any{"principal": float64(600000), "rate": float64(0.0375), "termMonths": float64(360)},
 	}
 
 	evaluation, err := d.Evaluate(inputs)
