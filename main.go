@@ -48,7 +48,57 @@ type Decision struct {
 	Name                    string                   `xml:"name,attr"`
 	Variable                Variable                 `xml:"variable"`
 	InformationRequirements []InformationRequirement `xml:"informationRequirement"`
+	DecisionTables          []DecisionTable          `xml:"decisionTable"`
 	LiteralExpression       *LiteralExpression       `xml:"literalExpression"`
+}
+
+type DecisionTable struct {
+	HitPolicy            string   `xml:"hitPolicy,attr"`
+	OutputLabel          string   `xml:"outputLabel,attr"`
+	PreferredOrientation string   `xml:"preferredOrientation,attr"`
+	Inputs               []Input  `xml:"input"`
+	Output               []Output `xml:"output"`
+	Rules                []Rule   `xml:"rule"`
+}
+
+type Output struct {
+	OutputValues OutputValues `xml:"outputValues"`
+}
+
+type OutputValues struct {
+	Text string `xml:"text"`
+}
+
+type Input struct {
+	ID              string          `xml:"id,attr"`
+	Label           string          `xml:"label,attr"`
+	InputExpression InputExpression `xml:"inputExpression"`
+	InputValues     InputValues     `xml:"inputValues"`
+}
+
+type InputValues struct {
+	Text string `xml:"text"`
+}
+
+type InputExpression struct {
+	Text    string `xml:"text"`
+	TypeRef string `xml:"typeRef,attr"`
+}
+
+type Rule struct {
+	ID            string        `xml:"id,attr"`
+	InputEntries  []InputEntry  `xml:"inputEntry"`
+	OutputEntries []OutputEntry `xml:"outputEntry"`
+}
+
+type OutputEntry struct {
+	Text string `xml:"text"`
+	ID   string `xml:"id,attr"`
+}
+
+type InputEntry struct {
+	ID   string `xml:"id,attr"`
+	Text string `xml:"text"`
 }
 
 // Variable describes the output variable of a decision or input data
@@ -344,6 +394,111 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
+
+		if len(d.DecisionTables) != 0 {
+			for _, dt := range d.DecisionTables {
+				if !IsValidHitPolicy(dt.HitPolicy) {
+					return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
+				}
+
+				// for _, input := range dt.Input {
+				// 	log.Println(input.InputExpression)
+				// 	log.Println(input)
+				// }
+
+				// todo find better type?
+				hits := map[string]any{}
+
+				for _, rule := range dt.Rules {
+					// todo make sure the types are the same from the ctx input to the rule input
+					hit := true
+					for j, ie := range rule.InputEntries {
+						if ie.Text == "-" {
+							continue
+						}
+
+						input := dt.Inputs[j]
+
+						expression := ie.Text
+
+						switch input.InputExpression.TypeRef {
+						case "number":
+							expression = fmt.Sprintf("%s %s", input.InputExpression.Text, ie.Text)
+						case "string":
+							// todo make sure this is right
+							expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+						}
+
+						ctxBytes, err := json.Marshal(ctx)
+						if err != nil {
+							return nil, fmt.Errorf("unable to marshal ctx in rule evaluation: %w", err)
+						}
+
+						ret, err := feel.EvalString(expression, string(ctxBytes))
+						if err != nil {
+							log.Printf("err: %+v", err)
+						}
+
+						r, ok := ret.(bool)
+						if !ok {
+							return nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
+						}
+
+						if hit {
+							hit = r
+						}
+					}
+
+					if hit {
+						for _, oe := range rule.OutputEntries {
+							var hitsList []any
+
+							hitsAny, hasEntry := hits[d.ID]
+							if !hasEntry {
+								hitsList = make([]any, 0)
+							} else {
+								hitsList, _ = hitsAny.([]any)
+							}
+
+							oe.Text, _ = strconv.Unquote(oe.Text)
+
+							hitsList = append(hitsList, oe.Text)
+
+							hits[d.ID] = hitsList
+						}
+					}
+				}
+
+				hitsList, isList := hits[d.ID].([]any)
+				if isList {
+					switch dt.HitPolicy {
+					case HitPolicyUnique:
+						if len(hitsList) > 1 {
+							return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
+						}
+					case HitPolicyPriority:
+						outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
+
+						for _, output := range outputs {
+							output, _ = strconv.Unquote(output)
+							for _, hit := range hitsList {
+								if output == hit {
+									hits[d.ID] = output
+									return hits, nil
+								}
+							}
+						}
+
+					}
+
+					if len(hitsList) == 1 {
+						hits[d.ID] = hitsList[0]
+					}
+				}
+
+				return hits, nil
+			}
+		}
 	}
 
 	return decisionOutputs, nil
@@ -410,6 +565,9 @@ func main() {
 		"Company":           "Acme",
 		"Team":              "Platform",
 		"Employment Status": "\"EMPLOYED\"",
+		"Age":               18,
+		"RiskCategory":      "Medium",
+		"isAffordable":      true,
 	}
 
 	evaluation, err := d.Evaluate(inputs)
