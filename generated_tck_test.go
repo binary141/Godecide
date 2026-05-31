@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	feel "github.com/binary141/FEEL.go"
 	"github.com/stretchr/testify/require"
 )
 
@@ -513,7 +514,7 @@ func TestTCK_0105_feel_math_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_16"])
+	require.Equal(t, feel.Null, result["d_16"])
 }
 
 func TestTCK_0105_feel_math_017(t *testing.T) {
@@ -569,7 +570,7 @@ func TestTCK_0105_feel_math_023(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_23"])
+	require.Equal(t, feel.Null, result["d_23"])
 }
 
 func TestTCK_0105_feel_math_024(t *testing.T) {
@@ -577,7 +578,7 @@ func TestTCK_0105_feel_math_024(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_24"])
+	require.Equal(t, feel.Null, result["d_24"])
 }
 
 func TestTCK_0105_feel_math_025(t *testing.T) {
@@ -585,7 +586,7 @@ func TestTCK_0105_feel_math_025(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_25"])
+	require.Equal(t, feel.Null, result["d_25"])
 }
 
 func TestTCK_0105_feel_math_026(t *testing.T) {
@@ -593,7 +594,7 @@ func TestTCK_0105_feel_math_026(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_26"])
+	require.Equal(t, feel.Null, result["d_26"])
 }
 
 func TestTCK_0105_feel_math_027(t *testing.T) {
@@ -601,7 +602,7 @@ func TestTCK_0105_feel_math_027(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_27"])
+	require.Equal(t, feel.Null, result["d_27"])
 }
 
 func TestTCK_0105_feel_math_028(t *testing.T) {
@@ -609,7 +610,7 @@ func TestTCK_0105_feel_math_028(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_28"])
+	require.Equal(t, feel.Null, result["d_28"])
 }
 
 func TestTCK_0105_feel_math_029(t *testing.T) {
@@ -617,7 +618,7 @@ func TestTCK_0105_feel_math_029(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_29"])
+	require.Equal(t, feel.Null, result["d_29"])
 }
 
 func TestTCK_0105_feel_math_030(t *testing.T) {
@@ -625,7 +626,7 @@ func TestTCK_0105_feel_math_030(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_30"])
+	require.Equal(t, feel.Null, result["d_30"])
 }
 
 func TestTCK_0105_feel_math_031(t *testing.T) {
@@ -679,12 +680,12 @@ func TestTCK_0106_feel_ternary_logic_002(t *testing.T) {
 func TestTCK_0106_feel_ternary_logic_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0106-feel-ternary-logic/0106-feel-ternary-logic.dmn")
 	inputs := map[string]any{
-		"A": "",
+		"A": feel.Null,
 		"B": true,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_1"])
+	require.Equal(t, feel.Null, result["d_1"])
 	require.Equal(t, true, result["d_2"])
 }
 
@@ -715,24 +716,24 @@ func TestTCK_0106_feel_ternary_logic_005(t *testing.T) {
 func TestTCK_0106_feel_ternary_logic_006(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0106-feel-ternary-logic/0106-feel-ternary-logic.dmn")
 	inputs := map[string]any{
-		"A": "",
+		"A": feel.Null,
 		"B": false,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, false, result["d_1"])
-	require.Equal(t, "", result["d_2"])
+	require.Equal(t, feel.Null, result["d_2"])
 }
 
 func TestTCK_0106_feel_ternary_logic_007(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0106-feel-ternary-logic/0106-feel-ternary-logic.dmn")
 	inputs := map[string]any{
 		"A": true,
-		"B": "",
+		"B": feel.Null,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_1"])
+	require.Equal(t, feel.Null, result["d_1"])
 	require.Equal(t, true, result["d_2"])
 }
 
@@ -740,24 +741,24 @@ func TestTCK_0106_feel_ternary_logic_008(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0106-feel-ternary-logic/0106-feel-ternary-logic.dmn")
 	inputs := map[string]any{
 		"A": false,
-		"B": "",
+		"B": feel.Null,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, false, result["d_1"])
-	require.Equal(t, "", result["d_2"])
+	require.Equal(t, feel.Null, result["d_2"])
 }
 
 func TestTCK_0106_feel_ternary_logic_009(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0106-feel-ternary-logic/0106-feel-ternary-logic.dmn")
 	inputs := map[string]any{
-		"A": "",
-		"B": "",
+		"A": feel.Null,
+		"B": feel.Null,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_1"])
-	require.Equal(t, "", result["d_2"])
+	require.Equal(t, feel.Null, result["d_1"])
+	require.Equal(t, feel.Null, result["d_2"])
 }
 
 func TestTCK_0107_feel_ternary_logic_not_001(t *testing.T) {
@@ -783,11 +784,11 @@ func TestTCK_0107_feel_ternary_logic_not_002(t *testing.T) {
 func TestTCK_0107_feel_ternary_logic_not_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0107-feel-ternary-logic-not/0107-feel-ternary-logic-not.dmn")
 	inputs := map[string]any{
-		"A": "",
+		"A": feel.Null,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_not"])
+	require.Equal(t, feel.Null, result["d_not"])
 }
 
 func TestTCK_0108_first_hitpolicy_001(t *testing.T) {
@@ -1979,7 +1980,7 @@ func TestTCK_0032_conditionals_002(t *testing.T) {
 func TestTCK_0032_conditionals_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0032-conditionals/0032-conditionals.dmn")
 	inputs := map[string]any{
-		"bool": "",
+		"bool": feel.Null,
 		"num":  float64(100),
 	}
 	result, err := d.Evaluate(inputs)
@@ -2012,7 +2013,7 @@ func TestTCK_0032_conditionals_005(t *testing.T) {
 func TestTCK_0032_conditionals_006(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0032-conditionals/0032-conditionals.dmn")
 	inputs := map[string]any{
-		"aDate":   "",
+		"aDate":   feel.Null,
 		"aString": "Hello World",
 	}
 	result, err := d.Evaluate(inputs)
@@ -2353,7 +2354,7 @@ func TestTCK_0050_feel_abs_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0050_feel_abs_function_005(t *testing.T) {
@@ -2361,7 +2362,7 @@ func TestTCK_0050_feel_abs_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0050_feel_abs_function_006(t *testing.T) {
@@ -2377,7 +2378,7 @@ func TestTCK_0050_feel_abs_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0050_feel_abs_function_008(t *testing.T) {
@@ -2385,7 +2386,7 @@ func TestTCK_0050_feel_abs_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0050_feel_abs_function_009(t *testing.T) {
@@ -2393,7 +2394,7 @@ func TestTCK_0050_feel_abs_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0050_feel_abs_function_010(t *testing.T) {
@@ -2401,7 +2402,7 @@ func TestTCK_0050_feel_abs_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0050_feel_abs_function_011(t *testing.T) {
@@ -2441,7 +2442,7 @@ func TestTCK_0050_feel_abs_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0050_feel_abs_function_014(t *testing.T) {
@@ -2449,7 +2450,7 @@ func TestTCK_0050_feel_abs_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0050_feel_abs_function_015(t *testing.T) {
@@ -2457,7 +2458,7 @@ func TestTCK_0050_feel_abs_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0051_feel_sqrt_function_001(t *testing.T) {
@@ -2473,7 +2474,7 @@ func TestTCK_0051_feel_sqrt_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_0051_feel_sqrt_function_003(t *testing.T) {
@@ -2489,7 +2490,7 @@ func TestTCK_0051_feel_sqrt_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0051_feel_sqrt_function_005(t *testing.T) {
@@ -2497,7 +2498,7 @@ func TestTCK_0051_feel_sqrt_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0051_feel_sqrt_function_006(t *testing.T) {
@@ -2513,7 +2514,7 @@ func TestTCK_0051_feel_sqrt_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0051_feel_sqrt_function_008(t *testing.T) {
@@ -2521,7 +2522,7 @@ func TestTCK_0051_feel_sqrt_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0051_feel_sqrt_function_009(t *testing.T) {
@@ -2529,7 +2530,7 @@ func TestTCK_0051_feel_sqrt_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0051_feel_sqrt_function_010(t *testing.T) {
@@ -2537,7 +2538,7 @@ func TestTCK_0051_feel_sqrt_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0051_feel_sqrt_function_011(t *testing.T) {
@@ -2545,7 +2546,7 @@ func TestTCK_0051_feel_sqrt_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0051_feel_sqrt_function_012(t *testing.T) {
@@ -2553,7 +2554,7 @@ func TestTCK_0051_feel_sqrt_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0051_feel_sqrt_function_013(t *testing.T) {
@@ -2561,7 +2562,7 @@ func TestTCK_0051_feel_sqrt_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0051_feel_sqrt_function_014(t *testing.T) {
@@ -2569,7 +2570,7 @@ func TestTCK_0051_feel_sqrt_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0051_feel_sqrt_function_015(t *testing.T) {
@@ -2577,7 +2578,7 @@ func TestTCK_0051_feel_sqrt_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0052_feel_exp_function_001(t *testing.T) {
@@ -2609,7 +2610,7 @@ func TestTCK_0052_feel_exp_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0052_feel_exp_function_005(t *testing.T) {
@@ -2617,7 +2618,7 @@ func TestTCK_0052_feel_exp_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0052_feel_exp_function_006(t *testing.T) {
@@ -2633,7 +2634,7 @@ func TestTCK_0052_feel_exp_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0052_feel_exp_function_008(t *testing.T) {
@@ -2641,7 +2642,7 @@ func TestTCK_0052_feel_exp_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0052_feel_exp_function_009(t *testing.T) {
@@ -2649,7 +2650,7 @@ func TestTCK_0052_feel_exp_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0052_feel_exp_function_010(t *testing.T) {
@@ -2657,7 +2658,7 @@ func TestTCK_0052_feel_exp_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0052_feel_exp_function_011(t *testing.T) {
@@ -2665,7 +2666,7 @@ func TestTCK_0052_feel_exp_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0052_feel_exp_function_012(t *testing.T) {
@@ -2673,7 +2674,7 @@ func TestTCK_0052_feel_exp_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0052_feel_exp_function_013(t *testing.T) {
@@ -2681,7 +2682,7 @@ func TestTCK_0052_feel_exp_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0052_feel_exp_function_014(t *testing.T) {
@@ -2689,7 +2690,7 @@ func TestTCK_0052_feel_exp_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0052_feel_exp_function_015(t *testing.T) {
@@ -2697,7 +2698,7 @@ func TestTCK_0052_feel_exp_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0053_feel_log_function_001(t *testing.T) {
@@ -2713,7 +2714,7 @@ func TestTCK_0053_feel_log_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_0053_feel_log_function_003(t *testing.T) {
@@ -2721,7 +2722,7 @@ func TestTCK_0053_feel_log_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0053_feel_log_function_004(t *testing.T) {
@@ -2729,7 +2730,7 @@ func TestTCK_0053_feel_log_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0053_feel_log_function_005(t *testing.T) {
@@ -2737,7 +2738,7 @@ func TestTCK_0053_feel_log_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0053_feel_log_function_006(t *testing.T) {
@@ -2753,7 +2754,7 @@ func TestTCK_0053_feel_log_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0053_feel_log_function_008(t *testing.T) {
@@ -2761,7 +2762,7 @@ func TestTCK_0053_feel_log_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0053_feel_log_function_009(t *testing.T) {
@@ -2769,7 +2770,7 @@ func TestTCK_0053_feel_log_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0053_feel_log_function_010(t *testing.T) {
@@ -2777,7 +2778,7 @@ func TestTCK_0053_feel_log_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0053_feel_log_function_011(t *testing.T) {
@@ -2785,7 +2786,7 @@ func TestTCK_0053_feel_log_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0053_feel_log_function_012(t *testing.T) {
@@ -2793,7 +2794,7 @@ func TestTCK_0053_feel_log_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0053_feel_log_function_013(t *testing.T) {
@@ -2801,7 +2802,7 @@ func TestTCK_0053_feel_log_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0053_feel_log_function_014(t *testing.T) {
@@ -2809,7 +2810,7 @@ func TestTCK_0053_feel_log_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0053_feel_log_function_015(t *testing.T) {
@@ -2817,7 +2818,7 @@ func TestTCK_0053_feel_log_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0054_feel_even_function_001(t *testing.T) {
@@ -2865,7 +2866,7 @@ func TestTCK_0054_feel_even_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0054_feel_even_function_005(t *testing.T) {
@@ -2873,7 +2874,7 @@ func TestTCK_0054_feel_even_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0054_feel_even_function_006(t *testing.T) {
@@ -2889,7 +2890,7 @@ func TestTCK_0054_feel_even_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0054_feel_even_function_008(t *testing.T) {
@@ -2897,7 +2898,7 @@ func TestTCK_0054_feel_even_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0054_feel_even_function_009(t *testing.T) {
@@ -2905,7 +2906,7 @@ func TestTCK_0054_feel_even_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0054_feel_even_function_010(t *testing.T) {
@@ -2913,7 +2914,7 @@ func TestTCK_0054_feel_even_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0054_feel_even_function_011(t *testing.T) {
@@ -2921,7 +2922,7 @@ func TestTCK_0054_feel_even_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0054_feel_even_function_012(t *testing.T) {
@@ -2929,7 +2930,7 @@ func TestTCK_0054_feel_even_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0054_feel_even_function_013(t *testing.T) {
@@ -2937,7 +2938,7 @@ func TestTCK_0054_feel_even_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0054_feel_even_function_014(t *testing.T) {
@@ -2945,7 +2946,7 @@ func TestTCK_0054_feel_even_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0054_feel_even_function_015(t *testing.T) {
@@ -2953,7 +2954,7 @@ func TestTCK_0054_feel_even_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0055_feel_odd_function_001(t *testing.T) {
@@ -3001,7 +3002,7 @@ func TestTCK_0055_feel_odd_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0055_feel_odd_function_005(t *testing.T) {
@@ -3009,7 +3010,7 @@ func TestTCK_0055_feel_odd_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0055_feel_odd_function_006(t *testing.T) {
@@ -3025,7 +3026,7 @@ func TestTCK_0055_feel_odd_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0055_feel_odd_function_008(t *testing.T) {
@@ -3033,7 +3034,7 @@ func TestTCK_0055_feel_odd_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0055_feel_odd_function_009(t *testing.T) {
@@ -3041,7 +3042,7 @@ func TestTCK_0055_feel_odd_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0055_feel_odd_function_010(t *testing.T) {
@@ -3049,7 +3050,7 @@ func TestTCK_0055_feel_odd_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0055_feel_odd_function_011(t *testing.T) {
@@ -3057,7 +3058,7 @@ func TestTCK_0055_feel_odd_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0055_feel_odd_function_012(t *testing.T) {
@@ -3065,7 +3066,7 @@ func TestTCK_0055_feel_odd_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0055_feel_odd_function_013(t *testing.T) {
@@ -3073,7 +3074,7 @@ func TestTCK_0055_feel_odd_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0055_feel_odd_function_014(t *testing.T) {
@@ -3081,7 +3082,7 @@ func TestTCK_0055_feel_odd_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0055_feel_odd_function_015(t *testing.T) {
@@ -3089,7 +3090,7 @@ func TestTCK_0055_feel_odd_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0056_feel_modulo_function_001(t *testing.T) {
@@ -3129,7 +3130,7 @@ func TestTCK_0056_feel_modulo_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0056_feel_modulo_function_004(t *testing.T) {
@@ -3137,7 +3138,7 @@ func TestTCK_0056_feel_modulo_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0056_feel_modulo_function_005(t *testing.T) {
@@ -3145,7 +3146,7 @@ func TestTCK_0056_feel_modulo_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0056_feel_modulo_function_005_a(t *testing.T) {
@@ -3153,7 +3154,7 @@ func TestTCK_0056_feel_modulo_function_005_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005_a"])
+	require.Equal(t, feel.Null, result["_decision005_a"])
 }
 
 func TestTCK_0056_feel_modulo_function_006(t *testing.T) {
@@ -3169,7 +3170,7 @@ func TestTCK_0056_feel_modulo_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0056_feel_modulo_function_008(t *testing.T) {
@@ -3177,7 +3178,7 @@ func TestTCK_0056_feel_modulo_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0056_feel_modulo_function_008_a(t *testing.T) {
@@ -3185,7 +3186,7 @@ func TestTCK_0056_feel_modulo_function_008_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_a"])
+	require.Equal(t, feel.Null, result["_decision008_a"])
 }
 
 func TestTCK_0056_feel_modulo_function_008_b(t *testing.T) {
@@ -3193,7 +3194,7 @@ func TestTCK_0056_feel_modulo_function_008_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_b"])
+	require.Equal(t, feel.Null, result["_decision008_b"])
 }
 
 func TestTCK_0056_feel_modulo_function_009(t *testing.T) {
@@ -3201,7 +3202,7 @@ func TestTCK_0056_feel_modulo_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0056_feel_modulo_function_010(t *testing.T) {
@@ -3209,7 +3210,7 @@ func TestTCK_0056_feel_modulo_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0056_feel_modulo_function_011(t *testing.T) {
@@ -3217,7 +3218,7 @@ func TestTCK_0056_feel_modulo_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0056_feel_modulo_function_012(t *testing.T) {
@@ -3225,7 +3226,7 @@ func TestTCK_0056_feel_modulo_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0056_feel_modulo_function_013(t *testing.T) {
@@ -3233,7 +3234,7 @@ func TestTCK_0056_feel_modulo_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0056_feel_modulo_function_014(t *testing.T) {
@@ -3241,7 +3242,7 @@ func TestTCK_0056_feel_modulo_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0056_feel_modulo_function_015(t *testing.T) {
@@ -3249,7 +3250,7 @@ func TestTCK_0056_feel_modulo_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0056_feel_modulo_function_016a(t *testing.T) {
@@ -3385,7 +3386,7 @@ func TestTCK_0057_feel_context_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0057_feel_context_009(t *testing.T) {
@@ -3393,7 +3394,7 @@ func TestTCK_0057_feel_context_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0057_feel_context_010(t *testing.T) {
@@ -3401,7 +3402,7 @@ func TestTCK_0057_feel_context_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0058_feel_number_function_001(t *testing.T) {
@@ -3433,7 +3434,7 @@ func TestTCK_0058_feel_number_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0058_feel_number_function_004(t *testing.T) {
@@ -3441,7 +3442,7 @@ func TestTCK_0058_feel_number_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0058_feel_number_function_004_a(t *testing.T) {
@@ -3449,7 +3450,7 @@ func TestTCK_0058_feel_number_function_004_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004_a"])
+	require.Equal(t, feel.Null, result["_decision004_a"])
 }
 
 func TestTCK_0058_feel_number_function_004_b(t *testing.T) {
@@ -3457,7 +3458,7 @@ func TestTCK_0058_feel_number_function_004_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004_b"])
+	require.Equal(t, feel.Null, result["_decision004_b"])
 }
 
 func TestTCK_0058_feel_number_function_004_c(t *testing.T) {
@@ -3465,7 +3466,7 @@ func TestTCK_0058_feel_number_function_004_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004_c"])
+	require.Equal(t, feel.Null, result["_decision004_c"])
 }
 
 func TestTCK_0058_feel_number_function_005(t *testing.T) {
@@ -3505,7 +3506,7 @@ func TestTCK_0058_feel_number_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0058_feel_number_function_010(t *testing.T) {
@@ -3513,7 +3514,7 @@ func TestTCK_0058_feel_number_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_0058_feel_number_function_011(t *testing.T) {
@@ -3521,7 +3522,7 @@ func TestTCK_0058_feel_number_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_0058_feel_number_function_012(t *testing.T) {
@@ -3529,7 +3530,7 @@ func TestTCK_0058_feel_number_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0058_feel_number_function_013(t *testing.T) {
@@ -3545,7 +3546,7 @@ func TestTCK_0058_feel_number_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0058_feel_number_function_015(t *testing.T) {
@@ -3553,7 +3554,7 @@ func TestTCK_0058_feel_number_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_0058_feel_number_function_016(t *testing.T) {
@@ -3561,7 +3562,7 @@ func TestTCK_0058_feel_number_function_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	require.Equal(t, feel.Null, result["_decision016"])
 }
 
 func TestTCK_0058_feel_number_function_017(t *testing.T) {
@@ -3569,7 +3570,7 @@ func TestTCK_0058_feel_number_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_0059_feel_all_function_001(t *testing.T) {
@@ -3593,7 +3594,7 @@ func TestTCK_0059_feel_all_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0059_feel_all_function_004(t *testing.T) {
@@ -3601,7 +3602,7 @@ func TestTCK_0059_feel_all_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0059_feel_all_function_005(t *testing.T) {
@@ -3633,7 +3634,7 @@ func TestTCK_0059_feel_all_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0059_feel_all_function_009(t *testing.T) {
@@ -3641,7 +3642,7 @@ func TestTCK_0059_feel_all_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0059_feel_all_function_010(t *testing.T) {
@@ -3665,7 +3666,7 @@ func TestTCK_0059_feel_all_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0059_feel_all_function_013(t *testing.T) {
@@ -3673,7 +3674,7 @@ func TestTCK_0059_feel_all_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0059_feel_all_function_014(t *testing.T) {
@@ -3681,7 +3682,7 @@ func TestTCK_0059_feel_all_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0059_feel_all_function_015(t *testing.T) {
@@ -3705,7 +3706,7 @@ func TestTCK_0059_feel_all_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_0059_feel_all_function_018(t *testing.T) {
@@ -3713,7 +3714,7 @@ func TestTCK_0059_feel_all_function_018(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision018"])
+	require.Equal(t, feel.Null, result["_decision018"])
 }
 
 func TestTCK_0059_feel_all_function_019(t *testing.T) {
@@ -3721,7 +3722,7 @@ func TestTCK_0059_feel_all_function_019(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision019"])
+	require.Equal(t, feel.Null, result["_decision019"])
 }
 
 func TestTCK_0060_feel_any_function_001(t *testing.T) {
@@ -3745,7 +3746,7 @@ func TestTCK_0060_feel_any_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0060_feel_any_function_005(t *testing.T) {
@@ -3777,7 +3778,7 @@ func TestTCK_0060_feel_any_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0060_feel_any_function_009(t *testing.T) {
@@ -3785,7 +3786,7 @@ func TestTCK_0060_feel_any_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_0060_feel_any_function_010(t *testing.T) {
@@ -3809,7 +3810,7 @@ func TestTCK_0060_feel_any_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0060_feel_any_function_014(t *testing.T) {
@@ -3817,7 +3818,7 @@ func TestTCK_0060_feel_any_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_0060_feel_any_function_015(t *testing.T) {
@@ -3841,7 +3842,7 @@ func TestTCK_0060_feel_any_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_0060_feel_any_function_018(t *testing.T) {
@@ -3849,7 +3850,7 @@ func TestTCK_0060_feel_any_function_018(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision018"])
+	require.Equal(t, feel.Null, result["_decision018"])
 }
 
 func TestTCK_0060_feel_any_function_019(t *testing.T) {
@@ -3857,7 +3858,7 @@ func TestTCK_0060_feel_any_function_019(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision019"])
+	require.Equal(t, feel.Null, result["_decision019"])
 }
 
 func TestTCK_0061_feel_median_function_001(t *testing.T) {
@@ -3881,7 +3882,7 @@ func TestTCK_0061_feel_median_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0061_feel_median_function_003_a(t *testing.T) {
@@ -3889,7 +3890,7 @@ func TestTCK_0061_feel_median_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0061_feel_median_function_004(t *testing.T) {
@@ -3897,7 +3898,7 @@ func TestTCK_0061_feel_median_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0061_feel_median_function_005(t *testing.T) {
@@ -3905,7 +3906,7 @@ func TestTCK_0061_feel_median_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0061_feel_median_function_006(t *testing.T) {
@@ -3921,7 +3922,7 @@ func TestTCK_0061_feel_median_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0061_feel_median_function_008(t *testing.T) {
@@ -3961,7 +3962,7 @@ func TestTCK_0061_feel_median_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0061_feel_median_function_013(t *testing.T) {
@@ -3969,7 +3970,7 @@ func TestTCK_0061_feel_median_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0062_feel_mode_function_001(t *testing.T) {
@@ -3993,7 +3994,7 @@ func TestTCK_0062_feel_mode_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0062_feel_mode_function_003_a(t *testing.T) {
@@ -4001,7 +4002,7 @@ func TestTCK_0062_feel_mode_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0062_feel_mode_function_004(t *testing.T) {
@@ -4009,7 +4010,7 @@ func TestTCK_0062_feel_mode_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0062_feel_mode_function_005(t *testing.T) {
@@ -4017,7 +4018,7 @@ func TestTCK_0062_feel_mode_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0062_feel_mode_function_006(t *testing.T) {
@@ -4065,7 +4066,7 @@ func TestTCK_0062_feel_mode_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0062_feel_mode_function_013(t *testing.T) {
@@ -4073,7 +4074,7 @@ func TestTCK_0062_feel_mode_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0063_feel_stddev_function_001(t *testing.T) {
@@ -4089,7 +4090,7 @@ func TestTCK_0063_feel_stddev_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0063_feel_stddev_function_003_a(t *testing.T) {
@@ -4097,7 +4098,7 @@ func TestTCK_0063_feel_stddev_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0063_feel_stddev_function_004(t *testing.T) {
@@ -4105,7 +4106,7 @@ func TestTCK_0063_feel_stddev_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0063_feel_stddev_function_005(t *testing.T) {
@@ -4113,7 +4114,7 @@ func TestTCK_0063_feel_stddev_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0063_feel_stddev_function_007(t *testing.T) {
@@ -4121,7 +4122,7 @@ func TestTCK_0063_feel_stddev_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0063_feel_stddev_function_008(t *testing.T) {
@@ -4129,7 +4130,7 @@ func TestTCK_0063_feel_stddev_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0063_feel_stddev_function_008_a(t *testing.T) {
@@ -4137,7 +4138,7 @@ func TestTCK_0063_feel_stddev_function_008_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_a"])
+	require.Equal(t, feel.Null, result["_decision008_a"])
 }
 
 func TestTCK_0063_feel_stddev_function_009(t *testing.T) {
@@ -4161,7 +4162,7 @@ func TestTCK_0063_feel_stddev_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0063_feel_stddev_function_013(t *testing.T) {
@@ -4169,7 +4170,7 @@ func TestTCK_0063_feel_stddev_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0064_feel_conjunction_001(t *testing.T) {
@@ -4193,7 +4194,7 @@ func TestTCK_0064_feel_conjunction_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0064_feel_conjunction_003_b(t *testing.T) {
@@ -4201,7 +4202,7 @@ func TestTCK_0064_feel_conjunction_003_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_b"])
+	require.Equal(t, feel.Null, result["_decision003_b"])
 }
 
 func TestTCK_0064_feel_conjunction_003_c(t *testing.T) {
@@ -4209,7 +4210,7 @@ func TestTCK_0064_feel_conjunction_003_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_c"])
+	require.Equal(t, feel.Null, result["_decision003_c"])
 }
 
 func TestTCK_0064_feel_conjunction_004(t *testing.T) {
@@ -4257,7 +4258,7 @@ func TestTCK_0064_feel_conjunction_007_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007_a"])
+	require.Equal(t, feel.Null, result["_decision007_a"])
 }
 
 func TestTCK_0064_feel_conjunction_007_b(t *testing.T) {
@@ -4265,7 +4266,7 @@ func TestTCK_0064_feel_conjunction_007_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007_b"])
+	require.Equal(t, feel.Null, result["_decision007_b"])
 }
 
 func TestTCK_0064_feel_conjunction_007_c(t *testing.T) {
@@ -4273,7 +4274,7 @@ func TestTCK_0064_feel_conjunction_007_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007_c"])
+	require.Equal(t, feel.Null, result["_decision007_c"])
 }
 
 func TestTCK_0064_feel_conjunction_008_a(t *testing.T) {
@@ -4305,7 +4306,7 @@ func TestTCK_0064_feel_conjunction_009_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_a"])
+	require.Equal(t, feel.Null, result["_decision009_a"])
 }
 
 func TestTCK_0064_feel_conjunction_009_b(t *testing.T) {
@@ -4313,7 +4314,7 @@ func TestTCK_0064_feel_conjunction_009_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_b"])
+	require.Equal(t, feel.Null, result["_decision009_b"])
 }
 
 func TestTCK_0064_feel_conjunction_009_c(t *testing.T) {
@@ -4321,7 +4322,7 @@ func TestTCK_0064_feel_conjunction_009_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_c"])
+	require.Equal(t, feel.Null, result["_decision009_c"])
 }
 
 func TestTCK_0065_feel_disjunction_001(t *testing.T) {
@@ -4385,7 +4386,7 @@ func TestTCK_0065_feel_disjunction_006_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006_a"])
+	require.Equal(t, feel.Null, result["_decision006_a"])
 }
 
 func TestTCK_0065_feel_disjunction_006_b(t *testing.T) {
@@ -4393,7 +4394,7 @@ func TestTCK_0065_feel_disjunction_006_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006_b"])
+	require.Equal(t, feel.Null, result["_decision006_b"])
 }
 
 func TestTCK_0065_feel_disjunction_006_c(t *testing.T) {
@@ -4401,7 +4402,7 @@ func TestTCK_0065_feel_disjunction_006_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006_c"])
+	require.Equal(t, feel.Null, result["_decision006_c"])
 }
 
 func TestTCK_0065_feel_disjunction_007_a(t *testing.T) {
@@ -4433,7 +4434,7 @@ func TestTCK_0065_feel_disjunction_008_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_a"])
+	require.Equal(t, feel.Null, result["_decision008_a"])
 }
 
 func TestTCK_0065_feel_disjunction_008_b(t *testing.T) {
@@ -4441,7 +4442,7 @@ func TestTCK_0065_feel_disjunction_008_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_b"])
+	require.Equal(t, feel.Null, result["_decision008_b"])
 }
 
 func TestTCK_0065_feel_disjunction_008_c(t *testing.T) {
@@ -4449,7 +4450,7 @@ func TestTCK_0065_feel_disjunction_008_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_c"])
+	require.Equal(t, feel.Null, result["_decision008_c"])
 }
 
 func TestTCK_0065_feel_disjunction_009_a(t *testing.T) {
@@ -4457,7 +4458,7 @@ func TestTCK_0065_feel_disjunction_009_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_a"])
+	require.Equal(t, feel.Null, result["_decision009_a"])
 }
 
 func TestTCK_0065_feel_disjunction_009_b(t *testing.T) {
@@ -4465,7 +4466,7 @@ func TestTCK_0065_feel_disjunction_009_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_b"])
+	require.Equal(t, feel.Null, result["_decision009_b"])
 }
 
 func TestTCK_0065_feel_disjunction_009_c(t *testing.T) {
@@ -4473,7 +4474,7 @@ func TestTCK_0065_feel_disjunction_009_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_c"])
+	require.Equal(t, feel.Null, result["_decision009_c"])
 }
 
 func TestTCK_0066_feel_negation_001(t *testing.T) {
@@ -4497,7 +4498,7 @@ func TestTCK_0066_feel_negation_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0066_feel_negation_003_b(t *testing.T) {
@@ -4505,7 +4506,7 @@ func TestTCK_0066_feel_negation_003_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_b"])
+	require.Equal(t, feel.Null, result["_decision003_b"])
 }
 
 func TestTCK_0066_feel_negation_003_c(t *testing.T) {
@@ -4513,7 +4514,7 @@ func TestTCK_0066_feel_negation_003_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_c"])
+	require.Equal(t, feel.Null, result["_decision003_c"])
 }
 
 func TestTCK_0066_feel_negation_003_d(t *testing.T) {
@@ -4521,7 +4522,7 @@ func TestTCK_0066_feel_negation_003_d(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_d"])
+	require.Equal(t, feel.Null, result["_decision003_d"])
 }
 
 func TestTCK_0067_feel_split_function_001(t *testing.T) {
@@ -4545,7 +4546,7 @@ func TestTCK_0067_feel_split_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0067_feel_split_function_005(t *testing.T) {
@@ -4553,7 +4554,7 @@ func TestTCK_0067_feel_split_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0067_feel_split_function_006(t *testing.T) {
@@ -4569,7 +4570,7 @@ func TestTCK_0067_feel_split_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_0067_feel_split_function_008(t *testing.T) {
@@ -4577,7 +4578,7 @@ func TestTCK_0067_feel_split_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0067_feel_split_function_008_a(t *testing.T) {
@@ -4585,7 +4586,7 @@ func TestTCK_0067_feel_split_function_008_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_a"])
+	require.Equal(t, feel.Null, result["_decision008_a"])
 }
 
 func TestTCK_0067_feel_split_function_008_b(t *testing.T) {
@@ -4593,7 +4594,7 @@ func TestTCK_0067_feel_split_function_008_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_b"])
+	require.Equal(t, feel.Null, result["_decision008_b"])
 }
 
 func TestTCK_0068_feel_equality_null_001(t *testing.T) {
@@ -4673,7 +4674,7 @@ func TestTCK_0068_feel_equality_boolean_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_boolean_008"])
+	require.Equal(t, feel.Null, result["_boolean_008"])
 }
 
 func TestTCK_0068_feel_equality_boolean_009(t *testing.T) {
@@ -4681,7 +4682,7 @@ func TestTCK_0068_feel_equality_boolean_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_boolean_009"])
+	require.Equal(t, feel.Null, result["_boolean_009"])
 }
 
 func TestTCK_0068_feel_equality_number_001(t *testing.T) {
@@ -4737,7 +4738,7 @@ func TestTCK_0068_feel_equality_number_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_number_007"])
+	require.Equal(t, feel.Null, result["_number_007"])
 }
 
 func TestTCK_0068_feel_equality_number_008(t *testing.T) {
@@ -4801,7 +4802,7 @@ func TestTCK_0068_feel_equality_string_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_string_005"])
+	require.Equal(t, feel.Null, result["_string_005"])
 }
 
 func TestTCK_0068_feel_equality_list_001(t *testing.T) {
@@ -4929,7 +4930,7 @@ func TestTCK_0068_feel_equality_list_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_list_016"])
+	require.Equal(t, feel.Null, result["_list_016"])
 }
 
 func TestTCK_0068_feel_equality_context_001(t *testing.T) {
@@ -4985,7 +4986,7 @@ func TestTCK_0068_feel_equality_context_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_context_007"])
+	require.Equal(t, feel.Null, result["_context_007"])
 }
 
 func TestTCK_0068_feel_equality_date_001(t *testing.T) {
@@ -5017,7 +5018,7 @@ func TestTCK_0068_feel_equality_date_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_date_004"])
+	require.Equal(t, feel.Null, result["_date_004"])
 }
 
 func TestTCK_0068_feel_equality_time_001(t *testing.T) {
@@ -5105,7 +5106,7 @@ func TestTCK_0068_feel_equality_time_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_time_012"])
+	require.Equal(t, feel.Null, result["_time_012"])
 }
 
 func TestTCK_0068_feel_equality_datetime_001(t *testing.T) {
@@ -5209,7 +5210,7 @@ func TestTCK_0068_feel_equality_datetime_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_datetime_011"])
+	require.Equal(t, feel.Null, result["_datetime_011"])
 }
 
 func TestTCK_0068_feel_equality_datetime_012(t *testing.T) {
@@ -5281,7 +5282,7 @@ func TestTCK_0068_feel_equality_dt_duration_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_dt_duration_007"])
+	require.Equal(t, feel.Null, result["_dt_duration_007"])
 }
 
 func TestTCK_0068_feel_equality_ym_duration_001(t *testing.T) {
@@ -5329,7 +5330,7 @@ func TestTCK_0068_feel_equality_ym_duration_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_006"])
+	require.Equal(t, feel.Null, result["_ym_duration_006"])
 }
 
 func TestTCK_0068_feel_equality_ym_duration_007(t *testing.T) {
@@ -5345,7 +5346,7 @@ func TestTCK_0068_feel_equality_ym_duration_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_008"])
+	require.Equal(t, feel.Null, result["_ym_duration_008"])
 }
 
 func TestTCK_0068_feel_equality_deep_001(t *testing.T) {
@@ -5529,7 +5530,7 @@ func TestTCK_0069_feel_list_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_0069_feel_list_003(t *testing.T) {
@@ -5537,7 +5538,7 @@ func TestTCK_0069_feel_list_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0069_feel_list_004(t *testing.T) {
@@ -5577,7 +5578,7 @@ func TestTCK_0069_feel_list_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_0069_feel_list_009(t *testing.T) {
@@ -5681,7 +5682,7 @@ func TestTCK_0069_feel_list_021(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision021"])
+	require.Equal(t, feel.Null, result["_decision021"])
 }
 
 func TestTCK_0069_feel_list_022(t *testing.T) {
@@ -5689,7 +5690,7 @@ func TestTCK_0069_feel_list_022(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision022"])
+	require.Equal(t, feel.Null, result["_decision022"])
 }
 
 func TestTCK_0069_feel_list_023(t *testing.T) {
@@ -5697,7 +5698,7 @@ func TestTCK_0069_feel_list_023(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision023"])
+	require.Equal(t, feel.Null, result["_decision023"])
 }
 
 func TestTCK_0069_feel_list_024(t *testing.T) {
@@ -7209,7 +7210,7 @@ func TestTCK_0071_feel_between_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0071_feel_between_null_002(t *testing.T) {
@@ -7217,7 +7218,7 @@ func TestTCK_0071_feel_between_null_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_002"])
+	require.Equal(t, feel.Null, result["_null_002"])
 }
 
 func TestTCK_0071_feel_between_null_003(t *testing.T) {
@@ -7225,7 +7226,7 @@ func TestTCK_0071_feel_between_null_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_003"])
+	require.Equal(t, feel.Null, result["_null_003"])
 }
 
 func TestTCK_0072_feel_in_number_001(t *testing.T) {
@@ -9809,7 +9810,7 @@ func TestTCK_0072_feel_in_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0072_feel_in_null_001_a(t *testing.T) {
@@ -9817,7 +9818,7 @@ func TestTCK_0072_feel_in_null_001_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001_a"])
+	require.Equal(t, feel.Null, result["_null_001_a"])
 }
 
 func TestTCK_0072_feel_in_null_001_b(t *testing.T) {
@@ -9825,7 +9826,7 @@ func TestTCK_0072_feel_in_null_001_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001_b"])
+	require.Equal(t, feel.Null, result["_null_001_b"])
 }
 
 func TestTCK_0072_feel_in_null_001_c(t *testing.T) {
@@ -9833,7 +9834,7 @@ func TestTCK_0072_feel_in_null_001_c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001_c"])
+	require.Equal(t, feel.Null, result["_null_001_c"])
 }
 
 func TestTCK_0072_feel_in_null_001_d(t *testing.T) {
@@ -9841,7 +9842,7 @@ func TestTCK_0072_feel_in_null_001_d(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001_d"])
+	require.Equal(t, feel.Null, result["_null_001_d"])
 }
 
 func TestTCK_0073_feel_comments_decision_001(t *testing.T) {
@@ -10001,7 +10002,7 @@ func TestTCK_0074_feel_properties_dateTime_008_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_dateTime_008_a"])
+	require.Equal(t, feel.Null, result["_dateTime_008_a"])
 }
 
 func TestTCK_0074_feel_properties_dateTime_009(t *testing.T) {
@@ -10017,7 +10018,7 @@ func TestTCK_0074_feel_properties_dateTime_009_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_dateTime_009_a"])
+	require.Equal(t, feel.Null, result["_dateTime_009_a"])
 }
 
 func TestTCK_0074_feel_properties_time_001(t *testing.T) {
@@ -10057,7 +10058,7 @@ func TestTCK_0074_feel_properties_time_004_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_time_004_a"])
+	require.Equal(t, feel.Null, result["_time_004_a"])
 }
 
 func TestTCK_0074_feel_properties_time_005_a(t *testing.T) {
@@ -10065,7 +10066,7 @@ func TestTCK_0074_feel_properties_time_005_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_time_005_a"])
+	require.Equal(t, feel.Null, result["_time_005_a"])
 }
 
 func TestTCK_0074_feel_properties_ym_duration_001(t *testing.T) {
@@ -10105,7 +10106,7 @@ func TestTCK_0074_feel_properties_ym_duration_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_003"])
+	require.Equal(t, feel.Null, result["_ym_duration_003"])
 }
 
 func TestTCK_0074_feel_properties_ym_duration_004(t *testing.T) {
@@ -10113,7 +10114,7 @@ func TestTCK_0074_feel_properties_ym_duration_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_004"])
+	require.Equal(t, feel.Null, result["_ym_duration_004"])
 }
 
 func TestTCK_0074_feel_properties_ym_duration_005(t *testing.T) {
@@ -10121,7 +10122,7 @@ func TestTCK_0074_feel_properties_ym_duration_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_005"])
+	require.Equal(t, feel.Null, result["_ym_duration_005"])
 }
 
 func TestTCK_0074_feel_properties_ym_duration_006(t *testing.T) {
@@ -10129,7 +10130,7 @@ func TestTCK_0074_feel_properties_ym_duration_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ym_duration_006"])
+	require.Equal(t, feel.Null, result["_ym_duration_006"])
 }
 
 func TestTCK_0074_feel_properties_dt_duration_001(t *testing.T) {
@@ -10137,7 +10138,7 @@ func TestTCK_0074_feel_properties_dt_duration_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_dt_duration_001"])
+	require.Equal(t, feel.Null, result["_dt_duration_001"])
 }
 
 func TestTCK_0074_feel_properties_dt_duration_002(t *testing.T) {
@@ -10145,7 +10146,7 @@ func TestTCK_0074_feel_properties_dt_duration_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_dt_duration_002"])
+	require.Equal(t, feel.Null, result["_dt_duration_002"])
 }
 
 func TestTCK_0074_feel_properties_dt_duration_003(t *testing.T) {
@@ -10313,7 +10314,7 @@ func TestTCK_0075_feel_exponent_decision_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0075_feel_exponent_decision_003(t *testing.T) {
@@ -10321,7 +10322,7 @@ func TestTCK_0075_feel_exponent_decision_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_003"])
+	require.Equal(t, feel.Null, result["_decision_003"])
 }
 
 func TestTCK_0075_feel_exponent_decision_004(t *testing.T) {
@@ -10329,7 +10330,7 @@ func TestTCK_0075_feel_exponent_decision_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_004"])
+	require.Equal(t, feel.Null, result["_decision_004"])
 }
 
 func TestTCK_0075_feel_exponent_decision_005(t *testing.T) {
@@ -10337,7 +10338,7 @@ func TestTCK_0075_feel_exponent_decision_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005"])
+	require.Equal(t, feel.Null, result["_decision_005"])
 }
 
 func TestTCK_0075_feel_exponent_decision_006(t *testing.T) {
@@ -10345,7 +10346,7 @@ func TestTCK_0075_feel_exponent_decision_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006"])
+	require.Equal(t, feel.Null, result["_decision_006"])
 }
 
 func TestTCK_0075_feel_exponent_decision_007(t *testing.T) {
@@ -10353,7 +10354,7 @@ func TestTCK_0075_feel_exponent_decision_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007"])
+	require.Equal(t, feel.Null, result["_decision_007"])
 }
 
 func TestTCK_0075_feel_exponent_decision_008(t *testing.T) {
@@ -10361,7 +10362,7 @@ func TestTCK_0075_feel_exponent_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	require.Equal(t, feel.Null, result["_decision_008"])
 }
 
 func TestTCK_0075_feel_exponent_decision_009(t *testing.T) {
@@ -10369,7 +10370,7 @@ func TestTCK_0075_feel_exponent_decision_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_009"])
+	require.Equal(t, feel.Null, result["_decision_009"])
 }
 
 func TestTCK_0075_feel_exponent_decision_010(t *testing.T) {
@@ -10377,7 +10378,7 @@ func TestTCK_0075_feel_exponent_decision_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_010"])
+	require.Equal(t, feel.Null, result["_decision_010"])
 }
 
 func TestTCK_0075_feel_exponent_decision_011(t *testing.T) {
@@ -10385,7 +10386,7 @@ func TestTCK_0075_feel_exponent_decision_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_011"])
+	require.Equal(t, feel.Null, result["_decision_011"])
 }
 
 func TestTCK_0076_feel_external_java_boxed_001(t *testing.T) {
@@ -10401,7 +10402,7 @@ func TestTCK_0076_feel_external_java_incorrect_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_incorrect_001"])
+	require.Equal(t, feel.Null, result["_incorrect_001"])
 }
 
 func TestTCK_0076_feel_external_java_incorrect_002(t *testing.T) {
@@ -10409,7 +10410,7 @@ func TestTCK_0076_feel_external_java_incorrect_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_incorrect_002"])
+	require.Equal(t, feel.Null, result["_incorrect_002"])
 }
 
 func TestTCK_0076_feel_external_java_incorrect_003(t *testing.T) {
@@ -10417,7 +10418,7 @@ func TestTCK_0076_feel_external_java_incorrect_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_incorrect_003"])
+	require.Equal(t, feel.Null, result["_incorrect_003"])
 }
 
 func TestTCK_0076_feel_external_java_literal_001(t *testing.T) {
@@ -10481,7 +10482,7 @@ func TestTCK_0076_feel_external_java_literal_007_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_literal_007_a"])
+	require.Equal(t, feel.Null, result["_literal_007_a"])
 }
 
 func TestTCK_0076_feel_external_java_literal_008(t *testing.T) {
@@ -10537,7 +10538,7 @@ func TestTCK_0077_feel_nan_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	require.Equal(t, feel.Null, result["_decision_001"])
 }
 
 func TestTCK_0078_feel_infinity_decision_001(t *testing.T) {
@@ -10545,7 +10546,7 @@ func TestTCK_0078_feel_infinity_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	require.Equal(t, feel.Null, result["_decision_001"])
 }
 
 func TestTCK_0078_feel_infinity_decision_002(t *testing.T) {
@@ -10553,7 +10554,7 @@ func TestTCK_0078_feel_infinity_decision_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_001(t *testing.T) {
@@ -10561,7 +10562,7 @@ func TestTCK_0080_feel_getvalue_function_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	require.Equal(t, feel.Null, result["_decision_001"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_002(t *testing.T) {
@@ -10569,7 +10570,7 @@ func TestTCK_0080_feel_getvalue_function_decision_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_003(t *testing.T) {
@@ -10577,7 +10578,7 @@ func TestTCK_0080_feel_getvalue_function_decision_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_003"])
+	require.Equal(t, feel.Null, result["_decision_003"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_004(t *testing.T) {
@@ -10593,7 +10594,7 @@ func TestTCK_0080_feel_getvalue_function_decision_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005"])
+	require.Equal(t, feel.Null, result["_decision_005"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_006(t *testing.T) {
@@ -10601,7 +10602,7 @@ func TestTCK_0080_feel_getvalue_function_decision_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006"])
+	require.Equal(t, feel.Null, result["_decision_006"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_007(t *testing.T) {
@@ -10617,7 +10618,7 @@ func TestTCK_0080_feel_getvalue_function_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	require.Equal(t, feel.Null, result["_decision_008"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_009(t *testing.T) {
@@ -10625,7 +10626,7 @@ func TestTCK_0080_feel_getvalue_function_decision_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_009"])
+	require.Equal(t, feel.Null, result["_decision_009"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_010(t *testing.T) {
@@ -10633,7 +10634,7 @@ func TestTCK_0080_feel_getvalue_function_decision_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_010"])
+	require.Equal(t, feel.Null, result["_decision_010"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_011(t *testing.T) {
@@ -10641,7 +10642,7 @@ func TestTCK_0080_feel_getvalue_function_decision_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_011"])
+	require.Equal(t, feel.Null, result["_decision_011"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_012(t *testing.T) {
@@ -10649,7 +10650,7 @@ func TestTCK_0080_feel_getvalue_function_decision_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_012"])
+	require.Equal(t, feel.Null, result["_decision_012"])
 }
 
 func TestTCK_0080_feel_getvalue_function_decision_013(t *testing.T) {
@@ -10669,7 +10670,7 @@ func TestTCK_0080_feel_getvalue_function_decision_014(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_013"])
+	require.Equal(t, feel.Null, result["_decision_013"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_001(t *testing.T) {
@@ -10677,7 +10678,7 @@ func TestTCK_0081_feel_getentries_function_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	require.Equal(t, feel.Null, result["_decision_001"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_002(t *testing.T) {
@@ -10685,7 +10686,7 @@ func TestTCK_0081_feel_getentries_function_decision_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_003(t *testing.T) {
@@ -10693,7 +10694,7 @@ func TestTCK_0081_feel_getentries_function_decision_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_003"])
+	require.Equal(t, feel.Null, result["_decision_003"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_004(t *testing.T) {
@@ -10717,7 +10718,7 @@ func TestTCK_0081_feel_getentries_function_decision_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006"])
+	require.Equal(t, feel.Null, result["_decision_006"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_007(t *testing.T) {
@@ -10725,7 +10726,7 @@ func TestTCK_0081_feel_getentries_function_decision_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007"])
+	require.Equal(t, feel.Null, result["_decision_007"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_008(t *testing.T) {
@@ -10733,7 +10734,7 @@ func TestTCK_0081_feel_getentries_function_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	require.Equal(t, feel.Null, result["_decision_008"])
 }
 
 func TestTCK_0081_feel_getentries_function_decision_009(t *testing.T) {
@@ -10749,7 +10750,7 @@ func TestTCK_0082_feel_coercion_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	require.Equal(t, feel.Null, result["_decision_001"])
 }
 
 func TestTCK_0082_feel_coercion_decision_003(t *testing.T) {
@@ -10757,7 +10758,7 @@ func TestTCK_0082_feel_coercion_decision_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_003"])
+	require.Equal(t, feel.Null, result["_decision_003"])
 }
 
 func TestTCK_0082_feel_coercion_decision_004(t *testing.T) {
@@ -10773,7 +10774,7 @@ func TestTCK_0082_feel_coercion_decision_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005"])
+	require.Equal(t, feel.Null, result["_decision_005"])
 }
 
 func TestTCK_0082_feel_coercion_decision_006_a(t *testing.T) {
@@ -10781,7 +10782,7 @@ func TestTCK_0082_feel_coercion_decision_006_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006_a"])
+	require.Equal(t, feel.Null, result["_decision_006_a"])
 }
 
 func TestTCK_0082_feel_coercion_decision_007(t *testing.T) {
@@ -10797,7 +10798,7 @@ func TestTCK_0082_feel_coercion_decision_007_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007_a"])
+	require.Equal(t, feel.Null, result["_decision_007_a"])
 }
 
 func TestTCK_0082_feel_coercion_decision_008(t *testing.T) {
@@ -10805,7 +10806,7 @@ func TestTCK_0082_feel_coercion_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	require.Equal(t, feel.Null, result["_decision_008"])
 }
 
 func TestTCK_0082_feel_coercion_decision_bkm_001(t *testing.T) {
@@ -10821,7 +10822,7 @@ func TestTCK_0082_feel_coercion_decision_bkm_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_bkm_002"])
+	require.Equal(t, feel.Null, result["_decision_bkm_002"])
 }
 
 func TestTCK_0082_feel_coercion_decision_bkm_003(t *testing.T) {
@@ -10829,7 +10830,7 @@ func TestTCK_0082_feel_coercion_decision_bkm_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_bkm_003"])
+	require.Equal(t, feel.Null, result["_decision_bkm_003"])
 }
 
 func TestTCK_0082_feel_coercion_decision_bkm_004_a(t *testing.T) {
@@ -10837,7 +10838,7 @@ func TestTCK_0082_feel_coercion_decision_bkm_004_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_bkm_004_a"])
+	require.Equal(t, feel.Null, result["_decision_bkm_004_a"])
 }
 
 func TestTCK_0082_feel_coercion_decision_bkm_004_b(t *testing.T) {
@@ -10845,7 +10846,7 @@ func TestTCK_0082_feel_coercion_decision_bkm_004_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_bkm_004_b"])
+	require.Equal(t, feel.Null, result["_decision_bkm_004_b"])
 }
 
 func TestTCK_0082_feel_coercion_decision_bkm_005(t *testing.T) {
@@ -10861,7 +10862,7 @@ func TestTCK_0082_feel_coercion_decision_bkm_005_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_bkm_005_a"])
+	require.Equal(t, feel.Null, result["_decision_bkm_005_a"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_001(t *testing.T) {
@@ -10869,7 +10870,7 @@ func TestTCK_0082_feel_coercion_invoke_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_001"])
+	require.Equal(t, feel.Null, result["_invoke_001"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_002(t *testing.T) {
@@ -10877,7 +10878,7 @@ func TestTCK_0082_feel_coercion_invoke_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_002"])
+	require.Equal(t, feel.Null, result["_invoke_002"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_004(t *testing.T) {
@@ -10885,7 +10886,7 @@ func TestTCK_0082_feel_coercion_invoke_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_004"])
+	require.Equal(t, feel.Null, result["_invoke_004"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_005(t *testing.T) {
@@ -10893,7 +10894,7 @@ func TestTCK_0082_feel_coercion_invoke_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_005"])
+	require.Equal(t, feel.Null, result["_invoke_005"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_006(t *testing.T) {
@@ -10901,7 +10902,7 @@ func TestTCK_0082_feel_coercion_invoke_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_006"])
+	require.Equal(t, feel.Null, result["_invoke_006"])
 }
 
 func TestTCK_0082_feel_coercion_invoke_007(t *testing.T) {
@@ -10909,7 +10910,7 @@ func TestTCK_0082_feel_coercion_invoke_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_invoke_007"])
+	require.Equal(t, feel.Null, result["_invoke_007"])
 }
 
 func TestTCK_0082_feel_coercion_fd_001(t *testing.T) {
@@ -10925,7 +10926,7 @@ func TestTCK_0082_feel_coercion_fd_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_fd_002"])
+	require.Equal(t, feel.Null, result["_fd_002"])
 }
 
 func TestTCK_0082_feel_coercion_literal_001(t *testing.T) {
@@ -10941,7 +10942,7 @@ func TestTCK_0082_feel_coercion_literal_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_literal_002"])
+	require.Equal(t, feel.Null, result["_literal_002"])
 }
 
 func TestTCK_0082_feel_coercion_literal_004(t *testing.T) {
@@ -10949,7 +10950,7 @@ func TestTCK_0082_feel_coercion_literal_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_literal_004"])
+	require.Equal(t, feel.Null, result["_literal_004"])
 }
 
 func TestTCK_0082_feel_coercion_literal_005(t *testing.T) {
@@ -10965,7 +10966,7 @@ func TestTCK_0082_feel_coercion_literal_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_literal_006"])
+	require.Equal(t, feel.Null, result["_literal_006"])
 }
 
 func TestTCK_0082_feel_coercion_decisionService_001(t *testing.T) {
@@ -10973,7 +10974,7 @@ func TestTCK_0082_feel_coercion_decisionService_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_ds_001"])
+	require.Equal(t, feel.Null, result["_decision_ds_001"])
 }
 
 func TestTCK_0082_feel_coercion_decisionService_002(t *testing.T) {
@@ -10983,7 +10984,7 @@ func TestTCK_0082_feel_coercion_decisionService_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_ds_002"])
+	require.Equal(t, feel.Null, result["_decision_ds_002"])
 }
 
 func TestTCK_0082_feel_coercion_decisionService_002_a(t *testing.T) {
@@ -10991,7 +10992,7 @@ func TestTCK_0082_feel_coercion_decisionService_002_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ds_invoke_002_with_number"])
+	require.Equal(t, feel.Null, result["_ds_invoke_002_with_number"])
 }
 
 func TestTCK_0082_feel_coercion_decisionService_002_b(t *testing.T) {
@@ -11033,7 +11034,7 @@ func TestTCK_0082_feel_coercion_decision_context_03(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_context_03"])
+	require.Equal(t, feel.Null, result["_decision_context_03"])
 }
 
 func TestTCK_0083_feel_unicode_decision_001(t *testing.T) {
@@ -11273,7 +11274,7 @@ func TestTCK_0084_feel_for_loops_decision_019(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_019"])
+	require.Equal(t, feel.Null, result["_decision_019"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_019_a(t *testing.T) {
@@ -11281,7 +11282,7 @@ func TestTCK_0084_feel_for_loops_decision_019_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_019_a"])
+	require.Equal(t, feel.Null, result["_decision_019_a"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_020(t *testing.T) {
@@ -11289,7 +11290,7 @@ func TestTCK_0084_feel_for_loops_decision_020(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_020"])
+	require.Equal(t, feel.Null, result["_decision_020"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_020_a(t *testing.T) {
@@ -11297,7 +11298,7 @@ func TestTCK_0084_feel_for_loops_decision_020_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_020_a"])
+	require.Equal(t, feel.Null, result["_decision_020_a"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_021(t *testing.T) {
@@ -11305,7 +11306,7 @@ func TestTCK_0084_feel_for_loops_decision_021(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_021"])
+	require.Equal(t, feel.Null, result["_decision_021"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_021_a(t *testing.T) {
@@ -11313,7 +11314,7 @@ func TestTCK_0084_feel_for_loops_decision_021_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_021_a"])
+	require.Equal(t, feel.Null, result["_decision_021_a"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_022(t *testing.T) {
@@ -11321,7 +11322,7 @@ func TestTCK_0084_feel_for_loops_decision_022(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_022"])
+	require.Equal(t, feel.Null, result["_decision_022"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_022_a(t *testing.T) {
@@ -11329,7 +11330,7 @@ func TestTCK_0084_feel_for_loops_decision_022_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_022_a"])
+	require.Equal(t, feel.Null, result["_decision_022_a"])
 }
 
 func TestTCK_0084_feel_for_loops_decision_025(t *testing.T) {
@@ -11337,7 +11338,7 @@ func TestTCK_0084_feel_for_loops_decision_025(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_025"])
+	require.Equal(t, feel.Null, result["_decision_025"])
 }
 
 func TestTCK_0085_decision_services_001(t *testing.T) {
@@ -11363,17 +11364,17 @@ func TestTCK_0085_decision_services_002_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0085_decision_services_002_b(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0085-decision-services/0085-decision-services.dmn")
 	inputs := map[string]any{
-		"decision_002_input": "",
+		"decision_002_input": feel.Null,
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0085_decision_services_002_c(t *testing.T) {
@@ -11383,7 +11384,7 @@ func TestTCK_0085_decision_services_002_c(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	require.Equal(t, feel.Null, result["_decision_002"])
 }
 
 func TestTCK_0085_decision_services_003(t *testing.T) {
@@ -11411,7 +11412,7 @@ func TestTCK_0085_decision_services_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005_1"])
+	require.Equal(t, feel.Null, result["_decision_005_1"])
 }
 
 func TestTCK_0085_decision_services_006(t *testing.T) {
@@ -11427,7 +11428,7 @@ func TestTCK_0085_decision_services_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007_1"])
+	require.Equal(t, feel.Null, result["_decision_007_1"])
 }
 
 func TestTCK_0085_decision_services_008(t *testing.T) {
@@ -11435,7 +11436,7 @@ func TestTCK_0085_decision_services_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008_1"])
+	require.Equal(t, feel.Null, result["_decision_008_1"])
 }
 
 func TestTCK_0085_decision_services_009(t *testing.T) {
@@ -11451,7 +11452,7 @@ func TestTCK_0085_decision_services_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_010_1"])
+	require.Equal(t, feel.Null, result["_decision_010_1"])
 }
 
 func TestTCK_0085_decision_services_011(t *testing.T) {
@@ -11779,7 +11780,7 @@ func TestTCK_0092_feel_lambda_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_016_1"])
+	require.Equal(t, feel.Null, result["_decision_016_1"])
 }
 
 func TestTCK_0092_feel_lambda_017(t *testing.T) {
@@ -11805,7 +11806,7 @@ func TestTCK_0093_feel_at_literals_test_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_test_001"])
+	require.Equal(t, feel.Null, result["_test_001"])
 }
 
 func TestTCK_0093_feel_at_literals_date_001(t *testing.T) {
@@ -11965,7 +11966,7 @@ func TestTCK_0094_feel_product_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_0094_feel_product_function_003(t *testing.T) {
@@ -11973,7 +11974,7 @@ func TestTCK_0094_feel_product_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_0094_feel_product_function_003_a(t *testing.T) {
@@ -11981,7 +11982,7 @@ func TestTCK_0094_feel_product_function_003_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
+	require.Equal(t, feel.Null, result["_decision003_a"])
 }
 
 func TestTCK_0094_feel_product_function_004(t *testing.T) {
@@ -11989,7 +11990,7 @@ func TestTCK_0094_feel_product_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_0094_feel_product_function_005(t *testing.T) {
@@ -11997,7 +11998,7 @@ func TestTCK_0094_feel_product_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_0094_feel_product_function_006(t *testing.T) {
@@ -12045,7 +12046,7 @@ func TestTCK_0094_feel_product_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_0094_feel_product_function_013(t *testing.T) {
@@ -12053,7 +12054,7 @@ func TestTCK_0094_feel_product_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_date_001(t *testing.T) {
@@ -12153,7 +12154,7 @@ func TestTCK_0095_feel_day_of_year_function_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_002(t *testing.T) {
@@ -12161,7 +12162,7 @@ func TestTCK_0095_feel_day_of_year_function_null_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_002"])
+	require.Equal(t, feel.Null, result["_null_002"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_003(t *testing.T) {
@@ -12169,7 +12170,7 @@ func TestTCK_0095_feel_day_of_year_function_null_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_003"])
+	require.Equal(t, feel.Null, result["_null_003"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_004(t *testing.T) {
@@ -12177,7 +12178,7 @@ func TestTCK_0095_feel_day_of_year_function_null_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_004"])
+	require.Equal(t, feel.Null, result["_null_004"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_005(t *testing.T) {
@@ -12185,7 +12186,7 @@ func TestTCK_0095_feel_day_of_year_function_null_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_005"])
+	require.Equal(t, feel.Null, result["_null_005"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_006(t *testing.T) {
@@ -12193,7 +12194,7 @@ func TestTCK_0095_feel_day_of_year_function_null_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_006"])
+	require.Equal(t, feel.Null, result["_null_006"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_007(t *testing.T) {
@@ -12203,7 +12204,7 @@ func TestTCK_0095_feel_day_of_year_function_null_007(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_007"])
+	require.Equal(t, feel.Null, result["_null_007"])
 }
 
 func TestTCK_0095_feel_day_of_year_function_null_008(t *testing.T) {
@@ -12211,7 +12212,7 @@ func TestTCK_0095_feel_day_of_year_function_null_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_008"])
+	require.Equal(t, feel.Null, result["_null_008"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_date_001(t *testing.T) {
@@ -12255,7 +12256,7 @@ func TestTCK_0096_feel_day_of_week_function_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_002(t *testing.T) {
@@ -12263,7 +12264,7 @@ func TestTCK_0096_feel_day_of_week_function_null_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_002"])
+	require.Equal(t, feel.Null, result["_null_002"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_003(t *testing.T) {
@@ -12271,7 +12272,7 @@ func TestTCK_0096_feel_day_of_week_function_null_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_003"])
+	require.Equal(t, feel.Null, result["_null_003"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_004(t *testing.T) {
@@ -12279,7 +12280,7 @@ func TestTCK_0096_feel_day_of_week_function_null_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_004"])
+	require.Equal(t, feel.Null, result["_null_004"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_005(t *testing.T) {
@@ -12287,7 +12288,7 @@ func TestTCK_0096_feel_day_of_week_function_null_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_005"])
+	require.Equal(t, feel.Null, result["_null_005"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_006(t *testing.T) {
@@ -12295,7 +12296,7 @@ func TestTCK_0096_feel_day_of_week_function_null_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_006"])
+	require.Equal(t, feel.Null, result["_null_006"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_007(t *testing.T) {
@@ -12305,7 +12306,7 @@ func TestTCK_0096_feel_day_of_week_function_null_007(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_007"])
+	require.Equal(t, feel.Null, result["_null_007"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_null_008(t *testing.T) {
@@ -12313,7 +12314,7 @@ func TestTCK_0096_feel_day_of_week_function_null_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_008"])
+	require.Equal(t, feel.Null, result["_null_008"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_date_001(t *testing.T) {
@@ -12357,7 +12358,7 @@ func TestTCK_0097_feel_month_of_year_function_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_002(t *testing.T) {
@@ -12365,7 +12366,7 @@ func TestTCK_0097_feel_month_of_year_function_null_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_002"])
+	require.Equal(t, feel.Null, result["_null_002"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_003(t *testing.T) {
@@ -12373,7 +12374,7 @@ func TestTCK_0097_feel_month_of_year_function_null_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_003"])
+	require.Equal(t, feel.Null, result["_null_003"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_004(t *testing.T) {
@@ -12381,7 +12382,7 @@ func TestTCK_0097_feel_month_of_year_function_null_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_004"])
+	require.Equal(t, feel.Null, result["_null_004"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_005(t *testing.T) {
@@ -12389,7 +12390,7 @@ func TestTCK_0097_feel_month_of_year_function_null_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_005"])
+	require.Equal(t, feel.Null, result["_null_005"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_006(t *testing.T) {
@@ -12397,7 +12398,7 @@ func TestTCK_0097_feel_month_of_year_function_null_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_006"])
+	require.Equal(t, feel.Null, result["_null_006"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_007(t *testing.T) {
@@ -12407,7 +12408,7 @@ func TestTCK_0097_feel_month_of_year_function_null_007(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_007"])
+	require.Equal(t, feel.Null, result["_null_007"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_null_008(t *testing.T) {
@@ -12415,7 +12416,7 @@ func TestTCK_0097_feel_month_of_year_function_null_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_008"])
+	require.Equal(t, feel.Null, result["_null_008"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_date_001(t *testing.T) {
@@ -12515,7 +12516,7 @@ func TestTCK_0098_feel_week_of_year_function_null_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
+	require.Equal(t, feel.Null, result["_null_001"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_002(t *testing.T) {
@@ -12523,7 +12524,7 @@ func TestTCK_0098_feel_week_of_year_function_null_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_002"])
+	require.Equal(t, feel.Null, result["_null_002"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_003(t *testing.T) {
@@ -12531,7 +12532,7 @@ func TestTCK_0098_feel_week_of_year_function_null_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_003"])
+	require.Equal(t, feel.Null, result["_null_003"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_004(t *testing.T) {
@@ -12539,7 +12540,7 @@ func TestTCK_0098_feel_week_of_year_function_null_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_004"])
+	require.Equal(t, feel.Null, result["_null_004"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_005(t *testing.T) {
@@ -12547,7 +12548,7 @@ func TestTCK_0098_feel_week_of_year_function_null_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_005"])
+	require.Equal(t, feel.Null, result["_null_005"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_006(t *testing.T) {
@@ -12555,7 +12556,7 @@ func TestTCK_0098_feel_week_of_year_function_null_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_006"])
+	require.Equal(t, feel.Null, result["_null_006"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_007(t *testing.T) {
@@ -12565,7 +12566,7 @@ func TestTCK_0098_feel_week_of_year_function_null_007(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_007"])
+	require.Equal(t, feel.Null, result["_null_007"])
 }
 
 func TestTCK_0098_feel_week_of_year_function_null_008(t *testing.T) {
@@ -12573,7 +12574,7 @@ func TestTCK_0098_feel_week_of_year_function_null_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_null_008"])
+	require.Equal(t, feel.Null, result["_null_008"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_001(t *testing.T) {
@@ -12629,7 +12630,7 @@ func TestTCK_0099_arithmetic_negation_decision_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005"])
+	require.Equal(t, feel.Null, result["_decision_005"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_006(t *testing.T) {
@@ -12637,7 +12638,7 @@ func TestTCK_0099_arithmetic_negation_decision_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006"])
+	require.Equal(t, feel.Null, result["_decision_006"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_007(t *testing.T) {
@@ -12645,7 +12646,7 @@ func TestTCK_0099_arithmetic_negation_decision_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007"])
+	require.Equal(t, feel.Null, result["_decision_007"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_008(t *testing.T) {
@@ -12653,7 +12654,7 @@ func TestTCK_0099_arithmetic_negation_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	require.Equal(t, feel.Null, result["_decision_008"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_009(t *testing.T) {
@@ -12661,7 +12662,7 @@ func TestTCK_0099_arithmetic_negation_decision_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_009"])
+	require.Equal(t, feel.Null, result["_decision_009"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_010(t *testing.T) {
@@ -12669,7 +12670,7 @@ func TestTCK_0099_arithmetic_negation_decision_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_010"])
+	require.Equal(t, feel.Null, result["_decision_010"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_011(t *testing.T) {
@@ -12677,7 +12678,7 @@ func TestTCK_0099_arithmetic_negation_decision_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_011"])
+	require.Equal(t, feel.Null, result["_decision_011"])
 }
 
 func TestTCK_0099_arithmetic_negation_decision_012(t *testing.T) {
@@ -13021,7 +13022,7 @@ func TestTCK_0100_arithmetic_divide_lhs_number_by_rhs_number_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_divide_lhs_number_by_rhs_number_002"])
+	require.Equal(t, feel.Null, result["_divide_lhs_number_by_rhs_number_002"])
 }
 
 func TestTCK_0100_arithmetic_divide_lhs_ymDuration_by_rhs_number_001(t *testing.T) {
@@ -13037,7 +13038,7 @@ func TestTCK_0100_arithmetic_divide_lhs_ymDuration_by_rhs_number_002(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_divide_lhs_ymDuration_by_rhs_number_002"])
+	require.Equal(t, feel.Null, result["_divide_lhs_ymDuration_by_rhs_number_002"])
 }
 
 func TestTCK_0100_arithmetic_divide_lhs_ymDuration_by_rhs_number_003(t *testing.T) {
@@ -13069,7 +13070,7 @@ func TestTCK_0100_arithmetic_divide_lhs_ymDuration_by_rhs_ymDuration_002(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_divide_lhs_ymDuration_by_rhs_ymDuration_002"])
+	require.Equal(t, feel.Null, result["_divide_lhs_ymDuration_by_rhs_ymDuration_002"])
 }
 
 func TestTCK_0100_arithmetic_divide_lhs_dtDuration_by_rhs_number_001(t *testing.T) {
@@ -13085,7 +13086,7 @@ func TestTCK_0100_arithmetic_divide_lhs_dtDuration_by_rhs_number_002(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_divide_lhs_dtDuration_by_rhs_number_002"])
+	require.Equal(t, feel.Null, result["_divide_lhs_dtDuration_by_rhs_number_002"])
 }
 
 func TestTCK_0100_arithmetic_divide_lhs_dtDuration_by_rhs_number_003(t *testing.T) {
@@ -13109,7 +13110,7 @@ func TestTCK_0100_arithmetic_divide_lhs_dtDuration_by_rhs_dtDuration_002(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_divide_lhs_dtDuration_by_rhs_dtDuration_002"])
+	require.Equal(t, feel.Null, result["_divide_lhs_dtDuration_by_rhs_dtDuration_002"])
 }
 
 func TestTCK_0100_arithmetic_add_lhs_number_to_rhs_number_001(t *testing.T) {
@@ -14101,7 +14102,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_002(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_002"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_002"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_003(t *testing.T) {
@@ -14109,7 +14110,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_003(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_003"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_003"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_004(t *testing.T) {
@@ -14117,7 +14118,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_004(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_004"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_004"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_005(t *testing.T) {
@@ -14125,7 +14126,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_005(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_005"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_005"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_006(t *testing.T) {
@@ -14157,7 +14158,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_009(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_009"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_009"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_dateAndTime_010(t *testing.T) {
@@ -14317,7 +14318,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_date_001(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_dateAndTime_minus_rhs_date_001"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_dateAndTime_minus_rhs_date_001"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_dateAndTime_minus_rhs_date_002(t *testing.T) {
@@ -14493,7 +14494,7 @@ func TestTCK_0100_arithmetic_subtract_lhs_date_minus_rhs_dateAndTime_001(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_subtract_lhs_date_minus_rhs_dateAndTime_001"])
+	require.Equal(t, feel.Null, result["_subtract_lhs_date_minus_rhs_dateAndTime_001"])
 }
 
 func TestTCK_0100_arithmetic_subtract_lhs_date_minus_rhs_dateAndTime_002(t *testing.T) {
@@ -14933,7 +14934,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_string(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_boolean(t *testing.T) {
@@ -14941,7 +14942,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_boolean(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_date(t *testing.T) {
@@ -14949,7 +14950,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_date(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_dateAndTime(t *testing.T) {
@@ -14957,7 +14958,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_dateAndTime(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_time(t *testing.T) {
@@ -14965,7 +14966,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_time(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_list(t *testing.T) {
@@ -14973,7 +14974,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_list(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_context(t *testing.T) {
@@ -14981,7 +14982,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_context(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_range(t *testing.T) {
@@ -14989,7 +14990,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_range(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_function(t *testing.T) {
@@ -14997,7 +14998,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_function(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_null(t *testing.T) {
@@ -15005,7 +15006,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_number_by_rhs_null(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_number_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_number_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_number(t *testing.T) {
@@ -15013,7 +15014,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_number(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_string(t *testing.T) {
@@ -15021,7 +15022,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_string(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_boolean(t *testing.T) {
@@ -15029,7 +15030,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_boolean(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_date(t *testing.T) {
@@ -15037,7 +15038,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_date(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_dateAndTime(t *testing.T) {
@@ -15045,7 +15046,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_dateAndTime(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_time(t *testing.T) {
@@ -15053,7 +15054,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_time(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_list(t *testing.T) {
@@ -15061,7 +15062,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_list(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_context(t *testing.T) {
@@ -15069,7 +15070,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_context(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_dtDuration(t *testing.T) {
@@ -15077,7 +15078,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_dtDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_ymDuration(t *testing.T) {
@@ -15085,7 +15086,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_ymDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_range(t *testing.T) {
@@ -15093,7 +15094,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_range(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_function(t *testing.T) {
@@ -15101,7 +15102,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_function(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_null(t *testing.T) {
@@ -15109,7 +15110,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_string_by_rhs_null(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_string_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_string_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_number(t *testing.T) {
@@ -15117,7 +15118,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_string(t *testing.T) {
@@ -15125,7 +15126,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_boolean(t *testing.T) {
@@ -15133,7 +15134,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_date(t *testing.T) {
@@ -15141,7 +15142,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_dateAndTime(t *testing.T) {
@@ -15149,7 +15150,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_time(t *testing.T) {
@@ -15157,7 +15158,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_list(t *testing.T) {
@@ -15165,7 +15166,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_context(t *testing.T) {
@@ -15173,7 +15174,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_dtDuration(t *testing.T) {
@@ -15181,7 +15182,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_ymDuration(t *testing.T) {
@@ -15189,7 +15190,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_range(t *testing.T) {
@@ -15197,7 +15198,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_function(t *testing.T) {
@@ -15205,7 +15206,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_null(t *testing.T) {
@@ -15213,7 +15214,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_boolean_by_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_boolean_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_boolean_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_number(t *testing.T) {
@@ -15221,7 +15222,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_number(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_string(t *testing.T) {
@@ -15229,7 +15230,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_boolean(t *testing.T) {
@@ -15237,7 +15238,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_date(t *testing.T) {
@@ -15245,7 +15246,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_dateAndTime(t *testing.T) {
@@ -15253,7 +15254,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_time(t *testing.T) {
@@ -15261,7 +15262,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_list(t *testing.T) {
@@ -15269,7 +15270,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_context(t *testing.T) {
@@ -15277,7 +15278,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_dtDuration(t *testing.T) {
@@ -15285,7 +15286,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_ymDuration(t *testing.T) {
@@ -15293,7 +15294,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_range(t *testing.T) {
@@ -15301,7 +15302,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_function(t *testing.T) {
@@ -15309,7 +15310,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_null(t *testing.T) {
@@ -15317,7 +15318,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_date_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_date_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_date_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_number(t *testing.T) {
@@ -15325,7 +15326,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_number(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_string(t *testing.T) {
@@ -15333,7 +15334,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_string(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_boolean(t *testing.T) {
@@ -15341,7 +15342,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_boolean(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_date(t *testing.T) {
@@ -15349,7 +15350,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_date(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_dateAndTime(t *testing.T) {
@@ -15357,7 +15358,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_dateAndT
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_time(t *testing.T) {
@@ -15365,7 +15366,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_time(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_list(t *testing.T) {
@@ -15373,7 +15374,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_list(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_context(t *testing.T) {
@@ -15381,7 +15382,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_context(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_dtDuration(t *testing.T) {
@@ -15389,7 +15390,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_dtDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_ymDuration(t *testing.T) {
@@ -15397,7 +15398,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_ymDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_range(t *testing.T) {
@@ -15405,7 +15406,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_range(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_function(t *testing.T) {
@@ -15413,7 +15414,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_function
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_null(t *testing.T) {
@@ -15421,7 +15422,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dateAndTime_by_rhs_null(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dateAndTime_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dateAndTime_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_number(t *testing.T) {
@@ -15429,7 +15430,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_number(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_string(t *testing.T) {
@@ -15437,7 +15438,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_boolean(t *testing.T) {
@@ -15445,7 +15446,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_date(t *testing.T) {
@@ -15453,7 +15454,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_dateAndTime(t *testing.T) {
@@ -15461,7 +15462,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_time(t *testing.T) {
@@ -15469,7 +15470,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_list(t *testing.T) {
@@ -15477,7 +15478,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_context(t *testing.T) {
@@ -15485,7 +15486,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_dtDuration(t *testing.T) {
@@ -15493,7 +15494,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_ymDuration(t *testing.T) {
@@ -15501,7 +15502,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_range(t *testing.T) {
@@ -15509,7 +15510,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_function(t *testing.T) {
@@ -15517,7 +15518,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_null(t *testing.T) {
@@ -15525,7 +15526,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_time_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_time_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_time_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_number(t *testing.T) {
@@ -15533,7 +15534,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_number(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_string(t *testing.T) {
@@ -15541,7 +15542,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_boolean(t *testing.T) {
@@ -15549,7 +15550,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_date(t *testing.T) {
@@ -15557,7 +15558,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_dateAndTime(t *testing.T) {
@@ -15565,7 +15566,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_time(t *testing.T) {
@@ -15573,7 +15574,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_list(t *testing.T) {
@@ -15581,7 +15582,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_context(t *testing.T) {
@@ -15589,7 +15590,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_dtDuration(t *testing.T) {
@@ -15597,7 +15598,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_ymDuration(t *testing.T) {
@@ -15605,7 +15606,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_range(t *testing.T) {
@@ -15613,7 +15614,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_function(t *testing.T) {
@@ -15621,7 +15622,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_null(t *testing.T) {
@@ -15629,7 +15630,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_list_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_list_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_list_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_number(t *testing.T) {
@@ -15637,7 +15638,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_string(t *testing.T) {
@@ -15645,7 +15646,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_boolean(t *testing.T) {
@@ -15653,7 +15654,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_date(t *testing.T) {
@@ -15661,7 +15662,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_dateAndTime(t *testing.T) {
@@ -15669,7 +15670,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_time(t *testing.T) {
@@ -15677,7 +15678,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_list(t *testing.T) {
@@ -15685,7 +15686,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_context(t *testing.T) {
@@ -15693,7 +15694,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_dtDuration(t *testing.T) {
@@ -15701,7 +15702,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_ymDuration(t *testing.T) {
@@ -15709,7 +15710,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_range(t *testing.T) {
@@ -15717,7 +15718,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_function(t *testing.T) {
@@ -15725,7 +15726,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_null(t *testing.T) {
@@ -15733,7 +15734,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_context_by_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_context_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_context_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_string(t *testing.T) {
@@ -15741,7 +15742,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_string(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_boolean(t *testing.T) {
@@ -15749,7 +15750,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_boolean(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_date(t *testing.T) {
@@ -15757,7 +15758,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_date(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_dateAndTime(t *testing.T) {
@@ -15765,7 +15766,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_dateAndTi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_time(t *testing.T) {
@@ -15773,7 +15774,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_time(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_list(t *testing.T) {
@@ -15781,7 +15782,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_list(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_context(t *testing.T) {
@@ -15789,7 +15790,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_context(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_dtDuration(t *testing.T) {
@@ -15797,7 +15798,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_dtDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_ymDuration(t *testing.T) {
@@ -15805,7 +15806,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_ymDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_range(t *testing.T) {
@@ -15813,7 +15814,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_range(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_function(t *testing.T) {
@@ -15821,7 +15822,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_function(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_null(t *testing.T) {
@@ -15829,7 +15830,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_dtDuration_by_rhs_null(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_dtDuration_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_dtDuration_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_string(t *testing.T) {
@@ -15837,7 +15838,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_string(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_boolean(t *testing.T) {
@@ -15845,7 +15846,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_boolean(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_date(t *testing.T) {
@@ -15853,7 +15854,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_date(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_dateAndTime(t *testing.T) {
@@ -15861,7 +15862,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_dateAndTi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_time(t *testing.T) {
@@ -15869,7 +15870,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_time(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_list(t *testing.T) {
@@ -15877,7 +15878,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_list(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_context(t *testing.T) {
@@ -15885,7 +15886,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_context(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_dtDuration(t *testing.T) {
@@ -15893,7 +15894,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_dtDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_ymDuration(t *testing.T) {
@@ -15901,7 +15902,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_ymDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_range(t *testing.T) {
@@ -15909,7 +15910,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_range(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_function(t *testing.T) {
@@ -15917,7 +15918,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_function(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_null(t *testing.T) {
@@ -15925,7 +15926,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_ymDuration_by_rhs_null(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_ymDuration_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_ymDuration_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_number(t *testing.T) {
@@ -15933,7 +15934,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_string(t *testing.T) {
@@ -15941,7 +15942,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_boolean(t *testing.T) {
@@ -15949,7 +15950,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_date(t *testing.T) {
@@ -15957,7 +15958,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_dateAndTime(t *testing.T) {
@@ -15965,7 +15966,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_time(t *testing.T) {
@@ -15973,7 +15974,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_list(t *testing.T) {
@@ -15981,7 +15982,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_context(t *testing.T) {
@@ -15989,7 +15990,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_dtDuration(t *testing.T) {
@@ -15997,7 +15998,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_ymDuration(t *testing.T) {
@@ -16005,7 +16006,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_range(t *testing.T) {
@@ -16013,7 +16014,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_function(t *testing.T) {
@@ -16021,7 +16022,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_null(t *testing.T) {
@@ -16029,7 +16030,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_range_by_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_range_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_range_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_number(t *testing.T) {
@@ -16037,7 +16038,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_number(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_string(t *testing.T) {
@@ -16045,7 +16046,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_boolean(t *testing.T) {
@@ -16053,7 +16054,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_date(t *testing.T) {
@@ -16061,7 +16062,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_dateAndTime(t *testing.T) {
@@ -16069,7 +16070,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_time(t *testing.T) {
@@ -16077,7 +16078,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_list(t *testing.T) {
@@ -16085,7 +16086,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_context(t *testing.T) {
@@ -16093,7 +16094,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_dtDuration(t *testing.T) {
@@ -16101,7 +16102,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_dtDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_ymDuration(t *testing.T) {
@@ -16109,7 +16110,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_ymDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_range(t *testing.T) {
@@ -16117,7 +16118,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_function(t *testing.T) {
@@ -16125,7 +16126,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_null(t *testing.T) {
@@ -16133,7 +16134,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_function_by_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_function_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_function_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_number(t *testing.T) {
@@ -16141,7 +16142,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_number(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_string(t *testing.T) {
@@ -16149,7 +16150,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_boolean(t *testing.T) {
@@ -16157,7 +16158,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_date(t *testing.T) {
@@ -16165,7 +16166,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_dateAndTime(t *testing.T) {
@@ -16173,7 +16174,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_time(t *testing.T) {
@@ -16181,7 +16182,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_list(t *testing.T) {
@@ -16189,7 +16190,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_context(t *testing.T) {
@@ -16197,7 +16198,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_dtDuration(t *testing.T) {
@@ -16205,7 +16206,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_ymDuration(t *testing.T) {
@@ -16213,7 +16214,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_range(t *testing.T) {
@@ -16221,7 +16222,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_function(t *testing.T) {
@@ -16229,7 +16230,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_null(t *testing.T) {
@@ -16237,7 +16238,7 @@ func TestTCK_0100_arithmetic_error_when_multiply_lhs_null_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_multiply_lhs_null_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_multiply_lhs_null_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_string(t *testing.T) {
@@ -16245,7 +16246,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_boolean(t *testing.T) {
@@ -16253,7 +16254,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_date(t *testing.T) {
@@ -16261,7 +16262,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_dateAndTime(t *testing.T) {
@@ -16269,7 +16270,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_time(t *testing.T) {
@@ -16277,7 +16278,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_list(t *testing.T) {
@@ -16285,7 +16286,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_context(t *testing.T) {
@@ -16293,7 +16294,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_dtDuration(t *testing.T) {
@@ -16301,7 +16302,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_ymDuration(t *testing.T) {
@@ -16309,7 +16310,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_range(t *testing.T) {
@@ -16317,7 +16318,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_function(t *testing.T) {
@@ -16325,7 +16326,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_null(t *testing.T) {
@@ -16333,7 +16334,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_number_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_number_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_number_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_number(t *testing.T) {
@@ -16341,7 +16342,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_number(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_string(t *testing.T) {
@@ -16349,7 +16350,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_string(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_boolean(t *testing.T) {
@@ -16357,7 +16358,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_boolean(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_date(t *testing.T) {
@@ -16365,7 +16366,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_date(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_dateAndTime(t *testing.T) {
@@ -16373,7 +16374,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_dateAndTime(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_time(t *testing.T) {
@@ -16381,7 +16382,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_time(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_list(t *testing.T) {
@@ -16389,7 +16390,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_list(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_context(t *testing.T) {
@@ -16397,7 +16398,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_context(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_dtDuration(t *testing.T) {
@@ -16405,7 +16406,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_dtDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_ymDuration(t *testing.T) {
@@ -16413,7 +16414,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_ymDuration(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_range(t *testing.T) {
@@ -16421,7 +16422,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_range(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_function(t *testing.T) {
@@ -16429,7 +16430,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_function(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_null(t *testing.T) {
@@ -16437,7 +16438,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_string_by_rhs_null(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_string_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_string_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_number(t *testing.T) {
@@ -16445,7 +16446,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_string(t *testing.T) {
@@ -16453,7 +16454,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_boolean(t *testing.T) {
@@ -16461,7 +16462,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_date(t *testing.T) {
@@ -16469,7 +16470,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_dateAndTime(t *testing.T) {
@@ -16477,7 +16478,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_time(t *testing.T) {
@@ -16485,7 +16486,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_list(t *testing.T) {
@@ -16493,7 +16494,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_context(t *testing.T) {
@@ -16501,7 +16502,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_dtDuration(t *testing.T) {
@@ -16509,7 +16510,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_ymDuration(t *testing.T) {
@@ -16517,7 +16518,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_range(t *testing.T) {
@@ -16525,7 +16526,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_function(t *testing.T) {
@@ -16533,7 +16534,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_null(t *testing.T) {
@@ -16541,7 +16542,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_boolean_by_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_boolean_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_boolean_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_number(t *testing.T) {
@@ -16549,7 +16550,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_string(t *testing.T) {
@@ -16557,7 +16558,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_boolean(t *testing.T) {
@@ -16565,7 +16566,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_date(t *testing.T) {
@@ -16573,7 +16574,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_dateAndTime(t *testing.T) {
@@ -16581,7 +16582,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_time(t *testing.T) {
@@ -16589,7 +16590,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_list(t *testing.T) {
@@ -16597,7 +16598,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_context(t *testing.T) {
@@ -16605,7 +16606,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_dtDuration(t *testing.T) {
@@ -16613,7 +16614,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_ymDuration(t *testing.T) {
@@ -16621,7 +16622,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_range(t *testing.T) {
@@ -16629,7 +16630,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_function(t *testing.T) {
@@ -16637,7 +16638,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_null(t *testing.T) {
@@ -16645,7 +16646,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_date_by_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_date_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_date_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_number(t *testing.T) {
@@ -16653,7 +16654,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_number(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_string(t *testing.T) {
@@ -16661,7 +16662,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_string(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_boolean(t *testing.T) {
@@ -16669,7 +16670,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_boolean(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_date(t *testing.T) {
@@ -16677,7 +16678,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_date(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_dateAndTime(t *testing.T) {
@@ -16685,7 +16686,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_dateAndTim
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_time(t *testing.T) {
@@ -16693,7 +16694,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_time(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_list(t *testing.T) {
@@ -16701,7 +16702,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_list(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_context(t *testing.T) {
@@ -16709,7 +16710,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_context(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_dtDuration(t *testing.T) {
@@ -16717,7 +16718,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_dtDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_ymDuration(t *testing.T) {
@@ -16725,7 +16726,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_ymDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_range(t *testing.T) {
@@ -16733,7 +16734,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_range(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_function(t *testing.T) {
@@ -16741,7 +16742,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_function(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_null(t *testing.T) {
@@ -16749,7 +16750,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dateAndTime_by_rhs_null(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dateAndTime_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dateAndTime_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_number(t *testing.T) {
@@ -16757,7 +16758,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_string(t *testing.T) {
@@ -16765,7 +16766,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_boolean(t *testing.T) {
@@ -16773,7 +16774,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_date(t *testing.T) {
@@ -16781,7 +16782,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_dateAndTime(t *testing.T) {
@@ -16789,7 +16790,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_time(t *testing.T) {
@@ -16797,7 +16798,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_list(t *testing.T) {
@@ -16805,7 +16806,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_context(t *testing.T) {
@@ -16813,7 +16814,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_dtDuration(t *testing.T) {
@@ -16821,7 +16822,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_ymDuration(t *testing.T) {
@@ -16829,7 +16830,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_range(t *testing.T) {
@@ -16837,7 +16838,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_function(t *testing.T) {
@@ -16845,7 +16846,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_null(t *testing.T) {
@@ -16853,7 +16854,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_time_by_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_time_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_time_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_number(t *testing.T) {
@@ -16861,7 +16862,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_string(t *testing.T) {
@@ -16869,7 +16870,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_boolean(t *testing.T) {
@@ -16877,7 +16878,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_date(t *testing.T) {
@@ -16885,7 +16886,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_dateAndTime(t *testing.T) {
@@ -16893,7 +16894,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_time(t *testing.T) {
@@ -16901,7 +16902,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_list(t *testing.T) {
@@ -16909,7 +16910,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_context(t *testing.T) {
@@ -16917,7 +16918,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_dtDuration(t *testing.T) {
@@ -16925,7 +16926,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_ymDuration(t *testing.T) {
@@ -16933,7 +16934,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_range(t *testing.T) {
@@ -16941,7 +16942,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_function(t *testing.T) {
@@ -16949,7 +16950,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_null(t *testing.T) {
@@ -16957,7 +16958,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_list_by_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_list_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_list_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_number(t *testing.T) {
@@ -16965,7 +16966,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_string(t *testing.T) {
@@ -16973,7 +16974,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_boolean(t *testing.T) {
@@ -16981,7 +16982,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_date(t *testing.T) {
@@ -16989,7 +16990,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_dateAndTime(t *testing.T) {
@@ -16997,7 +16998,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_time(t *testing.T) {
@@ -17005,7 +17006,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_list(t *testing.T) {
@@ -17013,7 +17014,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_context(t *testing.T) {
@@ -17021,7 +17022,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_dtDuration(t *testing.T) {
@@ -17029,7 +17030,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_ymDuration(t *testing.T) {
@@ -17037,7 +17038,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_range(t *testing.T) {
@@ -17045,7 +17046,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_function(t *testing.T) {
@@ -17053,7 +17054,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_null(t *testing.T) {
@@ -17061,7 +17062,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_context_by_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_context_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_context_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_string(t *testing.T) {
@@ -17069,7 +17070,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_boolean(t *testing.T) {
@@ -17077,7 +17078,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_date(t *testing.T) {
@@ -17085,7 +17086,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_dateAndTime(t *testing.T) {
@@ -17093,7 +17094,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_time(t *testing.T) {
@@ -17101,7 +17102,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_list(t *testing.T) {
@@ -17109,7 +17110,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_context(t *testing.T) {
@@ -17117,7 +17118,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_ymDuration(t *testing.T) {
@@ -17125,7 +17126,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_ymDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_range(t *testing.T) {
@@ -17133,7 +17134,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_function(t *testing.T) {
@@ -17141,7 +17142,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_null(t *testing.T) {
@@ -17149,7 +17150,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_dtDuration_by_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_dtDuration_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_dtDuration_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_string(t *testing.T) {
@@ -17157,7 +17158,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_boolean(t *testing.T) {
@@ -17165,7 +17166,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_date(t *testing.T) {
@@ -17173,7 +17174,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_dateAndTime(t *testing.T) {
@@ -17181,7 +17182,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_time(t *testing.T) {
@@ -17189,7 +17190,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_list(t *testing.T) {
@@ -17197,7 +17198,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_context(t *testing.T) {
@@ -17205,7 +17206,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_dtDuration(t *testing.T) {
@@ -17213,7 +17214,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_dtDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_range(t *testing.T) {
@@ -17221,7 +17222,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_function(t *testing.T) {
@@ -17229,7 +17230,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_null(t *testing.T) {
@@ -17237,7 +17238,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_ymDuration_by_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_ymDuration_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_ymDuration_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_number(t *testing.T) {
@@ -17245,7 +17246,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_number(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_string(t *testing.T) {
@@ -17253,7 +17254,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_string(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_boolean(t *testing.T) {
@@ -17261,7 +17262,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_boolean(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_date(t *testing.T) {
@@ -17269,7 +17270,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_date(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_dateAndTime(t *testing.T) {
@@ -17277,7 +17278,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_dateAndTime(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_time(t *testing.T) {
@@ -17285,7 +17286,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_time(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_list(t *testing.T) {
@@ -17293,7 +17294,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_list(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_context(t *testing.T) {
@@ -17301,7 +17302,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_context(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_dtDuration(t *testing.T) {
@@ -17309,7 +17310,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_dtDuration(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_ymDuration(t *testing.T) {
@@ -17317,7 +17318,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_ymDuration(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_range(t *testing.T) {
@@ -17325,7 +17326,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_range(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_function(t *testing.T) {
@@ -17333,7 +17334,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_function(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_null(t *testing.T) {
@@ -17341,7 +17342,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_range_by_rhs_null(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_range_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_range_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_number(t *testing.T) {
@@ -17349,7 +17350,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_number(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_string(t *testing.T) {
@@ -17357,7 +17358,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_string(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_boolean(t *testing.T) {
@@ -17365,7 +17366,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_boolean(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_date(t *testing.T) {
@@ -17373,7 +17374,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_date(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_dateAndTime(t *testing.T) {
@@ -17381,7 +17382,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_dateAndTime(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_time(t *testing.T) {
@@ -17389,7 +17390,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_time(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_list(t *testing.T) {
@@ -17397,7 +17398,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_list(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_context(t *testing.T) {
@@ -17405,7 +17406,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_context(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_dtDuration(t *testing.T) {
@@ -17413,7 +17414,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_dtDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_ymDuration(t *testing.T) {
@@ -17421,7 +17422,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_ymDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_range(t *testing.T) {
@@ -17429,7 +17430,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_range(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_function(t *testing.T) {
@@ -17437,7 +17438,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_function(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_null(t *testing.T) {
@@ -17445,7 +17446,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_function_by_rhs_null(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_function_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_function_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_number(t *testing.T) {
@@ -17453,7 +17454,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_string(t *testing.T) {
@@ -17461,7 +17462,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_boolean(t *testing.T) {
@@ -17469,7 +17470,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_date(t *testing.T) {
@@ -17477,7 +17478,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_dateAndTime(t *testing.T) {
@@ -17485,7 +17486,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_time(t *testing.T) {
@@ -17493,7 +17494,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_list(t *testing.T) {
@@ -17501,7 +17502,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_context(t *testing.T) {
@@ -17509,7 +17510,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_dtDuration(t *testing.T) {
@@ -17517,7 +17518,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_ymDuration(t *testing.T) {
@@ -17525,7 +17526,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_range(t *testing.T) {
@@ -17533,7 +17534,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_function(t *testing.T) {
@@ -17541,7 +17542,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_null(t *testing.T) {
@@ -17549,7 +17550,7 @@ func TestTCK_0100_arithmetic_error_when_divide_lhs_null_by_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_divide_lhs_null_by_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_divide_lhs_null_by_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_string(t *testing.T) {
@@ -17557,7 +17558,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_string(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_boolean(t *testing.T) {
@@ -17565,7 +17566,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_boolean(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_date(t *testing.T) {
@@ -17573,7 +17574,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_date(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_dateAndTime(t *testing.T) {
@@ -17581,7 +17582,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_dateAndTime(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_time(t *testing.T) {
@@ -17589,7 +17590,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_time(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_list(t *testing.T) {
@@ -17597,7 +17598,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_list(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_context(t *testing.T) {
@@ -17605,7 +17606,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_context(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_dtDuration(t *testing.T) {
@@ -17613,7 +17614,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_dtDuration(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_ymDuration(t *testing.T) {
@@ -17621,7 +17622,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_ymDuration(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_range(t *testing.T) {
@@ -17629,7 +17630,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_range(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_function(t *testing.T) {
@@ -17637,7 +17638,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_function(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_null(t *testing.T) {
@@ -17645,7 +17646,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_number_to_rhs_null(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_number_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_number_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_number(t *testing.T) {
@@ -17653,7 +17654,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_number(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_boolean(t *testing.T) {
@@ -17661,7 +17662,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_boolean(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_date(t *testing.T) {
@@ -17669,7 +17670,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_date(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_dateAndTime(t *testing.T) {
@@ -17677,7 +17678,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_dateAndTime(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_time(t *testing.T) {
@@ -17685,7 +17686,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_time(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_list(t *testing.T) {
@@ -17693,7 +17694,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_list(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_context(t *testing.T) {
@@ -17701,7 +17702,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_context(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_dtDuration(t *testing.T) {
@@ -17709,7 +17710,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_dtDuration(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_ymDuration(t *testing.T) {
@@ -17717,7 +17718,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_ymDuration(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_range(t *testing.T) {
@@ -17725,7 +17726,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_range(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_function(t *testing.T) {
@@ -17733,7 +17734,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_function(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_null(t *testing.T) {
@@ -17741,7 +17742,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_string_to_rhs_null(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_string_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_string_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_number(t *testing.T) {
@@ -17749,7 +17750,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_string(t *testing.T) {
@@ -17757,7 +17758,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_boolean(t *testing.T) {
@@ -17765,7 +17766,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_date(t *testing.T) {
@@ -17773,7 +17774,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_dateAndTime(t *testing.T) {
@@ -17781,7 +17782,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_time(t *testing.T) {
@@ -17789,7 +17790,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_list(t *testing.T) {
@@ -17797,7 +17798,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_context(t *testing.T) {
@@ -17805,7 +17806,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_dtDuration(t *testing.T) {
@@ -17813,7 +17814,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_ymDuration(t *testing.T) {
@@ -17821,7 +17822,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_range(t *testing.T) {
@@ -17829,7 +17830,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_function(t *testing.T) {
@@ -17837,7 +17838,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_null(t *testing.T) {
@@ -17845,7 +17846,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_boolean_to_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_boolean_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_boolean_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_number(t *testing.T) {
@@ -17853,7 +17854,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_number(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_string(t *testing.T) {
@@ -17861,7 +17862,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_string(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_boolean(t *testing.T) {
@@ -17869,7 +17870,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_boolean(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_date(t *testing.T) {
@@ -17877,7 +17878,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_date(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_dateAndTime(t *testing.T) {
@@ -17885,7 +17886,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_dateAndTime(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_time(t *testing.T) {
@@ -17893,7 +17894,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_time(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_list(t *testing.T) {
@@ -17901,7 +17902,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_list(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_context(t *testing.T) {
@@ -17909,7 +17910,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_context(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_range(t *testing.T) {
@@ -17917,7 +17918,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_range(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_function(t *testing.T) {
@@ -17925,7 +17926,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_function(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_null(t *testing.T) {
@@ -17933,7 +17934,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_date_to_rhs_null(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_date_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_date_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_number(t *testing.T) {
@@ -17941,7 +17942,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_number(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_string(t *testing.T) {
@@ -17949,7 +17950,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_string(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_boolean(t *testing.T) {
@@ -17957,7 +17958,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_boolean(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_date(t *testing.T) {
@@ -17965,7 +17966,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_date(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_dateAndTime(t *testing.T) {
@@ -17973,7 +17974,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_dateAndTime(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_time(t *testing.T) {
@@ -17981,7 +17982,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_time(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_list(t *testing.T) {
@@ -17989,7 +17990,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_list(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_context(t *testing.T) {
@@ -17997,7 +17998,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_context(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_range(t *testing.T) {
@@ -18005,7 +18006,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_range(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_function(t *testing.T) {
@@ -18013,7 +18014,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_function(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_null(t *testing.T) {
@@ -18021,7 +18022,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dateAndTime_to_rhs_null(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dateAndTime_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dateAndTime_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_number(t *testing.T) {
@@ -18029,7 +18030,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_number(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_string(t *testing.T) {
@@ -18037,7 +18038,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_string(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_boolean(t *testing.T) {
@@ -18045,7 +18046,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_boolean(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_date(t *testing.T) {
@@ -18053,7 +18054,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_date(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_dateAndTime(t *testing.T) {
@@ -18061,7 +18062,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_dateAndTime(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_time(t *testing.T) {
@@ -18069,7 +18070,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_time(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_list(t *testing.T) {
@@ -18077,7 +18078,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_list(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_context(t *testing.T) {
@@ -18085,7 +18086,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_context(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_ymDuration(t *testing.T) {
@@ -18093,7 +18094,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_ymDuration(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_range(t *testing.T) {
@@ -18101,7 +18102,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_range(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_function(t *testing.T) {
@@ -18109,7 +18110,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_function(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_null(t *testing.T) {
@@ -18117,7 +18118,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_time_to_rhs_null(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_time_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_time_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_number(t *testing.T) {
@@ -18125,7 +18126,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_number(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_string(t *testing.T) {
@@ -18133,7 +18134,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_string(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_boolean(t *testing.T) {
@@ -18141,7 +18142,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_boolean(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_date(t *testing.T) {
@@ -18149,7 +18150,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_date(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_dateAndTime(t *testing.T) {
@@ -18157,7 +18158,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_dateAndTime(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_time(t *testing.T) {
@@ -18165,7 +18166,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_time(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_list(t *testing.T) {
@@ -18173,7 +18174,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_list(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_context(t *testing.T) {
@@ -18181,7 +18182,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_context(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_dtDuration(t *testing.T) {
@@ -18189,7 +18190,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_dtDuration(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_ymDuration(t *testing.T) {
@@ -18197,7 +18198,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_ymDuration(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_range(t *testing.T) {
@@ -18205,7 +18206,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_range(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_function(t *testing.T) {
@@ -18213,7 +18214,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_function(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_null(t *testing.T) {
@@ -18221,7 +18222,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_list_to_rhs_null(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_list_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_list_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_number(t *testing.T) {
@@ -18229,7 +18230,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_number(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_string(t *testing.T) {
@@ -18237,7 +18238,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_string(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_boolean(t *testing.T) {
@@ -18245,7 +18246,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_boolean(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_date(t *testing.T) {
@@ -18253,7 +18254,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_date(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_dateAndTime(t *testing.T) {
@@ -18261,7 +18262,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_dateAndTime(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_time(t *testing.T) {
@@ -18269,7 +18270,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_time(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_list(t *testing.T) {
@@ -18277,7 +18278,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_list(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_context(t *testing.T) {
@@ -18285,7 +18286,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_context(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_dtDuration(t *testing.T) {
@@ -18293,7 +18294,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_dtDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_ymDuration(t *testing.T) {
@@ -18301,7 +18302,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_ymDuration(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_range(t *testing.T) {
@@ -18309,7 +18310,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_range(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_function(t *testing.T) {
@@ -18317,7 +18318,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_function(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_null(t *testing.T) {
@@ -18325,7 +18326,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_context_to_rhs_null(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_context_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_context_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_number(t *testing.T) {
@@ -18333,7 +18334,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_string(t *testing.T) {
@@ -18341,7 +18342,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_boolean(t *testing.T) {
@@ -18349,7 +18350,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_list(t *testing.T) {
@@ -18357,7 +18358,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_context(t *testing.T) {
@@ -18365,7 +18366,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_ymDuration(t *testing.T) {
@@ -18373,7 +18374,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_range(t *testing.T) {
@@ -18381,7 +18382,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_function(t *testing.T) {
@@ -18389,7 +18390,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_null(t *testing.T) {
@@ -18397,7 +18398,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_dtDuration_to_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_dtDuration_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_dtDuration_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_number(t *testing.T) {
@@ -18405,7 +18406,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_string(t *testing.T) {
@@ -18413,7 +18414,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_boolean(t *testing.T) {
@@ -18421,7 +18422,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_time(t *testing.T) {
@@ -18429,7 +18430,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_list(t *testing.T) {
@@ -18437,7 +18438,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_context(t *testing.T) {
@@ -18445,7 +18446,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_dtDuration(t *testing.T) {
@@ -18453,7 +18454,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_range(t *testing.T) {
@@ -18461,7 +18462,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_function(t *testing.T) {
@@ -18469,7 +18470,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_null(t *testing.T) {
@@ -18477,7 +18478,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_ymDuration_to_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_ymDuration_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_ymDuration_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_number(t *testing.T) {
@@ -18485,7 +18486,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_number(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_string(t *testing.T) {
@@ -18493,7 +18494,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_string(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_boolean(t *testing.T) {
@@ -18501,7 +18502,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_boolean(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_date(t *testing.T) {
@@ -18509,7 +18510,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_date(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_dateAndTime(t *testing.T) {
@@ -18517,7 +18518,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_dateAndTime(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_time(t *testing.T) {
@@ -18525,7 +18526,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_time(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_list(t *testing.T) {
@@ -18533,7 +18534,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_list(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_context(t *testing.T) {
@@ -18541,7 +18542,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_context(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_dtDuration(t *testing.T) {
@@ -18549,7 +18550,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_dtDuration(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_ymDuration(t *testing.T) {
@@ -18557,7 +18558,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_ymDuration(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_range(t *testing.T) {
@@ -18565,7 +18566,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_range(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_function(t *testing.T) {
@@ -18573,7 +18574,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_function(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_null(t *testing.T) {
@@ -18581,7 +18582,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_range_to_rhs_null(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_range_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_range_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_number(t *testing.T) {
@@ -18589,7 +18590,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_number(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_string(t *testing.T) {
@@ -18597,7 +18598,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_string(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_boolean(t *testing.T) {
@@ -18605,7 +18606,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_boolean(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_date(t *testing.T) {
@@ -18613,7 +18614,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_date(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_dateAndTime(t *testing.T) {
@@ -18621,7 +18622,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_dateAndTime(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_time(t *testing.T) {
@@ -18629,7 +18630,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_time(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_list(t *testing.T) {
@@ -18637,7 +18638,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_list(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_context(t *testing.T) {
@@ -18645,7 +18646,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_context(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_dtDuration(t *testing.T) {
@@ -18653,7 +18654,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_dtDuration(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_ymDuration(t *testing.T) {
@@ -18661,7 +18662,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_ymDuration(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_range(t *testing.T) {
@@ -18669,7 +18670,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_range(t *testing
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_function(t *testing.T) {
@@ -18677,7 +18678,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_function(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_null(t *testing.T) {
@@ -18685,7 +18686,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_function_to_rhs_null(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_function_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_function_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_number(t *testing.T) {
@@ -18693,7 +18694,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_number(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_string(t *testing.T) {
@@ -18701,7 +18702,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_string(t *testing.T)
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_boolean(t *testing.T) {
@@ -18709,7 +18710,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_boolean(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_date(t *testing.T) {
@@ -18717,7 +18718,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_date(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_dateAndTime(t *testing.T) {
@@ -18725,7 +18726,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_dateAndTime(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_time(t *testing.T) {
@@ -18733,7 +18734,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_time(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_list(t *testing.T) {
@@ -18741,7 +18742,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_list(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_context(t *testing.T) {
@@ -18749,7 +18750,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_context(t *testing.T
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_dtDuration(t *testing.T) {
@@ -18757,7 +18758,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_dtDuration(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_ymDuration(t *testing.T) {
@@ -18765,7 +18766,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_ymDuration(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_range(t *testing.T) {
@@ -18773,7 +18774,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_range(t *testing.T) 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_function(t *testing.T) {
@@ -18781,7 +18782,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_function(t *testing.
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_null(t *testing.T) {
@@ -18789,7 +18790,7 @@ func TestTCK_0100_arithmetic_error_when_add_lhs_null_to_rhs_null(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_add_lhs_null_to_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_add_lhs_null_to_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_string(t *testing.T) {
@@ -18797,7 +18798,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_string(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_boolean(t *testing.T) {
@@ -18805,7 +18806,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_boolean(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_date(t *testing.T) {
@@ -18813,7 +18814,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_date(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_dateAndTime(t *testing.T) {
@@ -18821,7 +18822,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_dateAndTim
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_time(t *testing.T) {
@@ -18829,7 +18830,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_time(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_list(t *testing.T) {
@@ -18837,7 +18838,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_list(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_context(t *testing.T) {
@@ -18845,7 +18846,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_context(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_dtDuration(t *testing.T) {
@@ -18853,7 +18854,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_dtDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_ymDuration(t *testing.T) {
@@ -18861,7 +18862,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_ymDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_range(t *testing.T) {
@@ -18869,7 +18870,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_range(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_function(t *testing.T) {
@@ -18877,7 +18878,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_function(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_null(t *testing.T) {
@@ -18885,7 +18886,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_number_minus_rhs_null(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_number_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_number_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_number(t *testing.T) {
@@ -18893,7 +18894,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_number(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_string(t *testing.T) {
@@ -18901,7 +18902,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_string(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_boolean(t *testing.T) {
@@ -18909,7 +18910,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_boolean(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_date(t *testing.T) {
@@ -18917,7 +18918,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_date(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_dateAndTime(t *testing.T) {
@@ -18925,7 +18926,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_dateAndTim
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_time(t *testing.T) {
@@ -18933,7 +18934,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_time(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_list(t *testing.T) {
@@ -18941,7 +18942,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_list(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_context(t *testing.T) {
@@ -18949,7 +18950,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_context(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_dtDuration(t *testing.T) {
@@ -18957,7 +18958,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_dtDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_ymDuration(t *testing.T) {
@@ -18965,7 +18966,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_ymDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_range(t *testing.T) {
@@ -18973,7 +18974,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_range(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_function(t *testing.T) {
@@ -18981,7 +18982,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_function(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_null(t *testing.T) {
@@ -18989,7 +18990,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_string_minus_rhs_null(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_string_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_string_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_number(t *testing.T) {
@@ -18997,7 +18998,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_number(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_string(t *testing.T) {
@@ -19005,7 +19006,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_string(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_boolean(t *testing.T) {
@@ -19013,7 +19014,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_boolean(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_date(t *testing.T) {
@@ -19021,7 +19022,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_date(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_dateAndTime(t *testing.T) {
@@ -19029,7 +19030,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_dateAndTi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_time(t *testing.T) {
@@ -19037,7 +19038,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_time(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_list(t *testing.T) {
@@ -19045,7 +19046,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_list(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_context(t *testing.T) {
@@ -19053,7 +19054,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_context(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_dtDuration(t *testing.T) {
@@ -19061,7 +19062,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_dtDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_ymDuration(t *testing.T) {
@@ -19069,7 +19070,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_ymDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_range(t *testing.T) {
@@ -19077,7 +19078,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_range(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_function(t *testing.T) {
@@ -19085,7 +19086,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_function(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_null(t *testing.T) {
@@ -19093,7 +19094,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_boolean_minus_rhs_null(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_boolean_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_boolean_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_number(t *testing.T) {
@@ -19101,7 +19102,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_string(t *testing.T) {
@@ -19109,7 +19110,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_boolean(t *testing.T) {
@@ -19117,7 +19118,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_time(t *testing.T) {
@@ -19125,7 +19126,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_list(t *testing.T) {
@@ -19133,7 +19134,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_context(t *testing.T) {
@@ -19141,7 +19142,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_range(t *testing.T) {
@@ -19149,7 +19150,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_function(t *testing.T) {
@@ -19157,7 +19158,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_null(t *testing.T) {
@@ -19165,7 +19166,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_date_minus_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_date_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_date_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_number(t *testing.T) {
@@ -19173,7 +19174,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_numbe
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_string(t *testing.T) {
@@ -19181,7 +19182,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_strin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_boolean(t *testing.T) {
@@ -19189,7 +19190,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_boole
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_time(t *testing.T) {
@@ -19197,7 +19198,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_time(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_list(t *testing.T) {
@@ -19205,7 +19206,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_list(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_context(t *testing.T) {
@@ -19213,7 +19214,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_conte
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_range(t *testing.T) {
@@ -19221,7 +19222,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_range
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_function(t *testing.T) {
@@ -19229,7 +19230,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_funct
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_null(t *testing.T) {
@@ -19237,7 +19238,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dateAndTime_minus_rhs_null(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dateAndTime_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dateAndTime_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_number(t *testing.T) {
@@ -19245,7 +19246,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_string(t *testing.T) {
@@ -19253,7 +19254,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_boolean(t *testing.T) {
@@ -19261,7 +19262,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_date(t *testing.T) {
@@ -19269,7 +19270,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_dateAndTime(t *testing.T) {
@@ -19277,7 +19278,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_list(t *testing.T) {
@@ -19285,7 +19286,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_context(t *testing.T) {
@@ -19293,7 +19294,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_ymDuration(t *testing.T) {
@@ -19301,7 +19302,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_range(t *testing.T) {
@@ -19309,7 +19310,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_function(t *testing.T) {
@@ -19317,7 +19318,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_null(t *testing.T) {
@@ -19325,7 +19326,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_time_minus_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_time_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_time_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_number(t *testing.T) {
@@ -19333,7 +19334,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_string(t *testing.T) {
@@ -19341,7 +19342,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_boolean(t *testing.T) {
@@ -19349,7 +19350,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_date(t *testing.T) {
@@ -19357,7 +19358,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_dateAndTime(t *testing.T) {
@@ -19365,7 +19366,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_time(t *testing.T) {
@@ -19373,7 +19374,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_list(t *testing.T) {
@@ -19381,7 +19382,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_context(t *testing.T) {
@@ -19389,7 +19390,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_dtDuration(t *testing.T) {
@@ -19397,7 +19398,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_ymDuration(t *testing.T) {
@@ -19405,7 +19406,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_range(t *testing.T) {
@@ -19413,7 +19414,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_function(t *testing.T) {
@@ -19421,7 +19422,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_null(t *testing.T) {
@@ -19429,7 +19430,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_list_minus_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_list_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_list_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_number(t *testing.T) {
@@ -19437,7 +19438,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_number(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_string(t *testing.T) {
@@ -19445,7 +19446,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_string(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_boolean(t *testing.T) {
@@ -19453,7 +19454,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_boolean(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_date(t *testing.T) {
@@ -19461,7 +19462,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_date(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_dateAndTime(t *testing.T) {
@@ -19469,7 +19470,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_dateAndTi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_time(t *testing.T) {
@@ -19477,7 +19478,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_time(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_list(t *testing.T) {
@@ -19485,7 +19486,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_list(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_context(t *testing.T) {
@@ -19493,7 +19494,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_context(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_dtDuration(t *testing.T) {
@@ -19501,7 +19502,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_dtDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_ymDuration(t *testing.T) {
@@ -19509,7 +19510,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_ymDuratio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_range(t *testing.T) {
@@ -19517,7 +19518,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_range(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_function(t *testing.T) {
@@ -19525,7 +19526,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_function(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_null(t *testing.T) {
@@ -19533,7 +19534,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_context_minus_rhs_null(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_context_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_context_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_number(t *testing.T) {
@@ -19541,7 +19542,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_number
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_string(t *testing.T) {
@@ -19549,7 +19550,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_string
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_boolean(t *testing.T) {
@@ -19557,7 +19558,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_boolea
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_date(t *testing.T) {
@@ -19565,7 +19566,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_date(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_dateAndTime(t *testing.T) {
@@ -19573,7 +19574,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_dateAn
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_time(t *testing.T) {
@@ -19581,7 +19582,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_time(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_list(t *testing.T) {
@@ -19589,7 +19590,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_list(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_context(t *testing.T) {
@@ -19597,7 +19598,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_contex
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_ymDuration(t *testing.T) {
@@ -19605,7 +19606,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_ymDura
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_range(t *testing.T) {
@@ -19613,7 +19614,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_range(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_function(t *testing.T) {
@@ -19621,7 +19622,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_functi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_null(t *testing.T) {
@@ -19629,7 +19630,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_dtDuration_minus_rhs_null(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_dtDuration_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_dtDuration_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_number(t *testing.T) {
@@ -19637,7 +19638,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_number
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_string(t *testing.T) {
@@ -19645,7 +19646,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_string
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_boolean(t *testing.T) {
@@ -19653,7 +19654,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_boolea
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_date(t *testing.T) {
@@ -19661,7 +19662,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_date(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_dateAndTime(t *testing.T) {
@@ -19669,7 +19670,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_dateAn
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_time(t *testing.T) {
@@ -19677,7 +19678,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_time(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_list(t *testing.T) {
@@ -19685,7 +19686,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_list(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_context(t *testing.T) {
@@ -19693,7 +19694,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_contex
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_dtDuration(t *testing.T) {
@@ -19701,7 +19702,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_dtDura
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_range(t *testing.T) {
@@ -19709,7 +19710,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_range(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_function(t *testing.T) {
@@ -19717,7 +19718,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_functi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_null(t *testing.T) {
@@ -19725,7 +19726,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_ymDuration_minus_rhs_null(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_ymDuration_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_ymDuration_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_number(t *testing.T) {
@@ -19733,7 +19734,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_number(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_string(t *testing.T) {
@@ -19741,7 +19742,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_boolean(t *testing.T) {
@@ -19749,7 +19750,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_date(t *testing.T) {
@@ -19757,7 +19758,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_dateAndTime(t *testing.T) {
@@ -19765,7 +19766,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_time(t *testing.T) {
@@ -19773,7 +19774,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_list(t *testing.T) {
@@ -19781,7 +19782,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_context(t *testing.T) {
@@ -19789,7 +19790,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_dtDuration(t *testing.T) {
@@ -19797,7 +19798,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_dtDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_ymDuration(t *testing.T) {
@@ -19805,7 +19806,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_ymDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_range(t *testing.T) {
@@ -19813,7 +19814,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_function(t *testing.T) {
@@ -19821,7 +19822,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_null(t *testing.T) {
@@ -19829,7 +19830,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_range_minus_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_range_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_range_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_number(t *testing.T) {
@@ -19837,7 +19838,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_number(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_string(t *testing.T) {
@@ -19845,7 +19846,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_string(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_boolean(t *testing.T) {
@@ -19853,7 +19854,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_boolean(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_date(t *testing.T) {
@@ -19861,7 +19862,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_date(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_dateAndTime(t *testing.T) {
@@ -19869,7 +19870,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_dateAndT
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_time(t *testing.T) {
@@ -19877,7 +19878,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_time(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_list(t *testing.T) {
@@ -19885,7 +19886,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_list(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_context(t *testing.T) {
@@ -19893,7 +19894,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_context(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_dtDuration(t *testing.T) {
@@ -19901,7 +19902,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_dtDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_ymDuration(t *testing.T) {
@@ -19909,7 +19910,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_ymDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_range(t *testing.T) {
@@ -19917,7 +19918,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_range(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_function(t *testing.T) {
@@ -19925,7 +19926,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_function
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_null(t *testing.T) {
@@ -19933,7 +19934,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_function_minus_rhs_null(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_function_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_function_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_number(t *testing.T) {
@@ -19941,7 +19942,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_string(t *testing.T) {
@@ -19949,7 +19950,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_boolean(t *testing.T) {
@@ -19957,7 +19958,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_date(t *testing.T) {
@@ -19965,7 +19966,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_dateAndTime(t *testing.T) {
@@ -19973,7 +19974,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_time(t *testing.T) {
@@ -19981,7 +19982,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_list(t *testing.T) {
@@ -19989,7 +19990,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_context(t *testing.T) {
@@ -19997,7 +19998,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_dtDuration(t *testing.T) {
@@ -20005,7 +20006,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_ymDuration(t *testing.T) {
@@ -20013,7 +20014,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_range(t *testing.T) {
@@ -20021,7 +20022,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_function(t *testing.T) {
@@ -20029,7 +20030,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_null(t *testing.T) {
@@ -20037,7 +20038,7 @@ func TestTCK_0100_arithmetic_error_when_subtract_lhs_null_minus_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_subtract_lhs_null_minus_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_subtract_lhs_null_minus_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_string(t *testing.T) {
@@ -20045,7 +20046,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_boolean(t *testing.T) {
@@ -20053,7 +20054,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_date(t *testing.T) {
@@ -20061,7 +20062,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_dateAndTime(t *testing.T) {
@@ -20069,7 +20070,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_time(t *testing.T) {
@@ -20077,7 +20078,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_list(t *testing.T) {
@@ -20085,7 +20086,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_context(t *testing.T) {
@@ -20093,7 +20094,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_dtDuration(t *testing.T) {
@@ -20101,7 +20102,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_ymDuration(t *testing.T) {
@@ -20109,7 +20110,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_range(t *testing.T) {
@@ -20117,7 +20118,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_function(t *testing.T) {
@@ -20125,7 +20126,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_null(t *testing.T) {
@@ -20133,7 +20134,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_number_exp_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_number_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_number_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_number(t *testing.T) {
@@ -20141,7 +20142,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_number(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_string(t *testing.T) {
@@ -20149,7 +20150,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_string(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_boolean(t *testing.T) {
@@ -20157,7 +20158,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_boolean(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_date(t *testing.T) {
@@ -20165,7 +20166,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_date(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_dateAndTime(t *testing.T) {
@@ -20173,7 +20174,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_dateAndTime(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_time(t *testing.T) {
@@ -20181,7 +20182,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_time(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_list(t *testing.T) {
@@ -20189,7 +20190,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_list(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_context(t *testing.T) {
@@ -20197,7 +20198,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_context(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_dtDuration(t *testing.T) {
@@ -20205,7 +20206,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_dtDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_ymDuration(t *testing.T) {
@@ -20213,7 +20214,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_ymDuration(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_range(t *testing.T) {
@@ -20221,7 +20222,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_range(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_function(t *testing.T) {
@@ -20229,7 +20230,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_function(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_null(t *testing.T) {
@@ -20237,7 +20238,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_string_exp_rhs_null(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_string_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_string_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_number(t *testing.T) {
@@ -20245,7 +20246,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_number(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_string(t *testing.T) {
@@ -20253,7 +20254,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_boolean(t *testing.T) {
@@ -20261,7 +20262,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_date(t *testing.T) {
@@ -20269,7 +20270,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_dateAndTime(t *testing.T) {
@@ -20277,7 +20278,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_time(t *testing.T) {
@@ -20285,7 +20286,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_list(t *testing.T) {
@@ -20293,7 +20294,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_context(t *testing.T) {
@@ -20301,7 +20302,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_dtDuration(t *testing.T) {
@@ -20309,7 +20310,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_dtDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_ymDuration(t *testing.T) {
@@ -20317,7 +20318,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_ymDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_range(t *testing.T) {
@@ -20325,7 +20326,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_function(t *testing.T) {
@@ -20333,7 +20334,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_null(t *testing.T) {
@@ -20341,7 +20342,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_boolean_exp_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_boolean_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_boolean_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_number(t *testing.T) {
@@ -20349,7 +20350,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_string(t *testing.T) {
@@ -20357,7 +20358,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_boolean(t *testing.T) {
@@ -20365,7 +20366,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_date(t *testing.T) {
@@ -20373,7 +20374,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_dateAndTime(t *testing.T) {
@@ -20381,7 +20382,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_time(t *testing.T) {
@@ -20389,7 +20390,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_list(t *testing.T) {
@@ -20397,7 +20398,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_context(t *testing.T) {
@@ -20405,7 +20406,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_dtDuration(t *testing.T) {
@@ -20413,7 +20414,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_ymDuration(t *testing.T) {
@@ -20421,7 +20422,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_range(t *testing.T) {
@@ -20429,7 +20430,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_function(t *testing.T) {
@@ -20437,7 +20438,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_null(t *testing.T) {
@@ -20445,7 +20446,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_date_exp_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_date_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_date_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_number(t *testing.T) {
@@ -20453,7 +20454,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_number(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_string(t *testing.T) {
@@ -20461,7 +20462,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_string(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_boolean(t *testing.T) {
@@ -20469,7 +20470,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_boolean
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_date(t *testing.T) {
@@ -20477,7 +20478,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_date(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_dateAndTime(t *testing.T) {
@@ -20485,7 +20486,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_dateAnd
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_time(t *testing.T) {
@@ -20493,7 +20494,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_time(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_list(t *testing.T) {
@@ -20501,7 +20502,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_list(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_context(t *testing.T) {
@@ -20509,7 +20510,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_context
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_dtDuration(t *testing.T) {
@@ -20517,7 +20518,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_dtDurat
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_ymDuration(t *testing.T) {
@@ -20525,7 +20526,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_ymDurat
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_range(t *testing.T) {
@@ -20533,7 +20534,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_range(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_function(t *testing.T) {
@@ -20541,7 +20542,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_functio
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_null(t *testing.T) {
@@ -20549,7 +20550,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dateAndTime_exp_rhs_null(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dateAndTime_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dateAndTime_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_number(t *testing.T) {
@@ -20557,7 +20558,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_string(t *testing.T) {
@@ -20565,7 +20566,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_boolean(t *testing.T) {
@@ -20573,7 +20574,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_date(t *testing.T) {
@@ -20581,7 +20582,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_dateAndTime(t *testing.T) {
@@ -20589,7 +20590,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_time(t *testing.T) {
@@ -20597,7 +20598,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_list(t *testing.T) {
@@ -20605,7 +20606,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_context(t *testing.T) {
@@ -20613,7 +20614,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_dtDuration(t *testing.T) {
@@ -20621,7 +20622,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_ymDuration(t *testing.T) {
@@ -20629,7 +20630,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_range(t *testing.T) {
@@ -20637,7 +20638,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_function(t *testing.T) {
@@ -20645,7 +20646,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_null(t *testing.T) {
@@ -20653,7 +20654,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_time_exp_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_time_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_time_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_number(t *testing.T) {
@@ -20661,7 +20662,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_string(t *testing.T) {
@@ -20669,7 +20670,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_boolean(t *testing.T) {
@@ -20677,7 +20678,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_date(t *testing.T) {
@@ -20685,7 +20686,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_dateAndTime(t *testing.T) {
@@ -20693,7 +20694,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_time(t *testing.T) {
@@ -20701,7 +20702,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_list(t *testing.T) {
@@ -20709,7 +20710,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_context(t *testing.T) {
@@ -20717,7 +20718,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_dtDuration(t *testing.T) {
@@ -20725,7 +20726,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_ymDuration(t *testing.T) {
@@ -20733,7 +20734,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_range(t *testing.T) {
@@ -20741,7 +20742,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_function(t *testing.T) {
@@ -20749,7 +20750,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_null(t *testing.T) {
@@ -20757,7 +20758,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_list_exp_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_list_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_list_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_number(t *testing.T) {
@@ -20765,7 +20766,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_number(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_string(t *testing.T) {
@@ -20773,7 +20774,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_string(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_boolean(t *testing.T) {
@@ -20781,7 +20782,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_boolean(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_date(t *testing.T) {
@@ -20789,7 +20790,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_date(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_dateAndTime(t *testing.T) {
@@ -20797,7 +20798,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_dateAndTime
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_time(t *testing.T) {
@@ -20805,7 +20806,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_time(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_list(t *testing.T) {
@@ -20813,7 +20814,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_list(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_context(t *testing.T) {
@@ -20821,7 +20822,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_context(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_dtDuration(t *testing.T) {
@@ -20829,7 +20830,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_dtDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_ymDuration(t *testing.T) {
@@ -20837,7 +20838,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_ymDuration(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_range(t *testing.T) {
@@ -20845,7 +20846,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_range(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_function(t *testing.T) {
@@ -20853,7 +20854,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_function(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_null(t *testing.T) {
@@ -20861,7 +20862,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_context_exp_rhs_null(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_context_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_context_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_number(t *testing.T) {
@@ -20869,7 +20870,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_number(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_string(t *testing.T) {
@@ -20877,7 +20878,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_string(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_boolean(t *testing.T) {
@@ -20885,7 +20886,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_boolean(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_date(t *testing.T) {
@@ -20893,7 +20894,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_date(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_dateAndTime(t *testing.T) {
@@ -20901,7 +20902,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_dateAndT
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_time(t *testing.T) {
@@ -20909,7 +20910,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_time(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_list(t *testing.T) {
@@ -20917,7 +20918,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_list(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_context(t *testing.T) {
@@ -20925,7 +20926,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_context(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_dtDuration(t *testing.T) {
@@ -20933,7 +20934,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_dtDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_ymDuration(t *testing.T) {
@@ -20941,7 +20942,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_ymDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_range(t *testing.T) {
@@ -20949,7 +20950,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_range(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_function(t *testing.T) {
@@ -20957,7 +20958,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_function
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_null(t *testing.T) {
@@ -20965,7 +20966,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_dtDuration_exp_rhs_null(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_dtDuration_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_dtDuration_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_number(t *testing.T) {
@@ -20973,7 +20974,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_number(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_string(t *testing.T) {
@@ -20981,7 +20982,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_string(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_boolean(t *testing.T) {
@@ -20989,7 +20990,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_boolean(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_date(t *testing.T) {
@@ -20997,7 +20998,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_date(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_dateAndTime(t *testing.T) {
@@ -21005,7 +21006,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_dateAndT
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_time(t *testing.T) {
@@ -21013,7 +21014,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_time(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_list(t *testing.T) {
@@ -21021,7 +21022,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_list(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_context(t *testing.T) {
@@ -21029,7 +21030,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_context(
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_dtDuration(t *testing.T) {
@@ -21037,7 +21038,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_dtDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_ymDuration(t *testing.T) {
@@ -21045,7 +21046,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_ymDurati
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_range(t *testing.T) {
@@ -21053,7 +21054,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_range(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_function(t *testing.T) {
@@ -21061,7 +21062,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_function
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_null(t *testing.T) {
@@ -21069,7 +21070,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_ymDuration_exp_rhs_null(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_ymDuration_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_ymDuration_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_number(t *testing.T) {
@@ -21077,7 +21078,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_number(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_string(t *testing.T) {
@@ -21085,7 +21086,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_string(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_boolean(t *testing.T) {
@@ -21093,7 +21094,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_boolean(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_date(t *testing.T) {
@@ -21101,7 +21102,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_date(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_dateAndTime(t *testing.T) {
@@ -21109,7 +21110,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_dateAndTime(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_time(t *testing.T) {
@@ -21117,7 +21118,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_time(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_list(t *testing.T) {
@@ -21125,7 +21126,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_list(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_context(t *testing.T) {
@@ -21133,7 +21134,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_context(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_dtDuration(t *testing.T) {
@@ -21141,7 +21142,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_dtDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_ymDuration(t *testing.T) {
@@ -21149,7 +21150,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_ymDuration(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_range(t *testing.T) {
@@ -21157,7 +21158,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_range(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_function(t *testing.T) {
@@ -21165,7 +21166,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_function(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_null(t *testing.T) {
@@ -21173,7 +21174,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_range_exp_rhs_null(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_range_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_range_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_number(t *testing.T) {
@@ -21181,7 +21182,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_number(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_string(t *testing.T) {
@@ -21189,7 +21190,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_string(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_boolean(t *testing.T) {
@@ -21197,7 +21198,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_boolean(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_date(t *testing.T) {
@@ -21205,7 +21206,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_date(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_dateAndTime(t *testing.T) {
@@ -21213,7 +21214,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_dateAndTim
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_time(t *testing.T) {
@@ -21221,7 +21222,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_time(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_list(t *testing.T) {
@@ -21229,7 +21230,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_list(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_context(t *testing.T) {
@@ -21237,7 +21238,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_context(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_dtDuration(t *testing.T) {
@@ -21245,7 +21246,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_dtDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_ymDuration(t *testing.T) {
@@ -21253,7 +21254,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_ymDuration
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_range(t *testing.T) {
@@ -21261,7 +21262,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_range(t *t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_function(t *testing.T) {
@@ -21269,7 +21270,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_function(t
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_null(t *testing.T) {
@@ -21277,7 +21278,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_function_exp_rhs_null(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_function_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_function_exp_rhs_null"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_number(t *testing.T) {
@@ -21285,7 +21286,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_number(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_number"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_number"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_string(t *testing.T) {
@@ -21293,7 +21294,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_string(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_string"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_string"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_boolean(t *testing.T) {
@@ -21301,7 +21302,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_boolean(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_boolean"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_boolean"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_date(t *testing.T) {
@@ -21309,7 +21310,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_date(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_date"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_date"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_dateAndTime(t *testing.T) {
@@ -21317,7 +21318,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_dateAndTime(t 
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_dateAndTime"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_dateAndTime"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_time(t *testing.T) {
@@ -21325,7 +21326,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_time(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_time"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_time"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_list(t *testing.T) {
@@ -21333,7 +21334,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_list(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_list"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_list"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_context(t *testing.T) {
@@ -21341,7 +21342,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_context(t *tes
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_context"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_context"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_dtDuration(t *testing.T) {
@@ -21349,7 +21350,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_dtDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_dtDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_dtDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_ymDuration(t *testing.T) {
@@ -21357,7 +21358,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_ymDuration(t *
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_ymDuration"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_ymDuration"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_range(t *testing.T) {
@@ -21365,7 +21366,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_range(t *testi
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_range"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_range"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_function(t *testing.T) {
@@ -21373,7 +21374,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_function(t *te
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_function"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_function"])
 }
 
 func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_null(t *testing.T) {
@@ -21381,7 +21382,7 @@ func TestTCK_0100_arithmetic_error_when_exponent_lhs_null_exp_rhs_null(t *testin
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_error_when_exponent_lhs_null_exp_rhs_null"])
+	require.Equal(t, feel.Null, result["_error_when_exponent_lhs_null_exp_rhs_null"])
 }
 
 func TestTCK_0103_feel_is_function_number_001(t *testing.T) {
@@ -21781,7 +21782,7 @@ func TestTCK_0103_feel_is_function_named_params_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["named_params_004"])
+	require.Equal(t, feel.Null, result["named_params_004"])
 }
 
 func TestTCK_1100_feel_decimal_function_001_af177e63fc(t *testing.T) {
@@ -21909,7 +21910,7 @@ func TestTCK_1101_feel_floor_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1101_feel_floor_function_007(t *testing.T) {
@@ -21917,7 +21918,7 @@ func TestTCK_1101_feel_floor_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1101_feel_floor_function_008(t *testing.T) {
@@ -21925,7 +21926,7 @@ func TestTCK_1101_feel_floor_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1101_feel_floor_function_009(t *testing.T) {
@@ -21933,7 +21934,7 @@ func TestTCK_1101_feel_floor_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1101_feel_floor_function_010(t *testing.T) {
@@ -21941,7 +21942,7 @@ func TestTCK_1101_feel_floor_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_1101_feel_floor_function_011(t *testing.T) {
@@ -21949,7 +21950,7 @@ func TestTCK_1101_feel_floor_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_1101_feel_floor_function_012(t *testing.T) {
@@ -21957,7 +21958,7 @@ func TestTCK_1101_feel_floor_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1101_feel_floor_function_013(t *testing.T) {
@@ -21965,7 +21966,7 @@ func TestTCK_1101_feel_floor_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1101_feel_floor_function_014(t *testing.T) {
@@ -21973,7 +21974,7 @@ func TestTCK_1101_feel_floor_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1101_feel_floor_function_015(t *testing.T) {
@@ -21981,7 +21982,7 @@ func TestTCK_1101_feel_floor_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_1101_feel_floor_function_016(t *testing.T) {
@@ -21989,7 +21990,7 @@ func TestTCK_1101_feel_floor_function_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	require.Equal(t, feel.Null, result["_decision016"])
 }
 
 func TestTCK_1101_feel_floor_function_017(t *testing.T) {
@@ -21997,7 +21998,7 @@ func TestTCK_1101_feel_floor_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_1102_feel_ceiling_function_001(t *testing.T) {
@@ -22045,7 +22046,7 @@ func TestTCK_1102_feel_ceiling_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1102_feel_ceiling_function_007(t *testing.T) {
@@ -22053,7 +22054,7 @@ func TestTCK_1102_feel_ceiling_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1102_feel_ceiling_function_008(t *testing.T) {
@@ -22061,7 +22062,7 @@ func TestTCK_1102_feel_ceiling_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1102_feel_ceiling_function_009(t *testing.T) {
@@ -22069,7 +22070,7 @@ func TestTCK_1102_feel_ceiling_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1102_feel_ceiling_function_010(t *testing.T) {
@@ -22077,7 +22078,7 @@ func TestTCK_1102_feel_ceiling_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_1102_feel_ceiling_function_011(t *testing.T) {
@@ -22085,7 +22086,7 @@ func TestTCK_1102_feel_ceiling_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_1102_feel_ceiling_function_012(t *testing.T) {
@@ -22093,7 +22094,7 @@ func TestTCK_1102_feel_ceiling_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1102_feel_ceiling_function_013(t *testing.T) {
@@ -22101,7 +22102,7 @@ func TestTCK_1102_feel_ceiling_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1102_feel_ceiling_function_014(t *testing.T) {
@@ -22109,7 +22110,7 @@ func TestTCK_1102_feel_ceiling_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1102_feel_ceiling_function_015(t *testing.T) {
@@ -22117,7 +22118,7 @@ func TestTCK_1102_feel_ceiling_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_1102_feel_ceiling_function_016(t *testing.T) {
@@ -22125,7 +22126,7 @@ func TestTCK_1102_feel_ceiling_function_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	require.Equal(t, feel.Null, result["_decision016"])
 }
 
 func TestTCK_1102_feel_ceiling_function_017(t *testing.T) {
@@ -22133,7 +22134,7 @@ func TestTCK_1102_feel_ceiling_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_1103_feel_substring_function_001_53051b5628(t *testing.T) {
@@ -22789,7 +22790,7 @@ func TestTCK_1110_feel_contains_function_001_2a4d7448c6(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jCpBZPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jCpBZPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1110_feel_contains_function_002_d2a1831b5c(t *testing.T) {
@@ -22797,7 +22798,7 @@ func TestTCK_1110_feel_contains_function_002_d2a1831b5c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jCpBaPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jCpBaPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1110_feel_contains_function_003_df56e0a1ad(t *testing.T) {
@@ -22805,7 +22806,7 @@ func TestTCK_1110_feel_contains_function_003_df56e0a1ad(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jCpBbPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jCpBbPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1110_feel_contains_function_004_805503b274(t *testing.T) {
@@ -22869,7 +22870,7 @@ func TestTCK_1111_feel_matches_function_fn_null_input(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_fn_null_pattern(t *testing.T) {
@@ -22877,7 +22878,7 @@ func TestTCK_1111_feel_matches_function_fn_null_pattern(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_fn_null_flags(t *testing.T) {
@@ -22901,7 +22902,7 @@ func TestTCK_1111_feel_matches_function_fn_matchesErr_1(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_fn_matches_27(t *testing.T) {
@@ -23013,7 +23014,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_1(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K_MatchesFunc_2(t *testing.T) {
@@ -23021,7 +23022,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_2(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K_MatchesFunc_3(t *testing.T) {
@@ -23029,7 +23030,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_3(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K_MatchesFunc_4(t *testing.T) {
@@ -23037,7 +23038,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_4(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K_MatchesFunc_5(t *testing.T) {
@@ -23045,7 +23046,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_5(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K_MatchesFunc_6(t *testing.T) {
@@ -23053,7 +23054,7 @@ func TestTCK_1111_feel_matches_function_K_MatchesFunc_6(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_1(t *testing.T) {
@@ -23109,7 +23110,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_7(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_8(t *testing.T) {
@@ -23117,7 +23118,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_8(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_9(t *testing.T) {
@@ -23125,7 +23126,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_10(t *testing.T) {
@@ -23133,7 +23134,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_10(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_11(t *testing.T) {
@@ -23141,7 +23142,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_11(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_12(t *testing.T) {
@@ -23149,7 +23150,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_12(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_13(t *testing.T) {
@@ -23157,7 +23158,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_13(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_14(t *testing.T) {
@@ -23165,7 +23166,7 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_14(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	require.Equal(t, feel.Null, result[""])
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_15(t *testing.T) {
@@ -23189,7 +23190,7 @@ func TestTCK_1115_feel_date_function_001_e9ae035ab9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZRPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZRPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_002_9b9e6085ce(t *testing.T) {
@@ -23197,7 +23198,7 @@ func TestTCK_1115_feel_date_function_002_9b9e6085ce(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZSPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZSPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_003_e4b7918d8f(t *testing.T) {
@@ -23205,7 +23206,7 @@ func TestTCK_1115_feel_date_function_003_e4b7918d8f(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZTPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZTPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_004_f24ed41117(t *testing.T) {
@@ -23213,7 +23214,7 @@ func TestTCK_1115_feel_date_function_004_f24ed41117(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZUPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZUPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_005_3540a22062(t *testing.T) {
@@ -23221,7 +23222,7 @@ func TestTCK_1115_feel_date_function_005_3540a22062(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZVPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZVPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_006_616e24dbb7(t *testing.T) {
@@ -23229,7 +23230,7 @@ func TestTCK_1115_feel_date_function_006_616e24dbb7(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZWPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZWPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_007_cda82a5d01(t *testing.T) {
@@ -23237,7 +23238,7 @@ func TestTCK_1115_feel_date_function_007_cda82a5d01(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZXPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZXPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_008_492649d3d0(t *testing.T) {
@@ -23245,7 +23246,7 @@ func TestTCK_1115_feel_date_function_008_492649d3d0(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZYPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZYPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_009_9e00bbdad3(t *testing.T) {
@@ -23253,7 +23254,7 @@ func TestTCK_1115_feel_date_function_009_9e00bbdad3(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZZPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZZPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_010_6d4d58d23a(t *testing.T) {
@@ -23261,7 +23262,7 @@ func TestTCK_1115_feel_date_function_010_6d4d58d23a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDiZaPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDiZaPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_011_5f0b42b1f8(t *testing.T) {
@@ -23429,7 +23430,7 @@ func TestTCK_1115_feel_date_function_031_4f5ec70669(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjQfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjQfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_032_fc66cc2fec(t *testing.T) {
@@ -23437,7 +23438,7 @@ func TestTCK_1115_feel_date_function_032_fc66cc2fec(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjRfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjRfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_033_c3a5600c62(t *testing.T) {
@@ -23445,7 +23446,7 @@ func TestTCK_1115_feel_date_function_033_c3a5600c62(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjSfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjSfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_034_7d2e18a10c(t *testing.T) {
@@ -23453,7 +23454,7 @@ func TestTCK_1115_feel_date_function_034_7d2e18a10c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjTfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjTfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_035_e6c1bb43fd(t *testing.T) {
@@ -23461,7 +23462,7 @@ func TestTCK_1115_feel_date_function_035_e6c1bb43fd(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjUfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjUfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_036_b826a6b5f9(t *testing.T) {
@@ -23469,7 +23470,7 @@ func TestTCK_1115_feel_date_function_036_b826a6b5f9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjVfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjVfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_037_cfd70896b6(t *testing.T) {
@@ -23477,7 +23478,7 @@ func TestTCK_1115_feel_date_function_037_cfd70896b6(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjWfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjWfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_038_c26782f559(t *testing.T) {
@@ -23485,7 +23486,7 @@ func TestTCK_1115_feel_date_function_038_c26782f559(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjXfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjXfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_039_67a6eafa3f(t *testing.T) {
@@ -23493,7 +23494,7 @@ func TestTCK_1115_feel_date_function_039_67a6eafa3f(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjYfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjYfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_040_dd2a2ed4a2(t *testing.T) {
@@ -23501,7 +23502,7 @@ func TestTCK_1115_feel_date_function_040_dd2a2ed4a2(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjZfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjZfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_041_9e7e388146(t *testing.T) {
@@ -23509,7 +23510,7 @@ func TestTCK_1115_feel_date_function_041_9e7e388146(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjafUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjafUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_042_8f5dd97588(t *testing.T) {
@@ -23517,7 +23518,7 @@ func TestTCK_1115_feel_date_function_042_8f5dd97588(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjbfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjbfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_043_8f82301fac(t *testing.T) {
@@ -23525,7 +23526,7 @@ func TestTCK_1115_feel_date_function_043_8f82301fac(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjcfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjcfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_044_74893220b4(t *testing.T) {
@@ -23533,7 +23534,7 @@ func TestTCK_1115_feel_date_function_044_74893220b4(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjdfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjdfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_045_969723fed5(t *testing.T) {
@@ -23541,7 +23542,7 @@ func TestTCK_1115_feel_date_function_045_969723fed5(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjefUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjefUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_046_36bf30268a(t *testing.T) {
@@ -23549,7 +23550,7 @@ func TestTCK_1115_feel_date_function_046_36bf30268a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjffUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjffUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_047_ba717eb672(t *testing.T) {
@@ -23557,7 +23558,7 @@ func TestTCK_1115_feel_date_function_047_ba717eb672(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjgfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjgfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_048_25595a6420(t *testing.T) {
@@ -23565,7 +23566,7 @@ func TestTCK_1115_feel_date_function_048_25595a6420(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjhfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjhfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_049_a1644ce710(t *testing.T) {
@@ -23573,7 +23574,7 @@ func TestTCK_1115_feel_date_function_049_a1644ce710(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jDrjifUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jDrjifUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1115_feel_date_function_050_8f1e299951(t *testing.T) {
@@ -23605,7 +23606,7 @@ func TestTCK_1116_feel_time_function_001_bdf26fdc72(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusE_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusE_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_002_9d2e399b96(t *testing.T) {
@@ -23613,7 +23614,7 @@ func TestTCK_1116_feel_time_function_002_9d2e399b96(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusF_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusF_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_003_d1f0ea5bb9(t *testing.T) {
@@ -23621,7 +23622,7 @@ func TestTCK_1116_feel_time_function_003_d1f0ea5bb9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusG_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusG_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_004_57aea91d1c(t *testing.T) {
@@ -23629,7 +23630,7 @@ func TestTCK_1116_feel_time_function_004_57aea91d1c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusH_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusH_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_005_32ea20b34f(t *testing.T) {
@@ -23637,7 +23638,7 @@ func TestTCK_1116_feel_time_function_005_32ea20b34f(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusI_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusI_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_006_e266498180(t *testing.T) {
@@ -23645,7 +23646,7 @@ func TestTCK_1116_feel_time_function_006_e266498180(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusJ_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusJ_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_007_ee82c7bf12(t *testing.T) {
@@ -23653,7 +23654,7 @@ func TestTCK_1116_feel_time_function_007_ee82c7bf12(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusK_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusK_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_008_08078c6c29(t *testing.T) {
@@ -23661,7 +23662,7 @@ func TestTCK_1116_feel_time_function_008_08078c6c29(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusL_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusL_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_009_804c21ed52(t *testing.T) {
@@ -23669,7 +23670,7 @@ func TestTCK_1116_feel_time_function_009_804c21ed52(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusM_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusM_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_010_cc773bb44b(t *testing.T) {
@@ -23677,7 +23678,7 @@ func TestTCK_1116_feel_time_function_010_cc773bb44b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusN_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusN_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_011_ad5b3a26b5(t *testing.T) {
@@ -23685,7 +23686,7 @@ func TestTCK_1116_feel_time_function_011_ad5b3a26b5(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusO_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusO_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_012_3c2f416fc9(t *testing.T) {
@@ -23693,7 +23694,7 @@ func TestTCK_1116_feel_time_function_012_3c2f416fc9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusP_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusP_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_013_7f22c0bda8(t *testing.T) {
@@ -23701,7 +23702,7 @@ func TestTCK_1116_feel_time_function_013_7f22c0bda8(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusQ_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusQ_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_014_0dc13176e8(t *testing.T) {
@@ -23709,7 +23710,7 @@ func TestTCK_1116_feel_time_function_014_0dc13176e8(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusR_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusR_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_015_376d693a79(t *testing.T) {
@@ -23725,7 +23726,7 @@ func TestTCK_1116_feel_time_function_016_c3cccff405(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEusT_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEusT_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_017_f3683885f5(t *testing.T) {
@@ -24029,7 +24030,7 @@ func TestTCK_1116_feel_time_function_054_fdc3094237(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEus5_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEus5_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_055_9b47db6ea4(t *testing.T) {
@@ -24037,7 +24038,7 @@ func TestTCK_1116_feel_time_function_055_9b47db6ea4(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEus6_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEus6_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_056_a8e828d64d(t *testing.T) {
@@ -24045,7 +24046,7 @@ func TestTCK_1116_feel_time_function_056_a8e828d64d(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEus7_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEus7_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_057_d039115cce(t *testing.T) {
@@ -24053,7 +24054,7 @@ func TestTCK_1116_feel_time_function_057_d039115cce(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEus8_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEus8_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_058_81dd4b1639(t *testing.T) {
@@ -24061,7 +24062,7 @@ func TestTCK_1116_feel_time_function_058_81dd4b1639(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jEus9_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jEus9_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_059_c7e1705fe1(t *testing.T) {
@@ -24069,7 +24070,7 @@ func TestTCK_1116_feel_time_function_059_c7e1705fe1(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32AfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32AfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_060_0cf4734fae(t *testing.T) {
@@ -24077,7 +24078,7 @@ func TestTCK_1116_feel_time_function_060_0cf4734fae(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32BfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32BfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_061_da2717f085(t *testing.T) {
@@ -24085,7 +24086,7 @@ func TestTCK_1116_feel_time_function_061_da2717f085(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32CfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32CfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_062_6cd1313fa9(t *testing.T) {
@@ -24093,7 +24094,7 @@ func TestTCK_1116_feel_time_function_062_6cd1313fa9(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32DfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32DfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_063_e85c40b474(t *testing.T) {
@@ -24101,7 +24102,7 @@ func TestTCK_1116_feel_time_function_063_e85c40b474(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32EfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32EfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_064_df74038c67(t *testing.T) {
@@ -24109,7 +24110,7 @@ func TestTCK_1116_feel_time_function_064_df74038c67(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32FfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32FfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_065_79eaef6fee(t *testing.T) {
@@ -24117,7 +24118,7 @@ func TestTCK_1116_feel_time_function_065_79eaef6fee(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32GfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32GfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_066_5116e12fd3(t *testing.T) {
@@ -24125,7 +24126,7 @@ func TestTCK_1116_feel_time_function_066_5116e12fd3(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32HfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32HfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_067_8285edad7b(t *testing.T) {
@@ -24133,7 +24134,7 @@ func TestTCK_1116_feel_time_function_067_8285edad7b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32IfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32IfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_068_ad528abb23(t *testing.T) {
@@ -24141,7 +24142,7 @@ func TestTCK_1116_feel_time_function_068_ad528abb23(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32JfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32JfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_069_5096701e2e(t *testing.T) {
@@ -24149,7 +24150,7 @@ func TestTCK_1116_feel_time_function_069_5096701e2e(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32KfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32KfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_070_8b2e39f570(t *testing.T) {
@@ -24157,7 +24158,7 @@ func TestTCK_1116_feel_time_function_070_8b2e39f570(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32LfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32LfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_071_cf9417648b(t *testing.T) {
@@ -24165,7 +24166,7 @@ func TestTCK_1116_feel_time_function_071_cf9417648b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32MfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32MfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_072_4c8c3835e4(t *testing.T) {
@@ -24173,7 +24174,7 @@ func TestTCK_1116_feel_time_function_072_4c8c3835e4(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32NfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32NfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_073_a5fc245959(t *testing.T) {
@@ -24181,7 +24182,7 @@ func TestTCK_1116_feel_time_function_073_a5fc245959(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32OfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32OfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_074_387d4411ea(t *testing.T) {
@@ -24189,7 +24190,7 @@ func TestTCK_1116_feel_time_function_074_387d4411ea(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32PfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32PfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_075_1606dda03d(t *testing.T) {
@@ -24197,7 +24198,7 @@ func TestTCK_1116_feel_time_function_075_1606dda03d(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32QfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32QfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_076_cb117ca612(t *testing.T) {
@@ -24205,7 +24206,7 @@ func TestTCK_1116_feel_time_function_076_cb117ca612(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32RfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32RfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_077_a4daad060c(t *testing.T) {
@@ -24213,7 +24214,7 @@ func TestTCK_1116_feel_time_function_077_a4daad060c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32SfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32SfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_078_c2fe73418b(t *testing.T) {
@@ -24221,7 +24222,7 @@ func TestTCK_1116_feel_time_function_078_c2fe73418b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32TfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32TfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_079_d2d226c3cd(t *testing.T) {
@@ -24229,7 +24230,7 @@ func TestTCK_1116_feel_time_function_079_d2d226c3cd(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jE32UfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jE32UfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1116_feel_time_function_080_2bbb8c86af(t *testing.T) {
@@ -24269,7 +24270,7 @@ func TestTCK_1117_feel_date_and_time_function_001_05fd7d6215(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN5PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN5PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_002_8c66ed2d1a(t *testing.T) {
@@ -24277,7 +24278,7 @@ func TestTCK_1117_feel_date_and_time_function_002_8c66ed2d1a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN6PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN6PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_003_335cff371a(t *testing.T) {
@@ -24285,7 +24286,7 @@ func TestTCK_1117_feel_date_and_time_function_003_335cff371a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN7PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN7PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_004_28ef3e7882(t *testing.T) {
@@ -24293,7 +24294,7 @@ func TestTCK_1117_feel_date_and_time_function_004_28ef3e7882(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN8PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN8PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_005_15df95b27a(t *testing.T) {
@@ -24301,7 +24302,7 @@ func TestTCK_1117_feel_date_and_time_function_005_15df95b27a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN9PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN9PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_006_8c794da0bb(t *testing.T) {
@@ -24309,7 +24310,7 @@ func TestTCK_1117_feel_date_and_time_function_006_8c794da0bb(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jFxN-PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jFxN-PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_007_59863d1b57(t *testing.T) {
@@ -24701,7 +24702,7 @@ func TestTCK_1117_feel_date_and_time_function_055_6ce9202e17(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_I_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_I_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_056_e66397568e(t *testing.T) {
@@ -24709,7 +24710,7 @@ func TestTCK_1117_feel_date_and_time_function_056_e66397568e(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_J_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_J_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_057_0452ca8719(t *testing.T) {
@@ -24717,7 +24718,7 @@ func TestTCK_1117_feel_date_and_time_function_057_0452ca8719(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_K_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_K_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_058_588040ceaa(t *testing.T) {
@@ -24725,7 +24726,7 @@ func TestTCK_1117_feel_date_and_time_function_058_588040ceaa(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_L_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_L_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_059_dfc62a3ebc(t *testing.T) {
@@ -24733,7 +24734,7 @@ func TestTCK_1117_feel_date_and_time_function_059_dfc62a3ebc(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_M_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_M_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_060_890c302575(t *testing.T) {
@@ -24741,7 +24742,7 @@ func TestTCK_1117_feel_date_and_time_function_060_890c302575(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_N_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_N_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_061_38ea1fc94d(t *testing.T) {
@@ -24749,7 +24750,7 @@ func TestTCK_1117_feel_date_and_time_function_061_38ea1fc94d(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_O_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_O_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_062_528aa370a3(t *testing.T) {
@@ -24757,7 +24758,7 @@ func TestTCK_1117_feel_date_and_time_function_062_528aa370a3(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_P_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_P_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_063_2c94303011(t *testing.T) {
@@ -24765,7 +24766,7 @@ func TestTCK_1117_feel_date_and_time_function_063_2c94303011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_Q_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_Q_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_064_926a372666(t *testing.T) {
@@ -24773,7 +24774,7 @@ func TestTCK_1117_feel_date_and_time_function_064_926a372666(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_R_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_R_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_065_a13de18ee4(t *testing.T) {
@@ -24781,7 +24782,7 @@ func TestTCK_1117_feel_date_and_time_function_065_a13de18ee4(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_S_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_S_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_066_e9f3d6d2c2(t *testing.T) {
@@ -24789,7 +24790,7 @@ func TestTCK_1117_feel_date_and_time_function_066_e9f3d6d2c2(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_T_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_T_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_067_35fef99b53(t *testing.T) {
@@ -24797,7 +24798,7 @@ func TestTCK_1117_feel_date_and_time_function_067_35fef99b53(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_U_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_U_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_068_abaa1c2774(t *testing.T) {
@@ -24805,7 +24806,7 @@ func TestTCK_1117_feel_date_and_time_function_068_abaa1c2774(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_V_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_V_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_069_ca84e9c806(t *testing.T) {
@@ -24813,7 +24814,7 @@ func TestTCK_1117_feel_date_and_time_function_069_ca84e9c806(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_W_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_W_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_070_889c75a0cf(t *testing.T) {
@@ -24821,7 +24822,7 @@ func TestTCK_1117_feel_date_and_time_function_070_889c75a0cf(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_X_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_X_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_071_e90b813dfe(t *testing.T) {
@@ -24829,7 +24830,7 @@ func TestTCK_1117_feel_date_and_time_function_071_e90b813dfe(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_Y_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_Y_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_072_9f3e9b9c21(t *testing.T) {
@@ -24837,7 +24838,7 @@ func TestTCK_1117_feel_date_and_time_function_072_9f3e9b9c21(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_Z_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_Z_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_073_717548bec6(t *testing.T) {
@@ -24845,7 +24846,7 @@ func TestTCK_1117_feel_date_and_time_function_073_717548bec6(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_a_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_a_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_074_a15e7f8d29(t *testing.T) {
@@ -24853,7 +24854,7 @@ func TestTCK_1117_feel_date_and_time_function_074_a15e7f8d29(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_b_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_b_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_075_4c3b8e7097(t *testing.T) {
@@ -24861,7 +24862,7 @@ func TestTCK_1117_feel_date_and_time_function_075_4c3b8e7097(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_c_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_c_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_076_4d31fed18e(t *testing.T) {
@@ -24869,7 +24870,7 @@ func TestTCK_1117_feel_date_and_time_function_076_4d31fed18e(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_d_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_d_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_077_f83b3ac8bb(t *testing.T) {
@@ -24877,7 +24878,7 @@ func TestTCK_1117_feel_date_and_time_function_077_f83b3ac8bb(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_e_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_e_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_078_e113dabcdd(t *testing.T) {
@@ -24885,7 +24886,7 @@ func TestTCK_1117_feel_date_and_time_function_078_e113dabcdd(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_f_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_f_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_079_2e6f80eb94(t *testing.T) {
@@ -24893,7 +24894,7 @@ func TestTCK_1117_feel_date_and_time_function_079_2e6f80eb94(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_g_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_g_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_080_69de952053(t *testing.T) {
@@ -24901,7 +24902,7 @@ func TestTCK_1117_feel_date_and_time_function_080_69de952053(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_h_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_h_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_081_e063215a7c(t *testing.T) {
@@ -24909,7 +24910,7 @@ func TestTCK_1117_feel_date_and_time_function_081_e063215a7c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_i_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_i_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_082_5b6ed4e801(t *testing.T) {
@@ -24917,7 +24918,7 @@ func TestTCK_1117_feel_date_and_time_function_082_5b6ed4e801(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_j_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_j_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_083_4f41731f2a(t *testing.T) {
@@ -24925,7 +24926,7 @@ func TestTCK_1117_feel_date_and_time_function_083_4f41731f2a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_k_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_k_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_084_c633b01603(t *testing.T) {
@@ -24933,7 +24934,7 @@ func TestTCK_1117_feel_date_and_time_function_084_c633b01603(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_l_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_l_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_085_a604a1bc80(t *testing.T) {
@@ -24941,7 +24942,7 @@ func TestTCK_1117_feel_date_and_time_function_085_a604a1bc80(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jF6_m_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jF6_m_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1117_feel_date_and_time_function_086_12ca8ac1d3(t *testing.T) {
@@ -24973,7 +24974,7 @@ func TestTCK_1120_feel_duration_function_001_f2c6cd6866(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG2L9PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG2L9PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_002_ddca5756ca(t *testing.T) {
@@ -24981,7 +24982,7 @@ func TestTCK_1120_feel_duration_function_002_ddca5756ca(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG2L-PUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG2L-PUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_003_951e1d1c31(t *testing.T) {
@@ -25293,7 +25294,7 @@ func TestTCK_1120_feel_duration_function_041_264bc9d682(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG7rj_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG7rj_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_042_59a0000245(t *testing.T) {
@@ -25301,7 +25302,7 @@ func TestTCK_1120_feel_duration_function_042_59a0000245(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG7rk_UUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG7rk_UUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_043_253815dc6c(t *testing.T) {
@@ -25309,7 +25310,7 @@ func TestTCK_1120_feel_duration_function_043_253815dc6c(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG8SkfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG8SkfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_044_f3b338d877(t *testing.T) {
@@ -25317,7 +25318,7 @@ func TestTCK_1120_feel_duration_function_044_f3b338d877(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG8SlfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG8SlfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_045_2ffcc37801(t *testing.T) {
@@ -25325,7 +25326,7 @@ func TestTCK_1120_feel_duration_function_045_2ffcc37801(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG8SmfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG8SmfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_046_eb637de5f6(t *testing.T) {
@@ -25333,7 +25334,7 @@ func TestTCK_1120_feel_duration_function_046_eb637de5f6(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG8SnfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG8SnfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_047_3210c46a5a(t *testing.T) {
@@ -25341,7 +25342,7 @@ func TestTCK_1120_feel_duration_function_047_3210c46a5a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG8SofUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG8SofUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_048_ab6244f767(t *testing.T) {
@@ -25349,7 +25350,7 @@ func TestTCK_1120_feel_duration_function_048_ab6244f767(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG85ofUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG85ofUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_049_2225b503a0(t *testing.T) {
@@ -25357,7 +25358,7 @@ func TestTCK_1120_feel_duration_function_049_2225b503a0(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG85pfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG85pfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1120_feel_duration_function_050_dd2ef33bbd(t *testing.T) {
@@ -25365,7 +25366,7 @@ func TestTCK_1120_feel_duration_function_050_dd2ef33bbd(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jG85qfUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jG85qfUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_001_b24a0c91f2(t *testing.T) {
@@ -25373,7 +25374,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_001_b24a0c91f2(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMpPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMpPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_002_4e7651ae0e(t *testing.T) {
@@ -25381,7 +25382,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_002_4e7651ae0e(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMqPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMqPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_003_0886738d31(t *testing.T) {
@@ -25389,7 +25390,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_003_0886738d31(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMrPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMrPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_004_1bdfef922b(t *testing.T) {
@@ -25397,7 +25398,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_004_1bdfef922b(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMsPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMsPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_005_d0a077da4e(t *testing.T) {
@@ -25405,7 +25406,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_005_d0a077da4e(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMtPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMtPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_006_f20de28d3f(t *testing.T) {
@@ -25413,7 +25414,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_006_f20de28d3f(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMuPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMuPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_007_0921c3d61a(t *testing.T) {
@@ -25421,7 +25422,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_007_0921c3d61a(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaMvPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaMvPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_008_015d35b442(t *testing.T) {
@@ -25581,7 +25582,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_027_3374dd86c6(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaNDPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaNDPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_028_77600e7b35(t *testing.T) {
@@ -25589,7 +25590,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_028_77600e7b35(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaNEPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaNEPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_029_15a0d0d9c1(t *testing.T) {
@@ -25597,7 +25598,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_029_15a0d0d9c1(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaNFPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaNFPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_030_ec16878596(t *testing.T) {
@@ -25605,7 +25606,7 @@ func TestTCK_1121_feel_years_and_months_duration_function_030_ec16878596(t *test
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_jHaNGPUUEeesLuP4RHs4vA"])
+	require.Equal(t, feel.Null, result["_jHaNGPUUEeesLuP4RHs4vA"])
 }
 
 func TestTCK_1121_feel_years_and_months_duration_function_031_4fd9c09d89(t *testing.T) {
@@ -25773,7 +25774,7 @@ func TestTCK_1131_feel_function_invocation_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	require.Equal(t, feel.Null, result["_decision001"])
 }
 
 func TestTCK_1131_feel_function_invocation_002(t *testing.T) {
@@ -25781,7 +25782,7 @@ func TestTCK_1131_feel_function_invocation_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_1131_feel_function_invocation_003(t *testing.T) {
@@ -25789,7 +25790,7 @@ func TestTCK_1131_feel_function_invocation_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_1131_feel_function_invocation_004(t *testing.T) {
@@ -25797,7 +25798,7 @@ func TestTCK_1131_feel_function_invocation_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_1131_feel_function_invocation_005(t *testing.T) {
@@ -25805,7 +25806,7 @@ func TestTCK_1131_feel_function_invocation_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1131_feel_function_invocation_006(t *testing.T) {
@@ -25813,7 +25814,7 @@ func TestTCK_1131_feel_function_invocation_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1131_feel_function_invocation_007(t *testing.T) {
@@ -25821,7 +25822,7 @@ func TestTCK_1131_feel_function_invocation_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1131_feel_function_invocation_008(t *testing.T) {
@@ -25829,7 +25830,7 @@ func TestTCK_1131_feel_function_invocation_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1140_feel_string_join_function_001(t *testing.T) {
@@ -25917,7 +25918,7 @@ func TestTCK_1140_feel_string_join_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1140_feel_string_join_function_009(t *testing.T) {
@@ -25925,7 +25926,7 @@ func TestTCK_1140_feel_string_join_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1140_feel_string_join_function_010_a(t *testing.T) {
@@ -25949,7 +25950,7 @@ func TestTCK_1140_feel_string_join_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	require.Equal(t, feel.Null, result["_decision011_a"])
 }
 
 func TestTCK_1140_feel_string_join_function_011_b(t *testing.T) {
@@ -25957,7 +25958,7 @@ func TestTCK_1140_feel_string_join_function_011_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_b"])
+	require.Equal(t, feel.Null, result["_decision011_b"])
 }
 
 func TestTCK_1140_feel_string_join_function_012_a(t *testing.T) {
@@ -25965,7 +25966,7 @@ func TestTCK_1140_feel_string_join_function_012_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012_a"])
+	require.Equal(t, feel.Null, result["_decision012_a"])
 }
 
 func TestTCK_1140_feel_string_join_function_012_b(t *testing.T) {
@@ -25973,7 +25974,7 @@ func TestTCK_1140_feel_string_join_function_012_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012_b"])
+	require.Equal(t, feel.Null, result["_decision012_b"])
 }
 
 func TestTCK_1140_feel_string_join_function_013(t *testing.T) {
@@ -25981,7 +25982,7 @@ func TestTCK_1140_feel_string_join_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1140_feel_string_join_function_014(t *testing.T) {
@@ -25989,7 +25990,7 @@ func TestTCK_1140_feel_string_join_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1140_feel_string_join_function_015(t *testing.T) {
@@ -26045,7 +26046,7 @@ func TestTCK_1141_feel_round_up_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1141_feel_round_up_function_007(t *testing.T) {
@@ -26053,7 +26054,7 @@ func TestTCK_1141_feel_round_up_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1141_feel_round_up_function_008(t *testing.T) {
@@ -26061,7 +26062,7 @@ func TestTCK_1141_feel_round_up_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1141_feel_round_up_function_009(t *testing.T) {
@@ -26069,7 +26070,7 @@ func TestTCK_1141_feel_round_up_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1141_feel_round_up_function_010(t *testing.T) {
@@ -26085,7 +26086,7 @@ func TestTCK_1141_feel_round_up_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	require.Equal(t, feel.Null, result["_decision011_a"])
 }
 
 func TestTCK_1141_feel_round_up_function_012(t *testing.T) {
@@ -26093,7 +26094,7 @@ func TestTCK_1141_feel_round_up_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1141_feel_round_up_function_013(t *testing.T) {
@@ -26101,7 +26102,7 @@ func TestTCK_1141_feel_round_up_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1141_feel_round_up_function_014(t *testing.T) {
@@ -26109,7 +26110,7 @@ func TestTCK_1141_feel_round_up_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1141_feel_round_up_function_016_b(t *testing.T) {
@@ -26117,7 +26118,7 @@ func TestTCK_1141_feel_round_up_function_016_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016_b"])
+	require.Equal(t, feel.Null, result["_decision016_b"])
 }
 
 func TestTCK_1141_feel_round_up_function_017_a(t *testing.T) {
@@ -26133,7 +26134,7 @@ func TestTCK_1141_feel_round_up_function_017_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017_b"])
+	require.Equal(t, feel.Null, result["_decision017_b"])
 }
 
 func TestTCK_1142_feel_round_down_function_001(t *testing.T) {
@@ -26173,7 +26174,7 @@ func TestTCK_1142_feel_round_down_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1142_feel_round_down_function_007(t *testing.T) {
@@ -26181,7 +26182,7 @@ func TestTCK_1142_feel_round_down_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1142_feel_round_down_function_008(t *testing.T) {
@@ -26189,7 +26190,7 @@ func TestTCK_1142_feel_round_down_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1142_feel_round_down_function_009(t *testing.T) {
@@ -26197,7 +26198,7 @@ func TestTCK_1142_feel_round_down_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1142_feel_round_down_function_010(t *testing.T) {
@@ -26213,7 +26214,7 @@ func TestTCK_1142_feel_round_down_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	require.Equal(t, feel.Null, result["_decision011_a"])
 }
 
 func TestTCK_1142_feel_round_down_function_012(t *testing.T) {
@@ -26221,7 +26222,7 @@ func TestTCK_1142_feel_round_down_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1142_feel_round_down_function_013(t *testing.T) {
@@ -26229,7 +26230,7 @@ func TestTCK_1142_feel_round_down_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1142_feel_round_down_function_014(t *testing.T) {
@@ -26237,7 +26238,7 @@ func TestTCK_1142_feel_round_down_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1142_feel_round_down_function_016_b(t *testing.T) {
@@ -26245,7 +26246,7 @@ func TestTCK_1142_feel_round_down_function_016_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016_b"])
+	require.Equal(t, feel.Null, result["_decision016_b"])
 }
 
 func TestTCK_1142_feel_round_down_function_017_a(t *testing.T) {
@@ -26261,7 +26262,7 @@ func TestTCK_1142_feel_round_down_function_017_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017_b"])
+	require.Equal(t, feel.Null, result["_decision017_b"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_001(t *testing.T) {
@@ -26301,7 +26302,7 @@ func TestTCK_1143_feel_round_half_up_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_007(t *testing.T) {
@@ -26309,7 +26310,7 @@ func TestTCK_1143_feel_round_half_up_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_008(t *testing.T) {
@@ -26317,7 +26318,7 @@ func TestTCK_1143_feel_round_half_up_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_009(t *testing.T) {
@@ -26325,7 +26326,7 @@ func TestTCK_1143_feel_round_half_up_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_010(t *testing.T) {
@@ -26341,7 +26342,7 @@ func TestTCK_1143_feel_round_half_up_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	require.Equal(t, feel.Null, result["_decision011_a"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_012(t *testing.T) {
@@ -26349,7 +26350,7 @@ func TestTCK_1143_feel_round_half_up_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_013(t *testing.T) {
@@ -26357,7 +26358,7 @@ func TestTCK_1143_feel_round_half_up_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_014(t *testing.T) {
@@ -26365,7 +26366,7 @@ func TestTCK_1143_feel_round_half_up_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_016_b(t *testing.T) {
@@ -26373,7 +26374,7 @@ func TestTCK_1143_feel_round_half_up_function_016_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016_b"])
+	require.Equal(t, feel.Null, result["_decision016_b"])
 }
 
 func TestTCK_1143_feel_round_half_up_function_017_a(t *testing.T) {
@@ -26389,7 +26390,7 @@ func TestTCK_1143_feel_round_half_up_function_017_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017_b"])
+	require.Equal(t, feel.Null, result["_decision017_b"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_001(t *testing.T) {
@@ -26429,7 +26430,7 @@ func TestTCK_1144_feel_round_half_down_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_007(t *testing.T) {
@@ -26437,7 +26438,7 @@ func TestTCK_1144_feel_round_half_down_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_008(t *testing.T) {
@@ -26445,7 +26446,7 @@ func TestTCK_1144_feel_round_half_down_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_009(t *testing.T) {
@@ -26453,7 +26454,7 @@ func TestTCK_1144_feel_round_half_down_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_010(t *testing.T) {
@@ -26469,7 +26470,7 @@ func TestTCK_1144_feel_round_half_down_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	require.Equal(t, feel.Null, result["_decision011_a"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_012(t *testing.T) {
@@ -26477,7 +26478,7 @@ func TestTCK_1144_feel_round_half_down_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_013(t *testing.T) {
@@ -26485,7 +26486,7 @@ func TestTCK_1144_feel_round_half_down_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_014(t *testing.T) {
@@ -26493,7 +26494,7 @@ func TestTCK_1144_feel_round_half_down_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_016_b(t *testing.T) {
@@ -26501,7 +26502,7 @@ func TestTCK_1144_feel_round_half_down_function_016_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016_b"])
+	require.Equal(t, feel.Null, result["_decision016_b"])
 }
 
 func TestTCK_1144_feel_round_half_down_function_017_a(t *testing.T) {
@@ -26517,7 +26518,7 @@ func TestTCK_1144_feel_round_half_down_function_017_b(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017_b"])
+	require.Equal(t, feel.Null, result["_decision017_b"])
 }
 
 func TestTCK_1145_feel_context_function_001(t *testing.T) {
@@ -26541,7 +26542,7 @@ func TestTCK_1145_feel_context_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_1145_feel_context_function_004(t *testing.T) {
@@ -26565,7 +26566,7 @@ func TestTCK_1145_feel_context_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1145_feel_context_function_007(t *testing.T) {
@@ -26573,7 +26574,7 @@ func TestTCK_1145_feel_context_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1145_feel_context_function_008(t *testing.T) {
@@ -26581,7 +26582,7 @@ func TestTCK_1145_feel_context_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1145_feel_context_function_009(t *testing.T) {
@@ -26605,7 +26606,7 @@ func TestTCK_1145_feel_context_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_1145_feel_context_function_012(t *testing.T) {
@@ -26613,7 +26614,7 @@ func TestTCK_1145_feel_context_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1145_feel_context_function_013(t *testing.T) {
@@ -26621,7 +26622,7 @@ func TestTCK_1145_feel_context_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1145_feel_context_function_014_a(t *testing.T) {
@@ -26645,7 +26646,7 @@ func TestTCK_1145_feel_context_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_1145_feel_context_function_016(t *testing.T) {
@@ -26653,7 +26654,7 @@ func TestTCK_1145_feel_context_function_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	require.Equal(t, feel.Null, result["_decision016"])
 }
 
 func TestTCK_1145_feel_context_function_017(t *testing.T) {
@@ -26709,7 +26710,7 @@ func TestTCK_1146_feel_context_put_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1146_feel_context_put_function_006(t *testing.T) {
@@ -26717,7 +26718,7 @@ func TestTCK_1146_feel_context_put_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1146_feel_context_put_function_007(t *testing.T) {
@@ -26733,7 +26734,7 @@ func TestTCK_1146_feel_context_put_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	require.Equal(t, feel.Null, result["_decision008"])
 }
 
 func TestTCK_1146_feel_context_put_function_009(t *testing.T) {
@@ -26741,7 +26742,7 @@ func TestTCK_1146_feel_context_put_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1146_feel_context_put_function_010(t *testing.T) {
@@ -26757,7 +26758,7 @@ func TestTCK_1146_feel_context_put_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_1146_feel_context_put_function_012(t *testing.T) {
@@ -26765,7 +26766,7 @@ func TestTCK_1146_feel_context_put_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	require.Equal(t, feel.Null, result["_decision012"])
 }
 
 func TestTCK_1146_feel_context_put_function_013(t *testing.T) {
@@ -26773,7 +26774,7 @@ func TestTCK_1146_feel_context_put_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	require.Equal(t, feel.Null, result["_decision013"])
 }
 
 func TestTCK_1146_feel_context_put_function_014(t *testing.T) {
@@ -26821,7 +26822,7 @@ func TestTCK_1146_feel_context_put_function_nested002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested002"])
+	require.Equal(t, feel.Null, result["_nested002"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested003(t *testing.T) {
@@ -26829,7 +26830,7 @@ func TestTCK_1146_feel_context_put_function_nested003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested003"])
+	require.Equal(t, feel.Null, result["_nested003"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested004(t *testing.T) {
@@ -26837,7 +26838,7 @@ func TestTCK_1146_feel_context_put_function_nested004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested004"])
+	require.Equal(t, feel.Null, result["_nested004"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested005(t *testing.T) {
@@ -26845,7 +26846,7 @@ func TestTCK_1146_feel_context_put_function_nested005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested005"])
+	require.Equal(t, feel.Null, result["_nested005"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested006(t *testing.T) {
@@ -26869,7 +26870,7 @@ func TestTCK_1146_feel_context_put_function_nested008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested008"])
+	require.Equal(t, feel.Null, result["_nested008"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested009(t *testing.T) {
@@ -26877,7 +26878,7 @@ func TestTCK_1146_feel_context_put_function_nested009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_nested009"])
+	require.Equal(t, feel.Null, result["_nested009"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested010(t *testing.T) {
@@ -26949,7 +26950,7 @@ func TestTCK_1147_feel_context_merge_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1147_feel_context_merge_function_006(t *testing.T) {
@@ -26957,7 +26958,7 @@ func TestTCK_1147_feel_context_merge_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1147_feel_context_merge_function_007(t *testing.T) {
@@ -26965,7 +26966,7 @@ func TestTCK_1147_feel_context_merge_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1147_feel_context_merge_function_008(t *testing.T) {
@@ -26981,7 +26982,7 @@ func TestTCK_1147_feel_context_merge_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	require.Equal(t, feel.Null, result["_decision009"])
 }
 
 func TestTCK_1147_feel_context_merge_function_010(t *testing.T) {
@@ -26989,7 +26990,7 @@ func TestTCK_1147_feel_context_merge_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_1147_feel_context_merge_function_011(t *testing.T) {
@@ -26997,7 +26998,7 @@ func TestTCK_1147_feel_context_merge_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	require.Equal(t, feel.Null, result["_decision011"])
 }
 
 func TestTCK_1147_feel_context_merge_function_012(t *testing.T) {
@@ -27029,7 +27030,7 @@ func TestTCK_1148_feel_now_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_1149_feel_today_function_001(t *testing.T) {
@@ -27045,7 +27046,7 @@ func TestTCK_1149_feel_today_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	require.Equal(t, feel.Null, result["_decision002"])
 }
 
 func TestTCK_1150_boxed_conditional_001(t *testing.T) {
@@ -27069,7 +27070,7 @@ func TestTCK_1150_boxed_conditional_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_1151_boxed_filter_001(t *testing.T) {
@@ -27093,7 +27094,7 @@ func TestTCK_1151_boxed_filter_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_1151_boxed_filter_005(t *testing.T) {
@@ -27101,7 +27102,7 @@ func TestTCK_1151_boxed_filter_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1152_boxed_for_001(t *testing.T) {
@@ -27141,7 +27142,7 @@ func TestTCK_1153_boxed_some_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1153_boxed_some_006(t *testing.T) {
@@ -27149,7 +27150,7 @@ func TestTCK_1153_boxed_some_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1153_boxed_some_007(t *testing.T) {
@@ -27181,7 +27182,7 @@ func TestTCK_1154_boxed_every_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1154_boxed_every_006(t *testing.T) {
@@ -27189,7 +27190,7 @@ func TestTCK_1154_boxed_every_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1154_boxed_every_007(t *testing.T) {
@@ -27205,7 +27206,24 @@ func TestTCK_1155_list_replace_function_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+
+	dRes := result["_decision001"]
+
+	vSlice, isSlice := dRes.([]any)
+	require.True(t, isSlice)
+
+	expected := []feel.Number{
+		*feel.N(1),
+		*feel.N(4),
+		*feel.N(3),
+	}
+
+	for i, vNum := range vSlice {
+		fNum, isNum := vNum.(*feel.Number)
+		require.True(t, isNum)
+
+		require.Equal(t, expected[i].Int64(), fNum.Int64())
+	}
 }
 
 func TestTCK_1155_list_replace_function_002(t *testing.T) {
@@ -27221,7 +27239,7 @@ func TestTCK_1155_list_replace_function_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
+	require.Equal(t, feel.Null, result["_decision003"])
 }
 
 func TestTCK_1155_list_replace_function_004(t *testing.T) {
@@ -27229,7 +27247,7 @@ func TestTCK_1155_list_replace_function_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	require.Equal(t, feel.Null, result["_decision004"])
 }
 
 func TestTCK_1155_list_replace_function_005(t *testing.T) {
@@ -27237,7 +27255,7 @@ func TestTCK_1155_list_replace_function_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
+	require.Equal(t, feel.Null, result["_decision005"])
 }
 
 func TestTCK_1155_list_replace_function_006(t *testing.T) {
@@ -27245,7 +27263,7 @@ func TestTCK_1155_list_replace_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	require.Equal(t, feel.Null, result["_decision006"])
 }
 
 func TestTCK_1155_list_replace_function_007(t *testing.T) {
@@ -27253,7 +27271,7 @@ func TestTCK_1155_list_replace_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	require.Equal(t, feel.Null, result["_decision007"])
 }
 
 func TestTCK_1155_list_replace_function_008(t *testing.T) {
@@ -27277,7 +27295,7 @@ func TestTCK_1155_list_replace_function_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	require.Equal(t, feel.Null, result["_decision010"])
 }
 
 func TestTCK_1155_list_replace_function_011(t *testing.T) {
@@ -27317,7 +27335,7 @@ func TestTCK_1155_list_replace_function_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	require.Equal(t, feel.Null, result["_decision014"])
 }
 
 func TestTCK_1155_list_replace_function_015(t *testing.T) {
@@ -27325,7 +27343,7 @@ func TestTCK_1155_list_replace_function_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	require.Equal(t, feel.Null, result["_decision015"])
 }
 
 func TestTCK_1155_list_replace_function_016(t *testing.T) {
@@ -27333,7 +27351,7 @@ func TestTCK_1155_list_replace_function_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	require.Equal(t, feel.Null, result["_decision016"])
 }
 
 func TestTCK_1155_list_replace_function_017(t *testing.T) {
@@ -27341,7 +27359,7 @@ func TestTCK_1155_list_replace_function_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	require.Equal(t, feel.Null, result["_decision017"])
 }
 
 func TestTCK_1155_list_replace_function_018(t *testing.T) {
@@ -27349,7 +27367,7 @@ func TestTCK_1155_list_replace_function_018(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision018"])
+	require.Equal(t, feel.Null, result["_decision018"])
 }
 
 func TestTCK_1155_list_replace_function_019(t *testing.T) {
@@ -27357,7 +27375,7 @@ func TestTCK_1155_list_replace_function_019(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision019"])
+	require.Equal(t, feel.Null, result["_decision019"])
 }
 
 func TestTCK_1155_list_replace_function_020(t *testing.T) {
@@ -27376,839 +27394,839 @@ func TestTCK_1155_list_replace_function_021(t *testing.T) {
 	require.Equal(t, "", result["_decision021"])
 }
 
-func TestTCK_1156_range_function_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001"])
-}
-
-func TestTCK_1156_range_function_001_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_a"])
-}
-
-func TestTCK_1156_range_function_001_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_b"])
-}
-
-func TestTCK_1156_range_function_001_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_c"])
-}
-
-func TestTCK_1156_range_function_001_d(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_d"])
-}
-
-func TestTCK_1156_range_function_001_e(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_e"])
-}
-
-func TestTCK_1156_range_function_001_g(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_g"])
-}
-
-func TestTCK_1156_range_function_001_h(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_h"])
-}
-
-func TestTCK_1156_range_function_001_i(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision001_i"])
-}
-
-func TestTCK_1156_range_function_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision002"])
-}
-
-func TestTCK_1156_range_function_003_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision003_a"])
-}
-
-func TestTCK_1156_range_function_003_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision003_b"])
-}
-
-func TestTCK_1156_range_function_003_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision003_c"])
-}
-
-func TestTCK_1156_range_function_003_d(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision003_d"])
-}
-
-func TestTCK_1156_range_function_003_e(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision003_e"])
-}
-
-func TestTCK_1156_range_function_004_e(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004_e"])
-}
-
-func TestTCK_1156_range_function_004_f(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004_f"])
-}
-
-func TestTCK_1156_range_function_005_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_a"])
-}
-
-func TestTCK_1156_range_function_005_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_b"])
-}
-
-func TestTCK_1156_range_function_005_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_c"])
-}
-
-func TestTCK_1156_range_function_005_d(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_d"])
-}
-
-func TestTCK_1156_range_function_005_e(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_e"])
-}
-
-func TestTCK_1156_range_function_005_f(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision005_f"])
-}
-
-func TestTCK_1156_range_function_006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision006"])
-}
-
-func TestTCK_1156_range_function_007_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision007_a"])
-}
-
-func TestTCK_1156_range_function_007_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007_b"])
-}
-
-func TestTCK_1156_range_function_007_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{
-		"input_001": "1970-01-01",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007_c"])
-}
-
-func TestTCK_1156_range_function_008_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision008_a"])
-}
-
-func TestTCK_1156_range_function_008_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_b"])
-}
-
-func TestTCK_1156_range_function_008_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{
-		"input_001": "1970-01-01T00:00:00",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008_c"])
-}
-
-func TestTCK_1156_range_function_009_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision009_a"])
-}
-
-func TestTCK_1156_range_function_009_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_b"])
-}
-
-func TestTCK_1156_range_function_009_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{
-		"input_001": "00:00:00",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009_c"])
-}
-
-func TestTCK_1156_range_function_010_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision010_a"])
-}
-
-func TestTCK_1156_range_function_010_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010_b"])
-}
-
-func TestTCK_1156_range_function_010_c(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{
-		"input_001": "P1D",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010_c"])
-}
-
-func TestTCK_1156_range_function_011(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, true, result["_decision011"])
-}
-
-func TestTCK_1156_range_function_012(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
-}
-
-func TestTCK_1156_range_function_013_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013_a"])
-}
-
-func TestTCK_1156_range_function_013_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013_b"])
-}
-
-func TestTCK_1156_range_function_014(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
-}
-
-func TestTCK_1156_range_function_015_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015_a"])
-}
-
-func TestTCK_1156_range_function_015_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015_b"])
-}
-
-func TestTCK_1156_range_function_016(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
-}
-
-func TestTCK_1156_range_function_017(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
-}
-
-func TestTCK_1156_range_function_018(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision018"])
-}
-
-func TestTCK_1156_range_function_019_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision019_sa"])
-}
-
-func TestTCK_1156_range_function_019_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision019_b"])
-}
-
-func TestTCK_1156_range_function_020(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision020"])
-}
-
-func TestTCK_1156_range_function_021(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision021"])
-}
-
-func TestTCK_1156_range_function_022(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision022"])
-}
-
-func TestTCK_1156_range_function_023(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision023"])
-}
-
-func TestTCK_1156_range_function_024(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision024"])
-}
-
-func TestTCK_1156_range_function_025(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision025"])
-}
-
-func TestTCK_1156_range_function_026(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision026"])
-}
-
-func TestTCK_1156_range_function_027(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision027"])
-}
-
-func TestTCK_1161_boxed_list_expression_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
-	inputs := map[string]any{
-		"A": float64(123),
-		"B": true,
-		"C": "abc",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
-}
-
-func TestTCK_1161_boxed_list_expression_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
-	inputs := map[string]any{
-		"A": "",
-		"B": "",
-		"C": "",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
-}
-
-func TestTCK_0015_all_any_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
-	inputs := map[string]any{
-		"a": "10",
-		"b": "9",
-		"c": "1",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "true", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
-	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
-	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
-	require.Equal(t, "true", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
-	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
-}
-
-func TestTCK_0015_all_any_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
-	inputs := map[string]any{
-		"a": "10",
-		"b": "11",
-		"c": "1",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "false", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
-	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
-	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
-	require.Equal(t, "false", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
-	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
-}
-
-func TestTCK_0019_flight_rebooking_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0019-flight-rebooking/0019-flight-rebooking.dmn")
-	inputs := map[string]any{
-		"Flight List":    map[string]any{},
-		"Passenger List": map[string]any{},
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["d_RebookedPassengers"])
-}
-
-func TestTCK_0079_feel_string_function_decision_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
-}
-
-func TestTCK_0079_feel_string_function_decision_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
-}
-
-func TestTCK_0079_feel_string_function_decision_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "foo", result["_decision_003"])
-}
-
-func TestTCK_0079_feel_string_function_decision_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_004"])
-}
-
-func TestTCK_0079_feel_string_function_null_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_null_001"])
-}
-
-func TestTCK_0079_feel_string_function_string_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "foo", result["_string_001"])
-}
-
-func TestTCK_0079_feel_string_function_number_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "123.45", result["_number_001"])
-}
-
-func TestTCK_0079_feel_string_function_boolean_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "true", result["_boolean_001"])
-}
-
-func TestTCK_0079_feel_string_function_boolean_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "false", result["_boolean_002"])
-}
-
-func TestTCK_0079_feel_string_function_date_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "2018-12-10", result["_date_001"])
-}
-
-func TestTCK_0079_feel_string_function_dateTime_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "2018-12-10T00:00:00", result["_dateTime_001"])
-}
-
-func TestTCK_0079_feel_string_function_dateTime_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "2018-12-10T10:30:00.0001", result["_dateTime_002"])
-}
-
-func TestTCK_0079_feel_string_function_dateTime_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "2018-12-10T10:30:00.0001+05:00:01", result["_dateTime_003"])
-}
-
-func TestTCK_0079_feel_string_function_dateTime_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "2018-12-10T10:30:00@Etc/UTC", result["_dateTime_004"])
-}
-
-func TestTCK_0079_feel_string_function_time_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "10:30:00.0001", result["_time_001"])
-}
-
-func TestTCK_0079_feel_string_function_time_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "10:30:00.0001+05:00:01", result["_time_002"])
-}
-
-func TestTCK_0079_feel_string_function_time_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "10:30:00@Etc/UTC", result["_time_003"])
-}
-
-func TestTCK_0079_feel_string_function_dt_duration_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P1D", result["_dt_duration_001"])
-}
-
-func TestTCK_0079_feel_string_function_dt_duration_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "-P1D", result["_dt_duration_002"])
-}
-
-func TestTCK_0079_feel_string_function_dt_duration_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "PT0S", result["_dt_duration_003"])
-}
-
-func TestTCK_0079_feel_string_function_dt_duration_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P1DT2H3M4.1234S", result["_dt_duration_004"])
-}
-
-func TestTCK_0079_feel_string_function_dt_duration_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P2DT1H", result["_dt_duration_005"])
-}
-
-func TestTCK_0079_feel_string_function_ym_duration_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P1Y", result["_ym_duration_001"])
-}
-
-func TestTCK_0079_feel_string_function_ym_duration_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "-P1Y", result["_ym_duration_002"])
-}
-
-func TestTCK_0079_feel_string_function_ym_duration_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P0M", result["_ym_duration_003"])
-}
-
-func TestTCK_0079_feel_string_function_ym_duration_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P1Y2M", result["_ym_duration_004"])
-}
-
-func TestTCK_0079_feel_string_function_ym_duration_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "P2Y1M", result["_ym_duration_005"])
-}
-
-func TestTCK_0079_feel_string_function_list_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "[1, 2, 3, \"foo\"]", result["_list_001"])
-}
-
-func TestTCK_0079_feel_string_function_list_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "[1, 2, 3, [4, 5, \"foo\"]]", result["_list_002"])
-}
-
-func TestTCK_0079_feel_string_function_list_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "[\"\\\"foo\\\"\"]", result["_list_003"])
-}
-
-func TestTCK_0079_feel_string_function_context_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{a: \"foo\"}", result["_context_001"])
-}
-
-func TestTCK_0079_feel_string_function_context_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{a: \"foo\", b: {bar: \"baz\"}}", result["_context_002"])
-}
-
-func TestTCK_0079_feel_string_function_context_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{\"{\": \"foo\"}", result["_context_003"])
-}
-
-func TestTCK_0079_feel_string_function_context_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{\":\": \"foo\"}", result["_context_004"])
-}
-
-func TestTCK_0079_feel_string_function_context_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{\",\": \"foo\"}", result["_context_005"])
-}
-
-func TestTCK_0079_feel_string_function_context_006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{\"}\": \"foo\"}", result["_context_006"])
-}
-
-func TestTCK_0079_feel_string_function_context_007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "{\"\\\"\": \"foo\"}", result["_context_007"])
-}
-
-func TestTCK_0088_recursion_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, float64(55), result["_fibonacci_001"])
-}
-
-func TestTCK_0088_recursion_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
-	inputs := map[string]any{
-		"treeData": map[string]any{"children": "", "value": float64(1)},
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, float64(28), result["_tree_001"])
-}
+// func TestTCK_1156_range_function_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001"])
+// }
+//
+// func TestTCK_1156_range_function_001_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_a"])
+// }
+//
+// func TestTCK_1156_range_function_001_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_b"])
+// }
+//
+// func TestTCK_1156_range_function_001_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_c"])
+// }
+//
+// func TestTCK_1156_range_function_001_d(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_d"])
+// }
+//
+// func TestTCK_1156_range_function_001_e(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_e"])
+// }
+//
+// func TestTCK_1156_range_function_001_g(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_g"])
+// }
+//
+// func TestTCK_1156_range_function_001_h(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_h"])
+// }
+//
+// func TestTCK_1156_range_function_001_i(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision001_i"])
+// }
+//
+// func TestTCK_1156_range_function_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision002"])
+// }
+//
+// func TestTCK_1156_range_function_003_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision003_a"])
+// }
+//
+// func TestTCK_1156_range_function_003_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision003_b"])
+// }
+//
+// func TestTCK_1156_range_function_003_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision003_c"])
+// }
+//
+// func TestTCK_1156_range_function_003_d(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision003_d"])
+// }
+//
+// func TestTCK_1156_range_function_003_e(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision003_e"])
+// }
+//
+// func TestTCK_1156_range_function_004_e(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision004_e"])
+// }
+//
+// func TestTCK_1156_range_function_004_f(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision004_f"])
+// }
+//
+// func TestTCK_1156_range_function_005_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_a"])
+// }
+//
+// func TestTCK_1156_range_function_005_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_b"])
+// }
+//
+// func TestTCK_1156_range_function_005_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_c"])
+// }
+//
+// func TestTCK_1156_range_function_005_d(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_d"])
+// }
+//
+// func TestTCK_1156_range_function_005_e(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_e"])
+// }
+//
+// func TestTCK_1156_range_function_005_f(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision005_f"])
+// }
+//
+// func TestTCK_1156_range_function_006(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision006"])
+// }
+//
+// func TestTCK_1156_range_function_007_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision007_a"])
+// }
+//
+// func TestTCK_1156_range_function_007_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision007_b"])
+// }
+//
+// func TestTCK_1156_range_function_007_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{
+// 		"input_001": "1970-01-01",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision007_c"])
+// }
+//
+// func TestTCK_1156_range_function_008_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision008_a"])
+// }
+//
+// func TestTCK_1156_range_function_008_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision008_b"])
+// }
+//
+// func TestTCK_1156_range_function_008_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{
+// 		"input_001": "1970-01-01T00:00:00",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision008_c"])
+// }
+//
+// func TestTCK_1156_range_function_009_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision009_a"])
+// }
+//
+// func TestTCK_1156_range_function_009_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision009_b"])
+// }
+//
+// func TestTCK_1156_range_function_009_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{
+// 		"input_001": "00:00:00",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision009_c"])
+// }
+//
+// func TestTCK_1156_range_function_010_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision010_a"])
+// }
+//
+// func TestTCK_1156_range_function_010_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision010_b"])
+// }
+//
+// func TestTCK_1156_range_function_010_c(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{
+// 		"input_001": "P1D",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision010_c"])
+// }
+//
+// func TestTCK_1156_range_function_011(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, true, result["_decision011"])
+// }
+//
+// func TestTCK_1156_range_function_012(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision012"])
+// }
+//
+// func TestTCK_1156_range_function_013_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision013_a"])
+// }
+//
+// func TestTCK_1156_range_function_013_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision013_b"])
+// }
+//
+// func TestTCK_1156_range_function_014(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision014"])
+// }
+//
+// func TestTCK_1156_range_function_015_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision015_a"])
+// }
+//
+// func TestTCK_1156_range_function_015_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision015_b"])
+// }
+//
+// func TestTCK_1156_range_function_016(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision016"])
+// }
+//
+// func TestTCK_1156_range_function_017(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision017"])
+// }
+//
+// func TestTCK_1156_range_function_018(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision018"])
+// }
+//
+// func TestTCK_1156_range_function_019_a(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision019_sa"])
+// }
+//
+// func TestTCK_1156_range_function_019_b(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision019_b"])
+// }
+//
+// func TestTCK_1156_range_function_020(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision020"])
+// }
+//
+// func TestTCK_1156_range_function_021(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision021"])
+// }
+//
+// func TestTCK_1156_range_function_022(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision022"])
+// }
+//
+// func TestTCK_1156_range_function_023(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision023"])
+// }
+//
+// func TestTCK_1156_range_function_024(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision024"])
+// }
+//
+// func TestTCK_1156_range_function_025(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision025"])
+// }
+//
+// func TestTCK_1156_range_function_026(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision026"])
+// }
+//
+// func TestTCK_1156_range_function_027(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision027"])
+// }
+//
+// func TestTCK_1161_boxed_list_expression_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
+// 	inputs := map[string]any{
+// 		"A": float64(123),
+// 		"B": true,
+// 		"C": "abc",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
+// }
+//
+// func TestTCK_1161_boxed_list_expression_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
+// 	inputs := map[string]any{
+// 		"A": feel.Null,
+// 		"B": feel.Null,
+// 		"C": feel.Null,
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
+// }
+//
+// func TestTCK_0015_all_any_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
+// 	inputs := map[string]any{
+// 		"a": "10",
+// 		"b": "9",
+// 		"c": "1",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "true", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
+// 	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
+// 	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
+// 	require.Equal(t, "true", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
+// 	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
+// }
+//
+// func TestTCK_0015_all_any_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
+// 	inputs := map[string]any{
+// 		"a": "10",
+// 		"b": "11",
+// 		"c": "1",
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "false", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
+// 	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
+// 	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
+// 	require.Equal(t, "false", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
+// 	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
+// }
+//
+// func TestTCK_0019_flight_rebooking_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0019-flight-rebooking/0019-flight-rebooking.dmn")
+// 	inputs := map[string]any{
+// 		"Flight List":    map[string]any{},
+// 		"Passenger List": map[string]any{},
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "", result["d_RebookedPassengers"])
+// }
+//
+// func TestTCK_0079_feel_string_function_decision_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_decision_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_decision_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "foo", result["_decision_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_decision_004(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_decision_004"])
+// }
+//
+// func TestTCK_0079_feel_string_function_null_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, feel.Null, result["_null_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_string_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "foo", result["_string_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_number_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "123.45", result["_number_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_boolean_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "true", result["_boolean_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_boolean_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "false", result["_boolean_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_date_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "2018-12-10", result["_date_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dateTime_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "2018-12-10T00:00:00", result["_dateTime_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dateTime_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "2018-12-10T10:30:00.0001", result["_dateTime_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dateTime_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "2018-12-10T10:30:00.0001+05:00:01", result["_dateTime_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dateTime_004(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "2018-12-10T10:30:00@Etc/UTC", result["_dateTime_004"])
+// }
+//
+// func TestTCK_0079_feel_string_function_time_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "10:30:00.0001", result["_time_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_time_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "10:30:00.0001+05:00:01", result["_time_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_time_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "10:30:00@Etc/UTC", result["_time_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dt_duration_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P1D", result["_dt_duration_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dt_duration_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "-P1D", result["_dt_duration_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dt_duration_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "PT0S", result["_dt_duration_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dt_duration_004(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P1DT2H3M4.1234S", result["_dt_duration_004"])
+// }
+//
+// func TestTCK_0079_feel_string_function_dt_duration_005(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P2DT1H", result["_dt_duration_005"])
+// }
+//
+// func TestTCK_0079_feel_string_function_ym_duration_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P1Y", result["_ym_duration_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_ym_duration_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "-P1Y", result["_ym_duration_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_ym_duration_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P0M", result["_ym_duration_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_ym_duration_004(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P1Y2M", result["_ym_duration_004"])
+// }
+//
+// func TestTCK_0079_feel_string_function_ym_duration_005(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "P2Y1M", result["_ym_duration_005"])
+// }
+//
+// func TestTCK_0079_feel_string_function_list_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "[1, 2, 3, \"foo\"]", result["_list_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_list_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "[1, 2, 3, [4, 5, \"foo\"]]", result["_list_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_list_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "[\"\\\"foo\\\"\"]", result["_list_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{a: \"foo\"}", result["_context_001"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{a: \"foo\", b: {bar: \"baz\"}}", result["_context_002"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_003(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{\"{\": \"foo\"}", result["_context_003"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_004(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{\":\": \"foo\"}", result["_context_004"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_005(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{\",\": \"foo\"}", result["_context_005"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_006(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{\"}\": \"foo\"}", result["_context_006"])
+// }
+//
+// func TestTCK_0079_feel_string_function_context_007(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, "{\"\\\"\": \"foo\"}", result["_context_007"])
+// }
+//
+// func TestTCK_0088_recursion_001(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
+// 	inputs := map[string]any{}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, float64(55), result["_fibonacci_001"])
+// }
+//
+// func TestTCK_0088_recursion_002(t *testing.T) {
+// 	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
+// 	inputs := map[string]any{
+// 		"treeData": map[string]any{"children": "", "value": float64(1)},
+// 	}
+// 	result, err := d.Evaluate(inputs)
+// 	require.NoError(t, err)
+// 	require.Equal(t, float64(28), result["_tree_001"])
+// }
