@@ -264,42 +264,6 @@ func TestTCK_0009_invocation_arithmetic_003(t *testing.T) {
 	require.Equal(t, float64(2961.03377700389), result["d_MonthlyPayment"])
 }
 
-func TestTCK_0010_multi_output_U_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0010-multi-output-U/0010-multi-output-U.dmn")
-	inputs := map[string]any{
-		"Age":          float64(18),
-		"RiskCategory": "Medium",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0010_multi_output_U_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0010-multi-output-U/0010-multi-output-U.dmn")
-	inputs := map[string]any{
-		"Age":          float64(17),
-		"RiskCategory": "Medium",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0010_multi_output_U_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0010-multi-output-U/0010-multi-output-U.dmn")
-	inputs := map[string]any{
-		"Age":          float64(18),
-		"RiskCategory": "High",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
 func TestTCK_0100_feel_constants_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0100-feel-constants/0100-feel-constants.dmn")
 	inputs := map[string]any{}
@@ -791,42 +755,6 @@ func TestTCK_0107_feel_ternary_logic_not_003(t *testing.T) {
 	require.Equal(t, feel.Null, result["d_not"])
 }
 
-func TestTCK_0108_first_hitpolicy_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0108-first-hitpolicy/0108-first-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(19),
-		"RiskCategory": "Medium",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0108_first_hitpolicy_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0108-first-hitpolicy/0108-first-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(13),
-		"RiskCategory": "Medium",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0108_first_hitpolicy_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0108-first-hitpolicy/0108-first-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(10),
-		"RiskCategory": "Low",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
 func TestTCK_0109_ruleOrder_hitpolicy_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0109-ruleOrder-hitpolicy/0109-ruleOrder-hitpolicy.dmn")
 	inputs := map[string]any{
@@ -836,7 +764,14 @@ func TestTCK_0109_ruleOrder_hitpolicy_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0109_ruleOrder_hitpolicy_002(t *testing.T) {
@@ -848,7 +783,13 @@ func TestTCK_0109_ruleOrder_hitpolicy_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0109_ruleOrder_hitpolicy_003(t *testing.T) {
@@ -860,7 +801,13 @@ func TestTCK_0109_ruleOrder_hitpolicy_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0110_outputOrder_hitpolicy_001(t *testing.T) {
@@ -872,7 +819,14 @@ func TestTCK_0110_outputOrder_hitpolicy_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0110_outputOrder_hitpolicy_002(t *testing.T) {
@@ -884,7 +838,13 @@ func TestTCK_0110_outputOrder_hitpolicy_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0110_outputOrder_hitpolicy_003(t *testing.T) {
@@ -896,7 +856,13 @@ func TestTCK_0110_outputOrder_hitpolicy_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0111_first_hitpolicy_singleoutputcol_001(t *testing.T) {
@@ -936,7 +902,14 @@ func TestTCK_0112_ruleOrder_hitpolicy_singleinoutcol_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "Best", vSlice[0])
+		require.Equal(t, "Standard", vSlice[1])
+	}
 }
 
 func TestTCK_0112_ruleOrder_hitpolicy_singleinoutcol_002(t *testing.T) {
@@ -946,7 +919,13 @@ func TestTCK_0112_ruleOrder_hitpolicy_singleinoutcol_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "Standard", vSlice[0])
+	}
 }
 
 func TestTCK_0112_ruleOrder_hitpolicy_singleinoutcol_003(t *testing.T) {
@@ -956,7 +935,13 @@ func TestTCK_0112_ruleOrder_hitpolicy_singleinoutcol_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "Standard", vSlice[0])
+	}
 }
 
 func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_001(t *testing.T) {
@@ -966,7 +951,14 @@ func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "Approved", vSlice[0])
+		require.Equal(t, "Declined", vSlice[1])
+	}
 }
 
 func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_002(t *testing.T) {
@@ -976,7 +968,14 @@ func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "Approved", vSlice[0])
+		require.Equal(t, "Approved", vSlice[1])
+	}
 }
 
 func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_003(t *testing.T) {
@@ -986,7 +985,14 @@ func TestTCK_0113_outputOrder_hitpolicy_singleinoutcol_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "Approved", vSlice[0])
+		require.Equal(t, "Declined", vSlice[1])
+	}
 }
 
 func TestTCK_0114_min_collect_hitpolicy_001(t *testing.T) {
@@ -1079,78 +1085,6 @@ func TestTCK_0116_count_collect_hitpolicy_003(t *testing.T) {
 	require.Equal(t, float64(2), result["salary"])
 }
 
-func TestTCK_0117_multi_any_hitpolicy_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0117-multi-any-hitpolicy/0117-multi-any-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(19),
-		"isAffordable": true,
-		"RiskCategory": "Low",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0117_multi_any_hitpolicy_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0117-multi-any-hitpolicy/0117-multi-any-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(17),
-		"isAffordable": true,
-		"RiskCategory": "High",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0117_multi_any_hitpolicy_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0117-multi-any-hitpolicy/0117-multi-any-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(19),
-		"isAffordable": true,
-		"RiskCategory": "Medium",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0118_multi_priority_hitpolicy_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0118-multi-priority-hitpolicy/0118-multi-priority-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(17),
-		"RiskCategory": "High",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0118_multi_priority_hitpolicy_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0118-multi-priority-hitpolicy/0118-multi-priority-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(19),
-		"RiskCategory": "Low",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
-func TestTCK_0118_multi_priority_hitpolicy_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-2/0118-multi-priority-hitpolicy/0118-multi-priority-hitpolicy.dmn")
-	inputs := map[string]any{
-		"Age":          float64(10),
-		"RiskCategory": "Low",
-		"isAffordable": true,
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
-}
-
 func TestTCK_0119_multi_collect_hitpolicy_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-2/0119-multi-collect-hitpolicy/0119-multi-collect-hitpolicy.dmn")
 	inputs := map[string]any{
@@ -1160,7 +1094,14 @@ func TestTCK_0119_multi_collect_hitpolicy_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0119_multi_collect_hitpolicy_002(t *testing.T) {
@@ -1172,7 +1113,13 @@ func TestTCK_0119_multi_collect_hitpolicy_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0119_multi_collect_hitpolicy_003(t *testing.T) {
@@ -1184,29 +1131,30 @@ func TestTCK_0119_multi_collect_hitpolicy_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"])
+	{
+		dRes := result["_3b2953a3-745f-4d2e-b55d-75c8c5ae653c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0001_filter_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0001-filter/0001-filter.dmn")
 	inputs := map[string]any{
-		"Employees": map[string]any{},
+		"Employees": []any{"", "", "", "", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_4a786da5-5cd2-4c3a-ba4d-dcb3051c1812"])
-}
-
-func TestTCK_0002_string_functions_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0002-string-functions/0002-string-functions.dmn")
-	inputs := map[string]any{
-		"A":    "banana",
-		"B":    "a",
-		"NumC": float64(2),
+	{
+		dRes := result["_4a786da5-5cd2-4c3a-ba4d-dcb3051c1812"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "Adams", vSlice[0])
+		require.Equal(t, "Ford", vSlice[1])
 	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_de5529b1-ed4c-4b39-9e36-e0e056aec20c"])
 }
 
 func TestTCK_0002_string_functions_002(t *testing.T) {
@@ -1217,16 +1165,6 @@ func TestTCK_0002_string_functions_002(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, true, result["_93059496-257a-482b-b966-fcafe28cc84b"])
-}
-
-func TestTCK_0002_string_functions_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0002-string-functions/0002-string-functions.dmn")
-	inputs := map[string]any{
-		"A": "banana",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_cc368e53-961d-4399-ad91-df00446b49d8"])
 }
 
 func TestTCK_0002_string_functions_004(t *testing.T) {
@@ -1242,11 +1180,26 @@ func TestTCK_0002_string_functions_004(t *testing.T) {
 func TestTCK_0003_iteration_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0003-iteration/0003-iteration.dmn")
 	inputs := map[string]any{
-		"Loans": map[string]any{},
+		"Loans": []any{"", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_MonthlyPayment"])
+	{
+		dRes := result["d_MonthlyPayment"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(966), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(376), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0004_lending_001(t *testing.T) {
@@ -1308,8 +1261,8 @@ func TestTCK_0005_literal_invocation_003(t *testing.T) {
 func TestTCK_0006_join_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0006-join/0006-join.dmn")
 	inputs := map[string]any{
-		"EmployeeTable": map[string]any{},
-		"DeptTable":     map[string]any{},
+		"EmployeeTable": []any{"", "", "", "", ""},
+		"DeptTable":     []any{"", "", ""},
 		"LastName":      "Clark",
 	}
 	result, err := d.Evaluate(inputs)
@@ -1336,7 +1289,6 @@ func TestTCK_0007_date_time_001(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, "2016-12-24T23:59:00-08:00", result["_dfbb843a-bd34-4099-b700-0d9ca5b38d6a"])
-	require.Equal(t, "", result["_bd547a08-c157-47ca-84d4-ac6f3d5bdeda"])
 	require.Equal(t, "00:00:01-01:00", result["_9e8acf47-790a-4741-8ebb-e8a22a30744c"])
 	require.Equal(t, "2015-12-24T00:00:01-01:00", result["_7df22028-4b5b-4594-89c7-a80b8aec526f"])
 	require.Equal(t, "00:00:01-01:00", result["_1f2b08ce-3c6b-4e22-a747-8d9f378e9035"])
@@ -1361,7 +1313,15 @@ func TestTCK_0008_listGen_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_102c003f-ec24-47a9-bfa1-36d05f1452f6"])
+	{
+		dRes := result["_102c003f-ec24-47a9-bfa1-36d05f1452f6"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
 }
 
 func TestTCK_0008_listGen_002(t *testing.T) {
@@ -1373,7 +1333,15 @@ func TestTCK_0008_listGen_002(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_2504224f-d1c3-43cb-9216-8f9d4ffdfd72"])
+	{
+		dRes := result["_2504224f-d1c3-43cb-9216-8f9d4ffdfd72"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
 }
 
 func TestTCK_0008_listGen_003(t *testing.T) {
@@ -1384,7 +1352,15 @@ func TestTCK_0008_listGen_003(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_5786c8b8-bea1-4b1f-9f7b-71be3f4ffbcc"])
+	{
+		dRes := result["_5786c8b8-bea1-4b1f-9f7b-71be3f4ffbcc"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
 }
 
 func TestTCK_0008_listGen_004(t *testing.T) {
@@ -1394,7 +1370,15 @@ func TestTCK_0008_listGen_004(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ca299168-4590-4040-bb10-beb7d1a6932b"])
+	{
+		dRes := result["_ca299168-4590-4040-bb10-beb7d1a6932b"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
 }
 
 func TestTCK_0008_listGen_005(t *testing.T) {
@@ -1406,7 +1390,15 @@ func TestTCK_0008_listGen_005(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_4a428274-6c5f-4c4c-ac86-1e81df943704"])
+	{
+		dRes := result["_4a428274-6c5f-4c4c-ac86-1e81df943704"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
 }
 
 func TestTCK_0008_listGen_006(t *testing.T) {
@@ -1414,17 +1406,35 @@ func TestTCK_0008_listGen_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_50554bc6-d4e1-468b-a620-db2d35da5a0b"])
+	{
+		dRes := result["_50554bc6-d4e1-468b-a620-db2d35da5a0b"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0008_listGen_007(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0008-listGen/0008-listGen.dmn")
 	inputs := map[string]any{
-		"wx": map[string]any{},
+		"wx": []any{"w", "x"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_6d3062b2-55d4-4299-aeb2-a5e97e03daec"])
+	{
+		dRes := result["_6d3062b2-55d4-4299-aeb2-a5e97e03daec"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0008_listGen_008(t *testing.T) {
@@ -1435,7 +1445,18 @@ func TestTCK_0008_listGen_008(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_bd8b0287-1ff4-4c13-b0ef-68cff151cabd"])
+	{
+		dRes := result["_bd8b0287-1ff4-4c13-b0ef-68cff151cabd"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "w", vSlice[2])
+		require.Equal(t, "x", vSlice[3])
+		require.Equal(t, "y", vSlice[4])
+		require.Equal(t, "z", vSlice[5])
+	}
 }
 
 func TestTCK_0008_listGen_009(t *testing.T) {
@@ -1443,82 +1464,308 @@ func TestTCK_0008_listGen_009(t *testing.T) {
 	inputs := map[string]any{
 		"a":  "a",
 		"b":  "b",
-		"wx": map[string]any{},
+		"wx": []any{"w", "x"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_64ccac33-c22b-454d-b763-5a77ffd38678"])
+	{
+		dRes := result["_64ccac33-c22b-454d-b763-5a77ffd38678"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "w", vSlice[2])
+		require.Equal(t, "x", vSlice[3])
+		require.Equal(t, "y", vSlice[4])
+		require.Equal(t, "z", vSlice[5])
+	}
 }
 
 func TestTCK_0008_listGen_010(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0008-listGen/0008-listGen.dmn")
 	inputs := map[string]any{
 		"c":  "c",
-		"wx": map[string]any{},
+		"wx": []any{"w", "x"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_9d464a01-5230-4270-88b6-f8e08d03e10b"])
+	{
+		dRes := result["_9d464a01-5230-4270-88b6-f8e08d03e10b"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "w", vSlice[3])
+		require.Equal(t, "x", vSlice[4])
+		require.Equal(t, "y", vSlice[5])
+		require.Equal(t, "z", vSlice[6])
+	}
 }
 
 func TestTCK_0009_append_flatten_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0009-append-flatten/0009-append-flatten.dmn")
 	inputs := map[string]any{
-		"simpleList": map[string]any{},
-		"nestedList": map[string]any{},
+		"simpleList": []any{"a", "b", "c"},
+		"nestedList": []any{"", "", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_1bd696ab-0181-49e0-bb15-d090219c4943"])
-	require.Equal(t, "", result["_d6152254-7ad2-4aeb-90a0-16b962a11257"])
-	require.Equal(t, "", result["_f6e97b3b-d13c-47b5-b679-36cf46d4f904"])
-	require.Equal(t, "", result["_bf18b7c7-5f20-48a2-bd27-527c82cf0855"])
-	require.Equal(t, "", result["_877fd216-703c-4b2f-8197-9f3ed144ff4d"])
-	require.Equal(t, "", result["_cf4db6c6-da6b-42fe-8f85-110f8d711111"])
-	require.Equal(t, "", result["_84459bf0-7e3a-4897-8f0d-5abb51b1d564"])
-	require.Equal(t, "", result["_18ea4eb1-e7dd-45fa-a7b1-c2288bb48054"])
-	require.Equal(t, "", result["_c225c17f-276b-47c1-be56-f1153752eb70"])
-	require.Equal(t, "", result["_f513bcdc-7e96-4680-8893-d04ee04c61a8"])
+	{
+		dRes := result["_1bd696ab-0181-49e0-bb15-d090219c4943"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
+	{
+		dRes := result["_d6152254-7ad2-4aeb-90a0-16b962a11257"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
+	{
+		dRes := result["_f6e97b3b-d13c-47b5-b679-36cf46d4f904"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+	}
+	{
+		dRes := result["_bf18b7c7-5f20-48a2-bd27-527c82cf0855"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+	}
+	{
+		dRes := result["_877fd216-703c-4b2f-8197-9f3ed144ff4d"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+	}
+	{
+		dRes := result["_cf4db6c6-da6b-42fe-8f85-110f8d711111"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+	}
+	{
+		dRes := result["_84459bf0-7e3a-4897-8f0d-5abb51b1d564"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+		require.Equal(t, "t", vSlice[4])
+	}
+	{
+		dRes := result["_18ea4eb1-e7dd-45fa-a7b1-c2288bb48054"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+		require.Equal(t, "a", vSlice[4])
+		require.Equal(t, "b", vSlice[5])
+		require.Equal(t, "c", vSlice[6])
+	}
+	{
+		dRes := result["_c225c17f-276b-47c1-be56-f1153752eb70"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+		require.Equal(t, "a", vSlice[4])
+		require.Equal(t, "b", vSlice[5])
+		require.Equal(t, "c", vSlice[6])
+	}
+	{
+		dRes := result["_f513bcdc-7e96-4680-8893-d04ee04c61a8"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "w", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+		require.Equal(t, "a", vSlice[4])
+		require.Equal(t, "b", vSlice[5])
+		require.Equal(t, "c", vSlice[6])
+	}
 }
 
 func TestTCK_0010_concatenate_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0010-concatenate/0010-concatenate.dmn")
 	inputs := map[string]any{
-		"simpleList": map[string]any{},
-		"nestedList": map[string]any{},
+		"simpleList": []any{"a", "b", "c"},
+		"nestedList": []any{"", "", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_1bd696ab-0181-49e0-bb15-d090219c4943"])
-	require.Equal(t, "", result["_d6152254-7ad2-4aeb-90a0-16b962a11257"])
-	require.Equal(t, "", result["_f6e97b3b-d13c-47b5-b679-36cf46d4f904"])
-	require.Equal(t, "", result["_bf18b7c7-5f20-48a2-bd27-527c82cf0855"])
-	require.Equal(t, "", result["_877fd216-703c-4b2f-8197-9f3ed144ff4d"])
-	require.Equal(t, "", result["_cf4db6c6-da6b-42fe-8f85-110f8d711111"])
+	{
+		dRes := result["_1bd696ab-0181-49e0-bb15-d090219c4943"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+	}
+	{
+		dRes := result["_d6152254-7ad2-4aeb-90a0-16b962a11257"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
+	{
+		dRes := result["_f6e97b3b-d13c-47b5-b679-36cf46d4f904"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "a", vSlice[3])
+		require.Equal(t, "b", vSlice[4])
+		require.Equal(t, "c", vSlice[5])
+	}
+	{
+		dRes := result["_bf18b7c7-5f20-48a2-bd27-527c82cf0855"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "w", vSlice[3])
+		require.Equal(t, "x", vSlice[4])
+		require.Equal(t, "y", vSlice[5])
+		require.Equal(t, "z", vSlice[6])
+	}
+	{
+		dRes := result["_877fd216-703c-4b2f-8197-9f3ed144ff4d"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "w", vSlice[3])
+		require.Equal(t, "x", vSlice[4])
+		require.Equal(t, "y", vSlice[5])
+		require.Equal(t, "z", vSlice[6])
+	}
+	{
+		dRes := result["_cf4db6c6-da6b-42fe-8f85-110f8d711111"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+	}
 }
 
 func TestTCK_0011_insert_remove_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0011-insert-remove/0011-insert-remove.dmn")
 	inputs := map[string]any{
-		"simpleList": map[string]any{},
-		"nestedList": map[string]any{},
+		"simpleList": []any{"a", "b", "c"},
+		"nestedList": []any{"", ""},
 		"position":   float64(2),
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_7a7f2263-5d9b-4a18-aee8-43783f417b07"])
-	require.Equal(t, "", result["_c169428e-2a57-42d2-a26d-cf22039da762"])
-	require.Equal(t, "", result["_d6beae1e-c23f-4fdb-8c63-6c9835337eff"])
-	require.Equal(t, "", result["_12fdd98a-00da-47af-80e6-f70906e359c0"])
-	require.Equal(t, "", result["_93786c60-d986-4c40-b836-4b2f0bc218ce"])
-	require.Equal(t, "", result["_d1465880-49ca-4182-ae74-7670fc834f2c"])
+	{
+		dRes := result["_7a7f2263-5d9b-4a18-aee8-43783f417b07"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
+	{
+		dRes := result["_c169428e-2a57-42d2-a26d-cf22039da762"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "c", vSlice[1])
+	}
+	{
+		dRes := result["_d6beae1e-c23f-4fdb-8c63-6c9835337eff"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
+	{
+		dRes := result["_12fdd98a-00da-47af-80e6-f70906e359c0"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
+	{
+		dRes := result["_93786c60-d986-4c40-b836-4b2f0bc218ce"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
+	{
+		dRes := result["_d1465880-49ca-4182-ae74-7670fc834f2c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "x", vSlice[1])
+		require.Equal(t, "b", vSlice[2])
+		require.Equal(t, "c", vSlice[3])
+	}
 }
 
 func TestTCK_0012_list_functions_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
-		"list2": map[string]any{},
+		"list1": []any{"a", "b", "c"},
+		"list2": []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1529,7 +1776,7 @@ func TestTCK_0012_list_functions_002(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
 		"string1": "OK",
-		"list2":   map[string]any{},
+		"list2":   []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1539,7 +1786,7 @@ func TestTCK_0012_list_functions_002(t *testing.T) {
 func TestTCK_0012_list_functions_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
+		"list1": []any{"a", "b", "c"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1549,7 +1796,7 @@ func TestTCK_0012_list_functions_003(t *testing.T) {
 func TestTCK_0012_list_functions_004(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"numList": map[string]any{},
+		"numList": []any{float64(6), float64(14), float64(-3)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1559,7 +1806,7 @@ func TestTCK_0012_list_functions_004(t *testing.T) {
 func TestTCK_0012_list_functions_005(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"numList": map[string]any{},
+		"numList": []any{float64(6), float64(14), float64(-3)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1569,7 +1816,7 @@ func TestTCK_0012_list_functions_005(t *testing.T) {
 func TestTCK_0012_list_functions_006(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"numList": map[string]any{},
+		"numList": []any{float64(6), float64(14), float64(-3)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -1591,21 +1838,34 @@ func TestTCK_0012_list_functions_007(t *testing.T) {
 func TestTCK_0012_list_functions_008(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
+		"list1": []any{"a", "b", "c"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_95e0ad53-c08f-46af-baa0-9c36d69002f5"])
+	{
+		dRes := result["_95e0ad53-c08f-46af-baa0-9c36d69002f5"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+	}
 }
 
 func TestTCK_0012_list_functions_009(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
+		"list1": []any{"a", "b", "c"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_85f6330f-dcaa-47ca-96bb-1c0228da911f"])
+	{
+		dRes := result["_85f6330f-dcaa-47ca-96bb-1c0228da911f"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "c", vSlice[0])
+	}
 }
 
 func TestTCK_0012_list_functions_010(t *testing.T) {
@@ -1614,124 +1874,282 @@ func TestTCK_0012_list_functions_010(t *testing.T) {
 		"num1":    float64(11),
 		"num2":    float64(2),
 		"num3":    float64(10),
-		"numList": map[string]any{},
+		"numList": []any{float64(6), float64(14), float64(-3)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_845ea241-587e-43d8-a563-a1dd18693afe"])
+	{
+		dRes := result["_845ea241-587e-43d8-a563-a1dd18693afe"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(14), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(-3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(11), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[4].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0012_list_functions_011(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
-		"list2": map[string]any{},
+		"list1": []any{"a", "b", "c"},
+		"list2": []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_c0c13a64-ef12-4e04-8e3f-fe9193bd72b9"])
+	{
+		dRes := result["_c0c13a64-ef12-4e04-8e3f-fe9193bd72b9"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "x", vSlice[3])
+		require.Equal(t, "y", vSlice[4])
+		require.Equal(t, "z", vSlice[5])
+	}
 }
 
 func TestTCK_0012_list_functions_012(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
 		"string1": "OK",
-		"list2":   map[string]any{},
+		"list2":   []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_2064fd78-72aa-4851-9813-8d56674b3936"])
+	{
+		dRes := result["_2064fd78-72aa-4851-9813-8d56674b3936"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "x", vSlice[0])
+		require.Equal(t, "OK", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0012_list_functions_013(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list2": map[string]any{},
+		"list2": []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ffd2b93c-2bca-4979-9a65-357ca8ba92ff"])
+	{
+		dRes := result["_ffd2b93c-2bca-4979-9a65-357ca8ba92ff"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "x", vSlice[0])
+		require.Equal(t, "z", vSlice[1])
+	}
 }
 
 func TestTCK_0012_list_functions_014(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
-		"list2": map[string]any{},
+		"list1": []any{"a", "b", "c"},
+		"list2": []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_673c3497-f8e7-4340-827d-99d8d08664db"])
+	{
+		dRes := result["_673c3497-f8e7-4340-827d-99d8d08664db"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "z", vSlice[0])
+		require.Equal(t, "y", vSlice[1])
+		require.Equal(t, "x", vSlice[2])
+		require.Equal(t, "c", vSlice[3])
+		require.Equal(t, "b", vSlice[4])
+		require.Equal(t, "a", vSlice[5])
+	}
 }
 
 func TestTCK_0012_list_functions_015(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1":   map[string]any{},
+		"list1":   []any{"a", "b", "c"},
 		"string1": "x",
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_d12d9a82-b182-4c15-9fce-d22cdc53dbc4"])
+	{
+		dRes := result["_d12d9a82-b182-4c15-9fce-d22cdc53dbc4"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "x", vSlice[3])
+	}
 }
 
 func TestTCK_0012_list_functions_016(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
 		"string1": "OK",
-		"list2":   map[string]any{},
+		"list2":   []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_3c7aef83-002c-4c61-9297-e822a7d4e829"])
+	{
+		dRes := result["_3c7aef83-002c-4c61-9297-e822a7d4e829"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0012_list_functions_017(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
 		"string1": "OK",
-		"list1":   map[string]any{},
-		"list2":   map[string]any{},
+		"list1":   []any{"a", "b", "c"},
+		"list2":   []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_0dee9e3c-ef4e-4853-b182-bdf8bff1d20b"])
+	{
+		dRes := result["_0dee9e3c-ef4e-4853-b182-bdf8bff1d20b"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 7, len(vSlice))
+		require.Equal(t, "x", vSlice[0])
+		require.Equal(t, "OK", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+		require.Equal(t, "a", vSlice[4])
+		require.Equal(t, "b", vSlice[5])
+		require.Equal(t, "c", vSlice[6])
+	}
 }
 
 func TestTCK_0012_list_functions_018(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
 		"string1": "OK",
-		"list2":   map[string]any{},
+		"list2":   []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_0bbaa2a8-b265-49d4-9540-28b1bddac540"])
+	{
+		dRes := result["_0bbaa2a8-b265-49d4-9540-28b1bddac540"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "x", vSlice[0])
+		require.Equal(t, "OK", vSlice[1])
+		require.Equal(t, "y", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0012_list_functions_019(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0012-list-functions/0012-list-functions.dmn")
 	inputs := map[string]any{
-		"list1": map[string]any{},
-		"list2": map[string]any{},
+		"list1": []any{"a", "b", "c"},
+		"list2": []any{"x", "y", "z"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_ef7d1df2-8a1c-47cf-ae2e-928f71e2c460"])
+	{
+		dRes := result["_ef7d1df2-8a1c-47cf-ae2e-928f71e2c460"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "x", vSlice[3])
+		require.Equal(t, "y", vSlice[4])
+		require.Equal(t, "z", vSlice[5])
+	}
 }
 
 func TestTCK_0013_sort_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0013-sort/0013-sort.dmn")
 	inputs := map[string]any{
-		"listA":      map[string]any{},
-		"stringList": map[string]any{},
-		"tableB":     map[string]any{},
+		"listA":      []any{float64(3), float64(1), float64(5), float64(4)},
+		"stringList": []any{"a", "8", "Aa", "A", "10", "9"},
+		"tableB":     []any{"", "", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_c6416c42-328a-410c-a083-859b82771690"])
-	require.Equal(t, "", result["_d8ef1de9-9387-4389-ab83-cbf9dafc419b"])
-	require.Equal(t, "", result["_4ff4b8ff-4379-477a-a016-f7d1741d2036"])
+	{
+		dRes := result["_c6416c42-328a-410c-a083-859b82771690"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+	}
+	{
+		dRes := result["_d8ef1de9-9387-4389-ab83-cbf9dafc419b"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
+	{
+		dRes := result["_4ff4b8ff-4379-477a-a016-f7d1741d2036"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		require.Equal(t, "10", vSlice[0])
+		require.Equal(t, "8", vSlice[1])
+		require.Equal(t, "9", vSlice[2])
+		require.Equal(t, "A", vSlice[3])
+		require.Equal(t, "Aa", vSlice[4])
+		require.Equal(t, "a", vSlice[5])
+	}
 }
 
 func TestTCK_0014_loan_comparison_001(t *testing.T) {
@@ -1741,18 +2159,40 @@ func TestTCK_0014_loan_comparison_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_c5dd7a17-b588-4daf-8c9b-677e65ce87be"])
-	require.Equal(t, "", result["_715940be-0f5d-4701-8155-fcba85874aa1"])
+	{
+		dRes := result["_c5dd7a17-b588-4daf-8c9b-677e65ce87be"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 10, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+		require.Equal(t, "", vSlice[4])
+		require.Equal(t, "", vSlice[5])
+		require.Equal(t, "", vSlice[6])
+		require.Equal(t, "", vSlice[7])
+		require.Equal(t, "", vSlice[8])
+		require.Equal(t, "", vSlice[9])
+	}
 }
 
 func TestTCK_0016_some_every_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0016-some-every/0016-some-every.dmn")
 	inputs := map[string]any{
-		"priceTable2": map[string]any{},
+		"priceTable2": []any{"", "", ""},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_a471e76a-64b1-44af-9ede-623f6c15b72e"])
+	{
+		dRes := result["_a471e76a-64b1-44af-9ede-623f6c15b72e"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+		require.Equal(t, "", vSlice[2])
+	}
 	require.Equal(t, false, result["_a747d388-e0c0-41e1-b3ef-2904ba1a5d63"])
 	require.Equal(t, false, result["_e5194b4c-2191-45c3-a78c-723d04197dc6"])
 	require.Equal(t, true, result["_655236ba-669a-4a80-a07c-ec051f57a529"])
@@ -1899,13 +2339,25 @@ func TestTCK_0020_vacation_days_007(t *testing.T) {
 func TestTCK_0021_singleton_list_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0021-singleton-list/0021-singleton-list.dmn")
 	inputs := map[string]any{
-		"Employees": map[string]any{},
+		"Employees": []any{"Jack", "John", "Bob", "Zack"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["decision1"])
+	{
+		dRes := result["decision1"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "John", vSlice[0])
+	}
 	require.Equal(t, "John", result["decision2"])
-	require.Equal(t, "", result["decision3"])
+	{
+		dRes := result["decision3"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "Bob", vSlice[0])
+	}
 	require.Equal(t, "Bob", result["decision4"])
 	require.Equal(t, "BOB", result["decision5"])
 }
@@ -1920,39 +2372,6 @@ func TestTCK_0030_user_defined_functions_001(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, "feel#feel#", result["_WdFa8IDoEee-MeWXoLgrYg"])
 	require.Equal(t, "#feel#feel", result["_GNiCIIDzEeehqsf_bU54Lw"])
-}
-
-func TestTCK_0031_user_defined_functions_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0031-user-defined-functions/0031-user-defined-functions.dmn")
-	inputs := map[string]any{
-		"inputA": float64(10),
-		"inputB": float64(5),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_AfhOEH6QEeePe9Zmt-encA"])
-}
-
-func TestTCK_0031_user_defined_functions_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0031-user-defined-functions/0031-user-defined-functions.dmn")
-	inputs := map[string]any{
-		"inputA": float64(10),
-		"inputB": float64(5),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_yHl3UIDhEee-MeWXoLgrYg"])
-}
-
-func TestTCK_0031_user_defined_functions_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0031-user-defined-functions/0031-user-defined-functions.dmn")
-	inputs := map[string]any{
-		"inputA": float64(10),
-		"inputB": float64(5),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_b-gD0IDiEee-MeWXoLgrYg"])
 }
 
 func TestTCK_0032_conditionals_001(t *testing.T) {
@@ -2024,33 +2443,98 @@ func TestTCK_0032_conditionals_006(t *testing.T) {
 func TestTCK_0033_for_loops_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0033-for-loops/0033-for-loops.dmn")
 	inputs := map[string]any{
-		"heights": map[string]any{},
+		"heights": []any{float64(10), float64(20), float64(30)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_374e6945-f32c-46b2-8f14-7ca89da32275"])
+	{
+		dRes := result["_374e6945-f32c-46b2-8f14-7ca89da32275"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(11), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(21), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(31), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0033_for_loops_002(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0033-for-loops/0033-for-loops.dmn")
 	inputs := map[string]any{
-		"heights": map[string]any{},
-		"widths":  map[string]any{},
+		"heights": []any{float64(10), float64(20), float64(30)},
+		"widths":  []any{float64(2), float64(3)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["d_loop1"])
+	{
+		dRes := result["d_loop1"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(20), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(30), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(40), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(60), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[4].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(60), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[5].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(90), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0033_for_loops_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0033-for-loops/0033-for-loops.dmn")
 	inputs := map[string]any{
 		"value":   float64(35),
-		"factors": map[string]any{},
+		"factors": []any{float64(2), float64(3), float64(5), float64(7), float64(11)},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_133307f9-7ed4-429b-9f78-bf1a2022a384"])
+	{
+		dRes := result["_133307f9-7ed4-429b-9f78-bf1a2022a384"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		require.Equal(t, false, vSlice[0])
+		require.Equal(t, false, vSlice[1])
+		require.Equal(t, true, vSlice[2])
+		require.Equal(t, true, vSlice[3])
+		require.Equal(t, false, vSlice[4])
+	}
 }
 
 func TestTCK_0033_for_loops_004(t *testing.T) {
@@ -2060,7 +2544,32 @@ func TestTCK_0033_for_loops_004(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_4453511f-6eff-43ab-bed6-1424af36a10c"])
+	{
+		dRes := result["_4453511f-6eff-43ab-bed6-1424af36a10c"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(20), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(30), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(40), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(50), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0034_drg_scopes_001(t *testing.T) {
@@ -2072,54 +2581,8 @@ func TestTCK_0034_drg_scopes_001(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_DMwGMPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_HQN7oPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_HrMAYPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_LGRAIPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_EL7rQPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_I_HtcPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_JhYtAPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_Mk9LsPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_OWzj0PQJEeecaNY7kk20yA"])
 	require.Equal(t, "BKM I # BKM II # BKM III # decision C 2 # BKM IV # BKM III # decision C 2", result["_Zf4KAPQJEeecaNY7kk20yA"])
 	require.Equal(t, "BKM II # BKM III # decision C 3 # BKM IV # BKM III # decision C 3", result["_XsZaMPQJEeecaNY7kk20yA"])
-	require.Equal(t, "", result["_tX2SoPQMEeecaNY7kk20yA"])
-}
-
-func TestTCK_0035_test_structure_output_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0035-test-structure-output/0035-test-structure-output.dmn")
-	inputs := map[string]any{
-		"R Value": float64(0),
-		"G Value": float64(65),
-		"B Value": float64(83),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_70c6c572-8743-468f-8b77-e2d4940bec8f"])
-}
-
-func TestTCK_0035_test_structure_output_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0035-test-structure-output/0035-test-structure-output.dmn")
-	inputs := map[string]any{
-		"R Value": float64(0),
-		"G Value": float64(0),
-		"B Value": float64(0),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_70c6c572-8743-468f-8b77-e2d4940bec8f"])
-}
-
-func TestTCK_0035_test_structure_output_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0035-test-structure-output/0035-test-structure-output.dmn")
-	inputs := map[string]any{
-		"R Value": float64(204),
-		"G Value": float64(0),
-		"B Value": float64(0),
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_70c6c572-8743-468f-8b77-e2d4940bec8f"])
 }
 
 func TestTCK_0036_dt_variable_input__20445ee0_744d_4488_a90e_136701510871(t *testing.T) {
@@ -2240,23 +2703,36 @@ func TestTCK_0038_dt_on_bkm_explicit_params__bf27c25d_18f6_4891_8370_42d440709d9
 func TestTCK_0039_dt_list_semantics__a217c840_6ead_4cb7_a3e1_ad9df9c0c584(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0039-dt-list-semantics/0039-dt-list-semantics.dmn")
 	inputs := map[string]any{
-		"Flu Symtoms": map[string]any{},
+		"Flu Symtoms": []any{"fever", "cough", "sore throat", "runny nose"},
 		"Symptom":     "cough",
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_531cd585-b1f9-4f12-abda-6d152fc324af"])
+	{
+		dRes := result["_531cd585-b1f9-4f12-abda-6d152fc324af"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "cough is in the list of Cold symptoms", vSlice[0])
+		require.Equal(t, "cough is in the list of Flu symptoms", vSlice[1])
+	}
 }
 
 func TestTCK_0039_dt_list_semantics__07726176_a1a0_4e9e_9de2_16dba51556e2(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0039-dt-list-semantics/0039-dt-list-semantics.dmn")
 	inputs := map[string]any{
-		"Flu Symtoms": map[string]any{},
+		"Flu Symtoms": []any{"fever", "cough", "sore throat", "runny nose"},
 		"Symptom":     "fever",
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_531cd585-b1f9-4f12-abda-6d152fc324af"])
+	{
+		dRes := result["_531cd585-b1f9-4f12-abda-6d152fc324af"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "fever is in the list of Flu symptoms", vSlice[0])
+	}
 }
 
 func TestTCK_0040_singlenestedcontext_001(t *testing.T) {
@@ -3317,70 +3793,6 @@ func TestTCK_0056_feel_modulo_function_017d(t *testing.T) {
 	require.Equal(t, float64(-1.1), result["_decision017d"])
 }
 
-func TestTCK_0057_feel_context_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
-}
-
-func TestTCK_0057_feel_context_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
-}
-
-func TestTCK_0057_feel_context_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
-}
-
-func TestTCK_0057_feel_context_003_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
-}
-
-func TestTCK_0057_feel_context_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
-}
-
-func TestTCK_0057_feel_context_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
-}
-
-func TestTCK_0057_feel_context_006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
-}
-
-func TestTCK_0057_feel_context_007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
-}
-
 func TestTCK_0057_feel_context_008(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0057-feel-context/0057-feel-context.dmn")
 	inputs := map[string]any{}
@@ -3978,7 +4390,17 @@ func TestTCK_0062_feel_mode_function_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_002(t *testing.T) {
@@ -3986,7 +4408,27 @@ func TestTCK_0062_feel_mode_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	{
+		dRes := result["_decision002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_003(t *testing.T) {
@@ -4026,7 +4468,17 @@ func TestTCK_0062_feel_mode_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	{
+		dRes := result["_decision006"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_007(t *testing.T) {
@@ -4034,7 +4486,12 @@ func TestTCK_0062_feel_mode_function_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
+	{
+		dRes := result["_decision007"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0062_feel_mode_function_008(t *testing.T) {
@@ -4042,7 +4499,17 @@ func TestTCK_0062_feel_mode_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	{
+		dRes := result["_decision008"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_009(t *testing.T) {
@@ -4050,7 +4517,17 @@ func TestTCK_0062_feel_mode_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	{
+		dRes := result["_decision009"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_011(t *testing.T) {
@@ -4058,7 +4535,17 @@ func TestTCK_0062_feel_mode_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	{
+		dRes := result["_decision011"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0062_feel_mode_function_012(t *testing.T) {
@@ -4530,7 +5017,14 @@ func TestTCK_0067_feel_split_function_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "John", vSlice[0])
+		require.Equal(t, "Doe", vSlice[1])
+	}
 }
 
 func TestTCK_0067_feel_split_function_001_a(t *testing.T) {
@@ -4538,7 +5032,17 @@ func TestTCK_0067_feel_split_function_001_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001_a"])
+	{
+		dRes := result["_decision001_a"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "b", vSlice[1])
+		require.Equal(t, "c", vSlice[2])
+		require.Equal(t, "", vSlice[3])
+		require.Equal(t, "", vSlice[4])
+	}
 }
 
 func TestTCK_0067_feel_split_function_004(t *testing.T) {
@@ -4562,7 +5066,14 @@ func TestTCK_0067_feel_split_function_006(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision006"])
+	{
+		dRes := result["_decision006"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "foo", vSlice[0])
+		require.Equal(t, "bar", vSlice[1])
+	}
 }
 
 func TestTCK_0067_feel_split_function_007(t *testing.T) {
@@ -5514,7 +6025,27 @@ func TestTCK_0069_feel_list_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_001_a(t *testing.T) {
@@ -5522,7 +6053,12 @@ func TestTCK_0069_feel_list_001_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001_a"])
+	{
+		dRes := result["_decision001_a"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_002(t *testing.T) {
@@ -5586,7 +6122,27 @@ func TestTCK_0069_feel_list_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	{
+		dRes := result["_decision009"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_010(t *testing.T) {
@@ -5594,7 +6150,12 @@ func TestTCK_0069_feel_list_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
+	{
+		dRes := result["_decision010"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_011(t *testing.T) {
@@ -5602,7 +6163,22 @@ func TestTCK_0069_feel_list_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	{
+		dRes := result["_decision011"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_012(t *testing.T) {
@@ -5610,7 +6186,13 @@ func TestTCK_0069_feel_list_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	{
+		dRes := result["_decision012"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, true, vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_013(t *testing.T) {
@@ -5618,7 +6200,12 @@ func TestTCK_0069_feel_list_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	{
+		dRes := result["_decision013"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_014(t *testing.T) {
@@ -5626,7 +6213,17 @@ func TestTCK_0069_feel_list_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
+	{
+		dRes := result["_decision014"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(100), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_015(t *testing.T) {
@@ -5634,7 +6231,12 @@ func TestTCK_0069_feel_list_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
+	{
+		dRes := result["_decision015"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_016(t *testing.T) {
@@ -5642,7 +6244,13 @@ func TestTCK_0069_feel_list_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
+	{
+		dRes := result["_decision016"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "foo", vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_017(t *testing.T) {
@@ -5650,7 +6258,12 @@ func TestTCK_0069_feel_list_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
+	{
+		dRes := result["_decision017"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_018(t *testing.T) {
@@ -5706,7 +6319,14 @@ func TestTCK_0069_feel_list_024(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision024"])
+	{
+		dRes := result["_decision024"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0069_feel_list_025(t *testing.T) {
@@ -5714,7 +6334,14 @@ func TestTCK_0069_feel_list_025(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision025"])
+	{
+		dRes := result["_decision025"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0069_feel_list_026(t *testing.T) {
@@ -5722,7 +6349,14 @@ func TestTCK_0069_feel_list_026(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision026"])
+	{
+		dRes := result["_decision026"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0069_feel_list_027(t *testing.T) {
@@ -5730,7 +6364,22 @@ func TestTCK_0069_feel_list_027(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision027"])
+	{
+		dRes := result["_decision027"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_028(t *testing.T) {
@@ -5738,7 +6387,13 @@ func TestTCK_0069_feel_list_028(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision028"])
+	{
+		dRes := result["_decision028"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_029(t *testing.T) {
@@ -5746,7 +6401,13 @@ func TestTCK_0069_feel_list_029(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision029"])
+	{
+		dRes := result["_decision029"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_030(t *testing.T) {
@@ -5754,7 +6415,22 @@ func TestTCK_0069_feel_list_030(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision030"])
+	{
+		dRes := result["_decision030"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0069_feel_list_031(t *testing.T) {
@@ -5762,7 +6438,12 @@ func TestTCK_0069_feel_list_031(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision031"])
+	{
+		dRes := result["_decision031"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0069_feel_list_032(t *testing.T) {
@@ -5770,7 +6451,13 @@ func TestTCK_0069_feel_list_032(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision032"])
+	{
+		dRes := result["_decision032"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_033(t *testing.T) {
@@ -5778,7 +6465,13 @@ func TestTCK_0069_feel_list_033(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision033"])
+	{
+		dRes := result["_decision033"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		require.Equal(t, feel.Null, vSlice[0])
+	}
 }
 
 func TestTCK_0069_feel_list_034(t *testing.T) {
@@ -5786,7 +6479,18 @@ func TestTCK_0069_feel_list_034(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision034"])
+	{
+		dRes := result["_decision034"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, feel.Null, vSlice[0])
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0070_feel_instance_of_null_001(t *testing.T) {
@@ -10213,86 +10917,6 @@ func TestTCK_0074_feel_properties_dt_duration_006_a(t *testing.T) {
 	require.Equal(t, float64(0), result["_dt_duration_006_a"])
 }
 
-func TestTCK_0074_feel_properties_range_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_001"])
-}
-
-func TestTCK_0074_feel_properties_range_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_002"])
-}
-
-func TestTCK_0074_feel_properties_range_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_003"])
-}
-
-func TestTCK_0074_feel_properties_range_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_004"])
-}
-
-func TestTCK_0074_feel_properties_range_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_005"])
-}
-
-func TestTCK_0074_feel_properties_range_006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_006"])
-}
-
-func TestTCK_0074_feel_properties_range_007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_007"])
-}
-
-func TestTCK_0074_feel_properties_range_009(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_009"])
-}
-
-func TestTCK_0074_feel_properties_range_010(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_010"])
-}
-
-func TestTCK_0074_feel_properties_range_011(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0074-feel-properties/0074-feel-properties.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_range_011"])
-}
-
 func TestTCK_0075_feel_exponent_decision_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0075-feel-exponent/0075-feel-exponent.dmn")
 	inputs := map[string]any{}
@@ -10702,7 +11326,14 @@ func TestTCK_0081_feel_getentries_function_decision_004(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_004"])
+	{
+		dRes := result["_decision_004"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0081_feel_getentries_function_decision_005(t *testing.T) {
@@ -10710,7 +11341,14 @@ func TestTCK_0081_feel_getentries_function_decision_005(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_005"])
+	{
+		dRes := result["_decision_005"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0081_feel_getentries_function_decision_006(t *testing.T) {
@@ -10742,7 +11380,12 @@ func TestTCK_0081_feel_getentries_function_decision_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_009"])
+	{
+		dRes := result["_decision_009"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0082_feel_coercion_decision_001(t *testing.T) {
@@ -10759,14 +11402,6 @@ func TestTCK_0082_feel_coercion_decision_003(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, feel.Null, result["_decision_003"])
-}
-
-func TestTCK_0082_feel_coercion_decision_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0082-feel-coercion/0082-feel-coercion.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_004"])
 }
 
 func TestTCK_0082_feel_coercion_decision_005(t *testing.T) {
@@ -10998,7 +11633,7 @@ func TestTCK_0082_feel_coercion_decisionService_002_a(t *testing.T) {
 func TestTCK_0082_feel_coercion_decisionService_002_b(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0082-feel-coercion/0082-feel-coercion.dmn")
 	inputs := map[string]any{
-		"decisionService_002_input_1": map[string]any{},
+		"decisionService_002_input_1": []any{"foo"},
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
@@ -11011,22 +11646,6 @@ func TestTCK_0082_feel_coercion_decisionService_002_c(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, "foo", result["_ds_invoke_002_with_singleton_list"])
-}
-
-func TestTCK_0082_feel_coercion_decision_context_01(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0082-feel-coercion/0082-feel-coercion.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_context_01"])
-}
-
-func TestTCK_0082_feel_coercion_decision_context_02(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0082-feel-coercion/0082-feel-coercion.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_context_02"])
 }
 
 func TestTCK_0082_feel_coercion_decision_context_03(t *testing.T) {
@@ -11117,22 +11736,6 @@ func TestTCK_0083_feel_unicode_decision_005_a(t *testing.T) {
 	require.Equal(t, true, result["_decision_005_a"])
 }
 
-func TestTCK_0083_feel_unicode_decision_006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0083-feel-unicode/0083-feel-unicode.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_006"])
-}
-
-func TestTCK_0083_feel_unicode_decision_007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0083-feel-unicode/0083-feel-unicode.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007"])
-}
-
 func TestTCK_0083_feel_unicode_endswith_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0083-feel-unicode/0083-feel-unicode.dmn")
 	inputs := map[string]any{}
@@ -11154,7 +11757,27 @@ func TestTCK_0084_feel_for_loops_decision_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_001"])
+	{
+		dRes := result["_decision_001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_002(t *testing.T) {
@@ -11162,7 +11785,42 @@ func TestTCK_0084_feel_for_loops_decision_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_002"])
+	{
+		dRes := result["_decision_002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 6, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(7), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[4].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(7), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[5].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(8), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_003(t *testing.T) {
@@ -11170,7 +11828,12 @@ func TestTCK_0084_feel_for_loops_decision_003(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_003"])
+	{
+		dRes := result["_decision_003"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_007(t *testing.T) {
@@ -11178,7 +11841,27 @@ func TestTCK_0084_feel_for_loops_decision_007(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_007"])
+	{
+		dRes := result["_decision_007"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_008(t *testing.T) {
@@ -11186,7 +11869,27 @@ func TestTCK_0084_feel_for_loops_decision_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_008"])
+	{
+		dRes := result["_decision_008"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_009(t *testing.T) {
@@ -11194,7 +11897,27 @@ func TestTCK_0084_feel_for_loops_decision_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_009"])
+	{
+		dRes := result["_decision_009"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(-1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(0), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_010(t *testing.T) {
@@ -11202,7 +11925,27 @@ func TestTCK_0084_feel_for_loops_decision_010(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_010"])
+	{
+		dRes := result["_decision_010"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(0), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(-1), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_011(t *testing.T) {
@@ -11210,7 +11953,17 @@ func TestTCK_0084_feel_for_loops_decision_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_011"])
+	{
+		dRes := result["_decision_011"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_012(t *testing.T) {
@@ -11218,7 +11971,27 @@ func TestTCK_0084_feel_for_loops_decision_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_012"])
+	{
+		dRes := result["_decision_012"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_013(t *testing.T) {
@@ -11226,7 +11999,37 @@ func TestTCK_0084_feel_for_loops_decision_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_013"])
+	{
+		dRes := result["_decision_013"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[4].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(24), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_014(t *testing.T) {
@@ -11234,7 +12037,14 @@ func TestTCK_0084_feel_for_loops_decision_014(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_014"])
+	{
+		dRes := result["_decision_014"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, false, vSlice[0])
+		require.Equal(t, true, vSlice[1])
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_015(t *testing.T) {
@@ -11242,7 +12052,32 @@ func TestTCK_0084_feel_for_loops_decision_015(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_015"])
+	{
+		dRes := result["_decision_015"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_016(t *testing.T) {
@@ -11250,7 +12085,14 @@ func TestTCK_0084_feel_for_loops_decision_016(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_016"])
+	{
+		dRes := result["_decision_016"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_017(t *testing.T) {
@@ -11258,7 +12100,15 @@ func TestTCK_0084_feel_for_loops_decision_017(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_017"])
+	{
+		dRes := result["_decision_017"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "1980-01-01", vSlice[0])
+		require.Equal(t, "1980-01-02", vSlice[1])
+		require.Equal(t, "1980-01-03", vSlice[2])
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_018(t *testing.T) {
@@ -11266,7 +12116,15 @@ func TestTCK_0084_feel_for_loops_decision_018(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_018"])
+	{
+		dRes := result["_decision_018"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "1980-01-03", vSlice[0])
+		require.Equal(t, "1980-01-02", vSlice[1])
+		require.Equal(t, "1980-01-01", vSlice[2])
+	}
 }
 
 func TestTCK_0084_feel_for_loops_decision_019(t *testing.T) {
@@ -11469,26 +12327,6 @@ func TestTCK_0085_decision_services_012(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, "A B C D", result["_decision_012_1"])
-}
-
-func TestTCK_0085_decision_services_013(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0085-decision-services/0085-decision-services.dmn")
-	inputs := map[string]any{
-		"inputData_013_1": "C",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_013_1"])
-}
-
-func TestTCK_0085_decision_services_014(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0085-decision-services/0085-decision-services.dmn")
-	inputs := map[string]any{
-		"inputData_014_1": "C",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_014_1"])
 }
 
 func TestTCK_0085_decision_services_015(t *testing.T) {
@@ -11790,7 +12628,16 @@ func TestTCK_0092_feel_lambda_017(t *testing.T) {
 	}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_017_1"])
+	{
+		dRes := result["_decision_017_1"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "a", vSlice[1])
+		require.Equal(t, "z", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0092_feel_lambda_018(t *testing.T) {
@@ -11798,7 +12645,16 @@ func TestTCK_0092_feel_lambda_018(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision_018"])
+	{
+		dRes := result["_decision_018"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		require.Equal(t, "a", vSlice[0])
+		require.Equal(t, "a", vSlice[1])
+		require.Equal(t, "z", vSlice[2])
+		require.Equal(t, "z", vSlice[3])
+	}
 }
 
 func TestTCK_0093_feel_at_literals_test_001(t *testing.T) {
@@ -12215,32 +13071,12 @@ func TestTCK_0095_feel_day_of_year_function_null_008(t *testing.T) {
 	require.Equal(t, feel.Null, result["_null_008"])
 }
 
-func TestTCK_0096_feel_day_of_week_function_date_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0096-feel-day-of-week-function/0096-feel-day-of-week-function.dmn")
-	inputs := map[string]any{
-		"date_input_001": "2021-01-11",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_date_001"])
-}
-
 func TestTCK_0096_feel_day_of_week_function_date_002(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0096-feel-day-of-week-function/0096-feel-day-of-week-function.dmn")
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, "Tuesday", result["_date_002"])
-}
-
-func TestTCK_0096_feel_day_of_week_function_datetime_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0096-feel-day-of-week-function/0096-feel-day-of-week-function.dmn")
-	inputs := map[string]any{
-		"date_input_001": "2021-01-11T10:10:10",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_date_001"])
 }
 
 func TestTCK_0096_feel_day_of_week_function_datetime_002(t *testing.T) {
@@ -12317,32 +13153,12 @@ func TestTCK_0096_feel_day_of_week_function_null_008(t *testing.T) {
 	require.Equal(t, feel.Null, result["_null_008"])
 }
 
-func TestTCK_0097_feel_month_of_year_function_date_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0097-feel-month-of-year-function/0097-feel-month-of-year-function.dmn")
-	inputs := map[string]any{
-		"date_input_001": "2021-01-01",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_date_001"])
-}
-
 func TestTCK_0097_feel_month_of_year_function_date_002(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/0097-feel-month-of-year-function/0097-feel-month-of-year-function.dmn")
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, "September", result["_date_002"])
-}
-
-func TestTCK_0097_feel_month_of_year_function_datetime_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/0097-feel-month-of-year-function/0097-feel-month-of-year-function.dmn")
-	inputs := map[string]any{
-		"date_input_001": "2021-01-01T10:10:10",
-	}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_date_001"])
 }
 
 func TestTCK_0097_feel_month_of_year_function_datetime_002(t *testing.T) {
@@ -12482,7 +13298,27 @@ func TestTCK_0098_feel_week_of_year_function_date_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_date_008"])
+	{
+		dRes := result["_date_008"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(53), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_0098_feel_week_of_year_function_datetime_001(t *testing.T) {
@@ -23174,7 +24010,14 @@ func TestTCK_1111_feel_matches_function_K2_MatchesFunc_15(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result[""])
+	{
+		dRes := result[""]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, false, vSlice[0])
+		require.Equal(t, true, vSlice[1])
+	}
 }
 
 func TestTCK_1111_feel_matches_function_K2_MatchesFunc_17(t *testing.T) {
@@ -25657,118 +26500,6 @@ func TestTCK_1121_feel_years_and_months_duration_function_036_f8c8b02ba3(t *test
 	require.Equal(t, "-P1Y", result["_jHaNMPUUEeesLuP4RHs4vA"])
 }
 
-func TestTCK_1130_feel_interval_during(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_7cfd72fa-fc8d-474c-bd87-9ddd67c0994d"])
-}
-
-func TestTCK_1130_feel_interval_after(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_fac80212-e8cf-4940-9f0e-49b6edaf30c1"])
-}
-
-func TestTCK_1130_feel_interval_started_by(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_0100930c-32a9-47be-b977-cc5ef3076b7c"])
-}
-
-func TestTCK_1130_feel_interval_includes(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_31e16c94-a1ca-4fa0-b51b-1d5a1400f727"])
-}
-
-func TestTCK_1130_feel_interval_met_by(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_faf79323-ca20-458f-b257-30bf63a87678"])
-}
-
-func TestTCK_1130_feel_interval_before(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_80e62ec8-7db3-4ef1-ad00-115058ee1cf7"])
-}
-
-func TestTCK_1130_feel_interval_overlaps(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_028a365e-be96-4311-b7a3-80b1786e18e3"])
-}
-
-func TestTCK_1130_feel_interval_overlaps_before(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_20e70d27-7e01-4171-bb3f-eb81aa497ebe"])
-}
-
-func TestTCK_1130_feel_interval_finishes(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_37232b74-0615-47e4-9d05-875742a5a4d7"])
-}
-
-func TestTCK_1130_feel_interval_finished_by(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_9d5d273e-8b4a-48dd-b788-e0eeb2b712cd"])
-}
-
-func TestTCK_1130_feel_interval_starts(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_9388274a-d284-4ac8-8c5e-0bf1a471db10"])
-}
-
-func TestTCK_1130_feel_interval_coincides(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_324b7ce1-0b42-4534-9f6a-71ceb356721c"])
-}
-
-func TestTCK_1130_feel_interval_overlaps_after(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_27eb4c36-b482-49a9-a0d5-75f986581e02"])
-}
-
-func TestTCK_1130_feel_interval_mmets(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1130-feel-interval/1130-feel-interval.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_5724b910-e954-403b-aba8-411035af6792"])
-}
-
 func TestTCK_1131_feel_function_invocation_001(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1131-feel-function-invocation/1131-feel-function-invocation.dmn")
 	inputs := map[string]any{}
@@ -26521,22 +27252,6 @@ func TestTCK_1144_feel_round_half_down_function_017_b(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision017_b"])
 }
 
-func TestTCK_1145_feel_context_function_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
-}
-
-func TestTCK_1145_feel_context_function_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
-}
-
 func TestTCK_1145_feel_context_function_003(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
 	inputs := map[string]any{}
@@ -26551,14 +27266,6 @@ func TestTCK_1145_feel_context_function_004(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, true, result["_decision004"])
-}
-
-func TestTCK_1145_feel_context_function_005(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision005"])
 }
 
 func TestTCK_1145_feel_context_function_006(t *testing.T) {
@@ -26585,22 +27292,6 @@ func TestTCK_1145_feel_context_function_008(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision008"])
 }
 
-func TestTCK_1145_feel_context_function_009(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
-}
-
-func TestTCK_1145_feel_context_function_010(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
-}
-
 func TestTCK_1145_feel_context_function_011(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
 	inputs := map[string]any{}
@@ -26625,22 +27316,6 @@ func TestTCK_1145_feel_context_function_013(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision012"])
 }
 
-func TestTCK_1145_feel_context_function_014_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014_a"])
-}
-
-func TestTCK_1145_feel_context_function_014_b(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014_b"])
-}
-
 func TestTCK_1145_feel_context_function_015(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
 	inputs := map[string]any{}
@@ -26657,52 +27332,19 @@ func TestTCK_1145_feel_context_function_016(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision016"])
 }
 
-func TestTCK_1145_feel_context_function_017(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1145-feel-context-function/1145-feel-context-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision017"])
-}
-
-func TestTCK_1146_feel_context_put_function_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
-}
-
 func TestTCK_1146_feel_context_put_function_002(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
-}
-
-func TestTCK_1146_feel_context_put_function_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
-}
-
-func TestTCK_1146_feel_context_put_function_003_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003_a"])
-}
-
-func TestTCK_1146_feel_context_put_function_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
+	{
+		dRes := result["_decision002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 2, len(vSlice))
+		require.Equal(t, "", vSlice[0])
+		require.Equal(t, "", vSlice[1])
+	}
 }
 
 func TestTCK_1146_feel_context_put_function_005(t *testing.T) {
@@ -26721,14 +27363,6 @@ func TestTCK_1146_feel_context_put_function_006(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision006"])
 }
 
-func TestTCK_1146_feel_context_put_function_007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision007"])
-}
-
 func TestTCK_1146_feel_context_put_function_008(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
 	inputs := map[string]any{}
@@ -26743,14 +27377,6 @@ func TestTCK_1146_feel_context_put_function_009(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, feel.Null, result["_decision009"])
-}
-
-func TestTCK_1146_feel_context_put_function_010(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision010"])
 }
 
 func TestTCK_1146_feel_context_put_function_011(t *testing.T) {
@@ -26775,46 +27401,6 @@ func TestTCK_1146_feel_context_put_function_013(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, feel.Null, result["_decision013"])
-}
-
-func TestTCK_1146_feel_context_put_function_014(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision014"])
-}
-
-func TestTCK_1146_feel_context_put_function_015(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision015"])
-}
-
-func TestTCK_1146_feel_context_put_function_016(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision016"])
-}
-
-func TestTCK_1146_feel_context_put_function_nested001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested001"])
-}
-
-func TestTCK_1146_feel_context_put_function_nested001_a(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested001_a"])
 }
 
 func TestTCK_1146_feel_context_put_function_nested002(t *testing.T) {
@@ -26849,22 +27435,6 @@ func TestTCK_1146_feel_context_put_function_nested005(t *testing.T) {
 	require.Equal(t, feel.Null, result["_nested005"])
 }
 
-func TestTCK_1146_feel_context_put_function_nested006(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested006"])
-}
-
-func TestTCK_1146_feel_context_put_function_nested007(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested007"])
-}
-
 func TestTCK_1146_feel_context_put_function_nested008(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
 	inputs := map[string]any{}
@@ -26881,68 +27451,12 @@ func TestTCK_1146_feel_context_put_function_nested009(t *testing.T) {
 	require.Equal(t, feel.Null, result["_nested009"])
 }
 
-func TestTCK_1146_feel_context_put_function_nested010(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested010"])
-}
-
-func TestTCK_1146_feel_context_put_function_nested011(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested011"])
-}
-
-func TestTCK_1146_feel_context_put_function_nested012(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1146-feel-context-put-function/1146-feel-context-put-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_nested012"])
-}
-
-func TestTCK_1147_feel_context_merge_function_001(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
-}
-
 func TestTCK_1147_feel_context_merge_function_001_a(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, true, result["_decision001_a"])
-}
-
-func TestTCK_1147_feel_context_merge_function_002(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
-}
-
-func TestTCK_1147_feel_context_merge_function_003(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision003"])
-}
-
-func TestTCK_1147_feel_context_merge_function_004(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision004"])
 }
 
 func TestTCK_1147_feel_context_merge_function_005(t *testing.T) {
@@ -26969,14 +27483,6 @@ func TestTCK_1147_feel_context_merge_function_007(t *testing.T) {
 	require.Equal(t, feel.Null, result["_decision007"])
 }
 
-func TestTCK_1147_feel_context_merge_function_008(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
-}
-
 func TestTCK_1147_feel_context_merge_function_009(t *testing.T) {
 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
 	inputs := map[string]any{}
@@ -26999,22 +27505,6 @@ func TestTCK_1147_feel_context_merge_function_011(t *testing.T) {
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
 	require.Equal(t, feel.Null, result["_decision011"])
-}
-
-func TestTCK_1147_feel_context_merge_function_012(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
-}
-
-func TestTCK_1147_feel_context_merge_function_013(t *testing.T) {
-	d := mustParse("testdata/tck/TestCases/compliance-level-3/1147-feel-context-merge-function/1147-feel-context-merge-function.dmn")
-	inputs := map[string]any{}
-	result, err := d.Evaluate(inputs)
-	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
 }
 
 func TestTCK_1148_feel_now_function_001(t *testing.T) {
@@ -27078,7 +27568,27 @@ func TestTCK_1151_boxed_filter_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1151_boxed_filter_002(t *testing.T) {
@@ -27086,7 +27596,12 @@ func TestTCK_1151_boxed_filter_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	{
+		dRes := result["_decision002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_1151_boxed_filter_004(t *testing.T) {
@@ -27110,7 +27625,37 @@ func TestTCK_1152_boxed_for_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision001"])
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 5, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(6), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(8), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[4].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(10), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1152_boxed_for_002(t *testing.T) {
@@ -27118,7 +27663,12 @@ func TestTCK_1152_boxed_for_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	{
+		dRes := result["_decision002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 0, len(vSlice))
+	}
 }
 
 func TestTCK_1153_boxed_some_001(t *testing.T) {
@@ -27206,23 +27756,26 @@ func TestTCK_1155_list_replace_function_001(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-
-	dRes := result["_decision001"]
-
-	vSlice, isSlice := dRes.([]any)
-	require.True(t, isSlice)
-
-	expected := []feel.Number{
-		*feel.N(1),
-		*feel.N(4),
-		*feel.N(3),
-	}
-
-	for i, vNum := range vSlice {
-		fNum, isNum := vNum.(*feel.Number)
-		require.True(t, isNum)
-
-		require.Equal(t, expected[i].Int64(), fNum.Int64())
+	{
+		dRes := result["_decision001"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
 	}
 }
 
@@ -27231,7 +27784,27 @@ func TestTCK_1155_list_replace_function_002(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision002"])
+	{
+		dRes := result["_decision002"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_003(t *testing.T) {
@@ -27279,7 +27852,23 @@ func TestTCK_1155_list_replace_function_008(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision008"])
+	{
+		dRes := result["_decision008"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		require.Equal(t, feel.Null, vSlice[2])
+	}
 }
 
 func TestTCK_1155_list_replace_function_009(t *testing.T) {
@@ -27287,7 +27876,32 @@ func TestTCK_1155_list_replace_function_009(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision009"])
+	{
+		dRes := result["_decision009"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(7), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(8), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_010(t *testing.T) {
@@ -27303,7 +27917,27 @@ func TestTCK_1155_list_replace_function_011(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011"])
+	{
+		dRes := result["_decision011"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_011_a(t *testing.T) {
@@ -27311,7 +27945,27 @@ func TestTCK_1155_list_replace_function_011_a(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision011_a"])
+	{
+		dRes := result["_decision011_a"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(2), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_012(t *testing.T) {
@@ -27319,7 +27973,27 @@ func TestTCK_1155_list_replace_function_012(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision012"])
+	{
+		dRes := result["_decision012"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_013(t *testing.T) {
@@ -27327,7 +28001,27 @@ func TestTCK_1155_list_replace_function_013(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision013"])
+	{
+		dRes := result["_decision013"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(1), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(4), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(3), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_014(t *testing.T) {
@@ -27383,7 +28077,32 @@ func TestTCK_1155_list_replace_function_020(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision020"])
+	{
+		dRes := result["_decision020"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 4, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[1].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[2].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+		{
+			actual, ok := vSlice[3].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+	}
 }
 
 func TestTCK_1155_list_replace_function_021(t *testing.T) {
@@ -27391,842 +28110,511 @@ func TestTCK_1155_list_replace_function_021(t *testing.T) {
 	inputs := map[string]any{}
 	result, err := d.Evaluate(inputs)
 	require.NoError(t, err)
-	require.Equal(t, "", result["_decision021"])
+	{
+		dRes := result["_decision021"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 1, len(vSlice))
+		{
+			actual, ok := vSlice[0].(*feel.Number)
+			require.True(t, ok)
+			require.Equal(t, int64(5), actual.Int64())
+		}
+	}
 }
 
-// func TestTCK_1156_range_function_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001"])
-// }
-//
-// func TestTCK_1156_range_function_001_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_a"])
-// }
-//
-// func TestTCK_1156_range_function_001_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_b"])
-// }
-//
-// func TestTCK_1156_range_function_001_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_c"])
-// }
-//
-// func TestTCK_1156_range_function_001_d(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_d"])
-// }
-//
-// func TestTCK_1156_range_function_001_e(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_e"])
-// }
-//
-// func TestTCK_1156_range_function_001_g(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_g"])
-// }
-//
-// func TestTCK_1156_range_function_001_h(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_h"])
-// }
-//
-// func TestTCK_1156_range_function_001_i(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision001_i"])
-// }
-//
-// func TestTCK_1156_range_function_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision002"])
-// }
-//
-// func TestTCK_1156_range_function_003_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision003_a"])
-// }
-//
-// func TestTCK_1156_range_function_003_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision003_b"])
-// }
-//
-// func TestTCK_1156_range_function_003_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision003_c"])
-// }
-//
-// func TestTCK_1156_range_function_003_d(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision003_d"])
-// }
-//
-// func TestTCK_1156_range_function_003_e(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision003_e"])
-// }
-//
-// func TestTCK_1156_range_function_004_e(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision004_e"])
-// }
-//
-// func TestTCK_1156_range_function_004_f(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision004_f"])
-// }
-//
-// func TestTCK_1156_range_function_005_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_a"])
-// }
-//
-// func TestTCK_1156_range_function_005_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_b"])
-// }
-//
-// func TestTCK_1156_range_function_005_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_c"])
-// }
-//
-// func TestTCK_1156_range_function_005_d(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_d"])
-// }
-//
-// func TestTCK_1156_range_function_005_e(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_e"])
-// }
-//
-// func TestTCK_1156_range_function_005_f(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision005_f"])
-// }
-//
-// func TestTCK_1156_range_function_006(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision006"])
-// }
-//
-// func TestTCK_1156_range_function_007_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision007_a"])
-// }
-//
-// func TestTCK_1156_range_function_007_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision007_b"])
-// }
-//
-// func TestTCK_1156_range_function_007_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{
-// 		"input_001": "1970-01-01",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision007_c"])
-// }
-//
-// func TestTCK_1156_range_function_008_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision008_a"])
-// }
-//
-// func TestTCK_1156_range_function_008_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision008_b"])
-// }
-//
-// func TestTCK_1156_range_function_008_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{
-// 		"input_001": "1970-01-01T00:00:00",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision008_c"])
-// }
-//
-// func TestTCK_1156_range_function_009_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision009_a"])
-// }
-//
-// func TestTCK_1156_range_function_009_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision009_b"])
-// }
-//
-// func TestTCK_1156_range_function_009_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{
-// 		"input_001": "00:00:00",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision009_c"])
-// }
-//
-// func TestTCK_1156_range_function_010_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision010_a"])
-// }
-//
-// func TestTCK_1156_range_function_010_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision010_b"])
-// }
-//
-// func TestTCK_1156_range_function_010_c(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{
-// 		"input_001": "P1D",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision010_c"])
-// }
-//
-// func TestTCK_1156_range_function_011(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, true, result["_decision011"])
-// }
-//
-// func TestTCK_1156_range_function_012(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision012"])
-// }
-//
-// func TestTCK_1156_range_function_013_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision013_a"])
-// }
-//
-// func TestTCK_1156_range_function_013_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision013_b"])
-// }
-//
-// func TestTCK_1156_range_function_014(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision014"])
-// }
-//
-// func TestTCK_1156_range_function_015_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision015_a"])
-// }
-//
-// func TestTCK_1156_range_function_015_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision015_b"])
-// }
-//
-// func TestTCK_1156_range_function_016(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision016"])
-// }
-//
-// func TestTCK_1156_range_function_017(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision017"])
-// }
-//
-// func TestTCK_1156_range_function_018(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision018"])
-// }
-//
-// func TestTCK_1156_range_function_019_a(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision019_sa"])
-// }
-//
-// func TestTCK_1156_range_function_019_b(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision019_b"])
-// }
-//
-// func TestTCK_1156_range_function_020(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision020"])
-// }
-//
-// func TestTCK_1156_range_function_021(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision021"])
-// }
-//
-// func TestTCK_1156_range_function_022(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision022"])
-// }
-//
-// func TestTCK_1156_range_function_023(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision023"])
-// }
-//
-// func TestTCK_1156_range_function_024(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision024"])
-// }
-//
-// func TestTCK_1156_range_function_025(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision025"])
-// }
-//
-// func TestTCK_1156_range_function_026(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision026"])
-// }
-//
-// func TestTCK_1156_range_function_027(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision027"])
-// }
-//
-// func TestTCK_1161_boxed_list_expression_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
-// 	inputs := map[string]any{
-// 		"A": float64(123),
-// 		"B": true,
-// 		"C": "abc",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
-// }
-//
-// func TestTCK_1161_boxed_list_expression_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
-// 	inputs := map[string]any{
-// 		"A": feel.Null,
-// 		"B": feel.Null,
-// 		"C": feel.Null,
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "", result["_4910A030-0560-4E68-850E-3CEC5CA2758F"])
-// }
-//
-// func TestTCK_0015_all_any_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
-// 	inputs := map[string]any{
-// 		"a": "10",
-// 		"b": "9",
-// 		"c": "1",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "true", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
-// 	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
-// 	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
-// 	require.Equal(t, "true", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
-// 	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
-// }
-//
-// func TestTCK_0015_all_any_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0015-all-any/0015-all-any.dmn")
-// 	inputs := map[string]any{
-// 		"a": "10",
-// 		"b": "11",
-// 		"c": "1",
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "false", result["_a1f1c9c1-11b3-4fee-b26a-fbbd69014e78"])
-// 	require.Equal(t, "true", result["_7b646a38-8b7a-441a-a807-17f7700087b8"])
-// 	require.Equal(t, "", result["_065cfe42-f9c4-4218-801d-09a111945833"])
-// 	require.Equal(t, "false", result["_734e64a3-2733-453a-af1b-dce9f6995edb"])
-// 	require.Equal(t, "true", result["_30439de7-21fd-4e54-800c-b94e1f714f0d"])
-// }
-//
-// func TestTCK_0019_flight_rebooking_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0019-flight-rebooking/0019-flight-rebooking.dmn")
-// 	inputs := map[string]any{
-// 		"Flight List":    map[string]any{},
-// 		"Passenger List": map[string]any{},
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "", result["d_RebookedPassengers"])
-// }
-//
-// func TestTCK_0079_feel_string_function_decision_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_decision_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_decision_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "foo", result["_decision_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_decision_004(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_decision_004"])
-// }
-//
-// func TestTCK_0079_feel_string_function_null_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, feel.Null, result["_null_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_string_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "foo", result["_string_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_number_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "123.45", result["_number_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_boolean_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "true", result["_boolean_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_boolean_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "false", result["_boolean_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_date_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "2018-12-10", result["_date_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dateTime_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "2018-12-10T00:00:00", result["_dateTime_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dateTime_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "2018-12-10T10:30:00.0001", result["_dateTime_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dateTime_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "2018-12-10T10:30:00.0001+05:00:01", result["_dateTime_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dateTime_004(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "2018-12-10T10:30:00@Etc/UTC", result["_dateTime_004"])
-// }
-//
-// func TestTCK_0079_feel_string_function_time_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "10:30:00.0001", result["_time_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_time_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "10:30:00.0001+05:00:01", result["_time_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_time_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "10:30:00@Etc/UTC", result["_time_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dt_duration_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P1D", result["_dt_duration_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dt_duration_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "-P1D", result["_dt_duration_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dt_duration_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "PT0S", result["_dt_duration_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dt_duration_004(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P1DT2H3M4.1234S", result["_dt_duration_004"])
-// }
-//
-// func TestTCK_0079_feel_string_function_dt_duration_005(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P2DT1H", result["_dt_duration_005"])
-// }
-//
-// func TestTCK_0079_feel_string_function_ym_duration_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P1Y", result["_ym_duration_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_ym_duration_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "-P1Y", result["_ym_duration_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_ym_duration_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P0M", result["_ym_duration_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_ym_duration_004(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P1Y2M", result["_ym_duration_004"])
-// }
-//
-// func TestTCK_0079_feel_string_function_ym_duration_005(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "P2Y1M", result["_ym_duration_005"])
-// }
-//
-// func TestTCK_0079_feel_string_function_list_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "[1, 2, 3, \"foo\"]", result["_list_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_list_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "[1, 2, 3, [4, 5, \"foo\"]]", result["_list_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_list_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "[\"\\\"foo\\\"\"]", result["_list_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{a: \"foo\"}", result["_context_001"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{a: \"foo\", b: {bar: \"baz\"}}", result["_context_002"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_003(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{\"{\": \"foo\"}", result["_context_003"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_004(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{\":\": \"foo\"}", result["_context_004"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_005(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{\",\": \"foo\"}", result["_context_005"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_006(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{\"}\": \"foo\"}", result["_context_006"])
-// }
-//
-// func TestTCK_0079_feel_string_function_context_007(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0079-feel-string-function/0079-feel-string-function.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, "{\"\\\"\": \"foo\"}", result["_context_007"])
-// }
-//
-// func TestTCK_0088_recursion_001(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
-// 	inputs := map[string]any{}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, float64(55), result["_fibonacci_001"])
-// }
-//
-// func TestTCK_0088_recursion_002(t *testing.T) {
-// 	d := mustParse("testdata/tck/TestCases/non-compliant/0088-recursion/0088-recursion.dmn")
-// 	inputs := map[string]any{
-// 		"treeData": map[string]any{"children": "", "value": float64(1)},
-// 	}
-// 	result, err := d.Evaluate(inputs)
-// 	require.NoError(t, err)
-// 	require.Equal(t, float64(28), result["_tree_001"])
-// }
+func TestTCK_1156_range_function_001(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001"])
+}
+
+func TestTCK_1156_range_function_001_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_a"])
+}
+
+func TestTCK_1156_range_function_001_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_b"])
+}
+
+func TestTCK_1156_range_function_001_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_c"])
+}
+
+func TestTCK_1156_range_function_001_d(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_d"])
+}
+
+func TestTCK_1156_range_function_001_e(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_e"])
+}
+
+func TestTCK_1156_range_function_001_g(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_g"])
+}
+
+func TestTCK_1156_range_function_001_h(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_h"])
+}
+
+func TestTCK_1156_range_function_001_i(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision001_i"])
+}
+
+func TestTCK_1156_range_function_002(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision002"])
+}
+
+func TestTCK_1156_range_function_003_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision003_a"])
+}
+
+func TestTCK_1156_range_function_003_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision003_b"])
+}
+
+func TestTCK_1156_range_function_003_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision003_c"])
+}
+
+func TestTCK_1156_range_function_003_d(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision003_d"])
+}
+
+func TestTCK_1156_range_function_003_e(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision003_e"])
+}
+
+func TestTCK_1156_range_function_004_e(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision004_e"])
+}
+
+func TestTCK_1156_range_function_004_f(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision004_f"])
+}
+
+func TestTCK_1156_range_function_005_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_a"])
+}
+
+func TestTCK_1156_range_function_005_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_b"])
+}
+
+func TestTCK_1156_range_function_005_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_c"])
+}
+
+func TestTCK_1156_range_function_005_d(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_d"])
+}
+
+func TestTCK_1156_range_function_005_e(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_e"])
+}
+
+func TestTCK_1156_range_function_005_f(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision005_f"])
+}
+
+func TestTCK_1156_range_function_006(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision006"])
+}
+
+func TestTCK_1156_range_function_007_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision007_a"])
+}
+
+func TestTCK_1156_range_function_007_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision007_b"])
+}
+
+func TestTCK_1156_range_function_007_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{
+		"input_001": "1970-01-01",
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision007_c"])
+}
+
+func TestTCK_1156_range_function_008_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision008_a"])
+}
+
+func TestTCK_1156_range_function_008_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision008_b"])
+}
+
+func TestTCK_1156_range_function_008_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{
+		"input_001": "1970-01-01T00:00:00",
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision008_c"])
+}
+
+func TestTCK_1156_range_function_009_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision009_a"])
+}
+
+func TestTCK_1156_range_function_009_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision009_b"])
+}
+
+func TestTCK_1156_range_function_009_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{
+		"input_001": "00:00:00",
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision009_c"])
+}
+
+func TestTCK_1156_range_function_010_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision010_a"])
+}
+
+func TestTCK_1156_range_function_010_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision010_b"])
+}
+
+func TestTCK_1156_range_function_010_c(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{
+		"input_001": "P1D",
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision010_c"])
+}
+
+func TestTCK_1156_range_function_011(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, true, result["_decision011"])
+}
+
+func TestTCK_1156_range_function_012(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision012"])
+}
+
+func TestTCK_1156_range_function_013_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision013_a"])
+}
+
+func TestTCK_1156_range_function_013_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision013_b"])
+}
+
+func TestTCK_1156_range_function_014(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision014"])
+}
+
+func TestTCK_1156_range_function_015_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision015_a"])
+}
+
+func TestTCK_1156_range_function_015_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision015_b"])
+}
+
+func TestTCK_1156_range_function_016(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision016"])
+}
+
+func TestTCK_1156_range_function_017(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision017"])
+}
+
+func TestTCK_1156_range_function_018(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision018"])
+}
+
+func TestTCK_1156_range_function_019_a(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision019_sa"])
+}
+
+func TestTCK_1156_range_function_019_b(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision019_b"])
+}
+
+func TestTCK_1156_range_function_020(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision020"])
+}
+
+func TestTCK_1156_range_function_021(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision021"])
+}
+
+func TestTCK_1156_range_function_022(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision022"])
+}
+
+func TestTCK_1156_range_function_023(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision023"])
+}
+
+func TestTCK_1156_range_function_024(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision024"])
+}
+
+func TestTCK_1156_range_function_025(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision025"])
+}
+
+func TestTCK_1156_range_function_026(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision026"])
+}
+
+func TestTCK_1156_range_function_027(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1156-range-function/1156-range-function.dmn")
+	inputs := map[string]any{}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	require.Equal(t, feel.Null, result["_decision027"])
+}
+
+func TestTCK_1161_boxed_list_expression_001(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
+	inputs := map[string]any{
+		"A": float64(123),
+		"B": true,
+		"C": "abc",
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	{
+		dRes := result["_4910A030-0560-4E68-850E-3CEC5CA2758F"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, "123", vSlice[0])
+		require.Equal(t, "true", vSlice[1])
+		require.Equal(t, "abc", vSlice[2])
+	}
+}
+
+func TestTCK_1161_boxed_list_expression_002(t *testing.T) {
+	d := mustParse("testdata/tck/TestCases/compliance-level-3/1161-boxed-list-expression/1161-boxed-list-expression.dmn")
+	inputs := map[string]any{
+		"A": feel.Null,
+		"B": feel.Null,
+		"C": feel.Null,
+	}
+	result, err := d.Evaluate(inputs)
+	require.NoError(t, err)
+	{
+		dRes := result["_4910A030-0560-4E68-850E-3CEC5CA2758F"]
+		vSlice, isSlice := dRes.([]any)
+		require.True(t, isSlice)
+		require.Equal(t, 3, len(vSlice))
+		require.Equal(t, feel.Null, vSlice[0])
+		require.Equal(t, feel.Null, vSlice[1])
+		require.Equal(t, feel.Null, vSlice[2])
+	}
+}

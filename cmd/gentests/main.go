@@ -58,6 +58,7 @@ type tckTestCase struct {
 type tckInputNode struct {
 	Name       string         `xml:"name,attr"`
 	Value      *tckValue      `xml:"value"`
+	List       *tckList       `xml:"list"`
 	Components []tckComponent `xml:"component"`
 }
 
@@ -72,6 +73,15 @@ type tckResultNode struct {
 }
 
 type tckExpected struct {
+	Value *tckValue `xml:"value"`
+	List  *tckList  `xml:"list"`
+}
+
+type tckList struct {
+	Items []tckListItem `xml:"item"`
+}
+
+type tckListItem struct {
 	Value tckValue `xml:"value"`
 }
 
@@ -89,6 +99,15 @@ func (v tckValue) xsiType() string {
 	return ""
 }
 
+func (v tckValue) isNil() bool {
+	for _, a := range v.Attrs {
+		if a.Name.Local == "nil" && a.Value == "true" {
+			return true
+		}
+	}
+	return false
+}
+
 func parseTestXML(path string) (tckTestCases, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -100,31 +119,44 @@ func parseTestXML(path string) (tckTestCases, error) {
 
 // ----- code-generation helpers -----
 
-func goLiteral(xsiType, content string) string {
-	switch xsiType {
+func goLiteral(v tckValue) string {
+	if v.isNil() {
+		return "feel.Null"
+	}
+	switch v.xsiType() {
 	case "xsd:string":
-		return strconv.Quote(content)
+		return strconv.Quote(v.Content)
 	case "xsd:decimal", "xsd:double", "xsd:float":
-		return "float64(" + content + ")"
+		return "float64(" + v.Content + ")"
 	case "xsd:integer", "xsd:long", "xsd:int":
-		return "int64(" + content + ")"
+		return "int64(" + v.Content + ")"
 	case "xsd:boolean":
-		return content // "true" or "false"
+		return v.Content // "true" or "false"
 	default:
-		return strconv.Quote(content)
+		return strconv.Quote(v.Content)
 	}
 }
 
 // inputLiteral returns the Go literal for an inputNode.
-// Simple values produce a scalar literal; component inputs produce a map literal.
+// Simple values produce a scalar literal; list inputs produce a []any literal;
+// component inputs produce a map literal.
 func inputLiteral(n tckInputNode) string {
 	if n.Value != nil {
-		return goLiteral(n.Value.xsiType(), n.Value.Content)
+		return goLiteral(*n.Value)
+	}
+	if n.List != nil {
+		var sb strings.Builder
+		sb.WriteString("[]any{")
+		for _, item := range n.List.Items {
+			fmt.Fprintf(&sb, "%s,", goLiteral(item.Value))
+		}
+		sb.WriteString("}")
+		return sb.String()
 	}
 	var sb strings.Builder
 	sb.WriteString("map[string]any{")
 	for _, c := range n.Components {
-		fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value.xsiType(), c.Value.Content))
+		fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value))
 	}
 	sb.WriteString("}")
 	return sb.String()
@@ -136,11 +168,18 @@ func toIdentifier(s string) string {
 
 // ----- main -----
 
+type assertEntry struct {
+	decID     string
+	scalar    string     // non-empty for scalar assertions
+	isList    bool       // true for list assertions
+	listItems []tckValue // items for list assertions
+}
+
 type genTest struct {
 	name    string
 	dmnPath string
 	inputs  []struct{ name, literal string }
-	asserts []struct{ decID, expected string }
+	asserts []assertEntry
 }
 
 func main() {
@@ -151,6 +190,13 @@ func main() {
 	_ = filepath.WalkDir(tckRoot, func(path string, d fs.DirEntry, err error) error {
 		if err != nil || !d.IsDir() || path == tckRoot {
 			return err
+		}
+
+		// Only generate tests from compliance-level-2 and compliance-level-3.
+		rel, _ := filepath.Rel(tckRoot, path)
+		topLevel := strings.SplitN(rel, string(filepath.Separator), 2)[0]
+		if topLevel != "compliance-level-2" && topLevel != "compliance-level-3" {
+			return fs.SkipDir
 		}
 
 		entries, err := os.ReadDir(path)
@@ -198,7 +244,7 @@ func main() {
 					inputs = append(inputs, struct{ name, literal string }{in.Name, inputLiteral(in)})
 				}
 
-				var asserts []struct{ decID, expected string }
+				var asserts []assertEntry
 				for _, rn := range c.ResultNodes {
 					if rn.Expected == nil {
 						continue
@@ -208,10 +254,22 @@ func main() {
 						fmt.Fprintf(os.Stderr, "warn: no decision for result %q in %s\n", rn.Name, dmnFile)
 						continue
 					}
-					asserts = append(asserts, struct{ decID, expected string }{
-						decID,
-						goLiteral(rn.Expected.Value.xsiType(), rn.Expected.Value.Content),
-					})
+					if rn.Expected.List != nil {
+						var items []tckValue
+						for _, item := range rn.Expected.List.Items {
+							items = append(items, item.Value)
+						}
+						asserts = append(asserts, assertEntry{
+							decID:     decID,
+							isList:    true,
+							listItems: items,
+						})
+					} else if rn.Expected.Value != nil {
+						asserts = append(asserts, assertEntry{
+							decID:  decID,
+							scalar: goLiteral(*rn.Expected.Value),
+						})
+					}
 				}
 
 				if len(asserts) == 0 {
@@ -255,6 +313,7 @@ func buildSource(tests []genTest) string {
 	sb.WriteString("\t\"io\"\n")
 	sb.WriteString("\t\"os\"\n")
 	sb.WriteString("\t\"testing\"\n\n")
+	sb.WriteString("\tfeel \"github.com/binary141/FEEL.go\"\n")
 	sb.WriteString("\t\"github.com/stretchr/testify/require\"\n")
 	sb.WriteString(")\n\n")
 
@@ -280,10 +339,46 @@ func buildSource(tests []genTest) string {
 		sb.WriteString("\tresult, err := d.Evaluate(inputs)\n")
 		sb.WriteString("\trequire.NoError(t, err)\n")
 		for _, a := range fn.asserts {
-			fmt.Fprintf(&sb, "\trequire.Equal(t, %s, result[%s])\n", a.expected, strconv.Quote(a.decID))
+			if a.isList {
+				writeListAssert(&sb, a)
+			} else {
+				fmt.Fprintf(&sb, "\trequire.Equal(t, %s, result[%s])\n", a.scalar, strconv.Quote(a.decID))
+			}
 		}
 		sb.WriteString("}\n")
 	}
 
 	return sb.String()
+}
+
+func writeListAssert(sb *strings.Builder, a assertEntry) {
+	fmt.Fprintf(sb, "\t{\n")
+	fmt.Fprintf(sb, "\t\tdRes := result[%s]\n", strconv.Quote(a.decID))
+	fmt.Fprintf(sb, "\t\tvSlice, isSlice := dRes.([]any)\n")
+	fmt.Fprintf(sb, "\t\trequire.True(t, isSlice)\n")
+	fmt.Fprintf(sb, "\t\trequire.Equal(t, %d, len(vSlice))\n", len(a.listItems))
+	for i, item := range a.listItems {
+		if item.isNil() {
+			fmt.Fprintf(sb, "\t\trequire.Equal(t, feel.Null, vSlice[%d])\n", i)
+		} else {
+			switch item.xsiType() {
+			case "xsd:decimal", "xsd:double", "xsd:float", "xsd:integer", "xsd:long", "xsd:int":
+				fVal, err := strconv.ParseFloat(strings.TrimSpace(item.Content), 64)
+				if err == nil {
+					fmt.Fprintf(sb, "\t\t{\n")
+					fmt.Fprintf(sb, "\t\t\tactual, ok := vSlice[%d].(*feel.Number)\n", i)
+					fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+					fmt.Fprintf(sb, "\t\t\trequire.Equal(t, int64(%d), actual.Int64())\n", int64(fVal))
+					fmt.Fprintf(sb, "\t\t}\n")
+				}
+			case "xsd:string":
+				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strconv.Quote(item.Content), i)
+			case "xsd:boolean":
+				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strings.TrimSpace(item.Content), i)
+			default:
+				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strconv.Quote(item.Content), i)
+			}
+		}
+	}
+	fmt.Fprintf(sb, "\t}\n")
 }

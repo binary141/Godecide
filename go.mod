@@ -3,7 +3,7 @@ module dmn
 go 1.26.2
 
 require (
-	github.com/binary141/FEEL.go v0.0.0-20260527045327-124c00edfa85
+	github.com/binary141/FEEL.go v0.0.0-20260602004827-dee118953989
 	github.com/stretchr/testify v1.11.1
 )
 

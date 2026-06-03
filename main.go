@@ -273,10 +273,6 @@ func dfs(nodes map[string]node, edges map[string][]edge) []node {
 }
 
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
-	if len(d.InputData) != 0 && len(context) == 0 {
-		return nil, ErrMissingInput
-	}
-
 	itemDefinitionMap := make(map[string]ItemDefinition, 0)
 
 	d.TopologicalSort()
@@ -290,7 +286,8 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 
 	for _, i := range d.InputData {
 		if _, found := context[i.Name]; !found {
-			return nil, fmt.Errorf("%w: %s not found for input: %+v", ErrMissingInput, i.Name, i.ID)
+			// return nil, fmt.Errorf("%w: %s not found for input: %+v", ErrMissingInput, i.Name, i.ID)
+			continue
 		}
 
 		// todo make sure the types are the same between input data and the context
@@ -303,6 +300,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	decisionOutputs := map[string]any{}
 
 	for _, d := range d.Decisions {
+		missingInput := false
 		for _, i := range d.InformationRequirements {
 			if i.RequiredInput == nil && i.RequiredDecision == nil {
 				return nil, fmt.Errorf("information requirement: %s needs either an input or decision", i.ID)
@@ -315,7 +313,8 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			if i.RequiredInput != nil {
 				variable, hasInput := inputMap[i.RequiredInput.ResolvedID()]
 				if !hasInput {
-					return nil, fmt.Errorf("%w: %s not found for input: %+v", ErrMissingInput, i.RequiredInput.Href, i.ID)
+					missingInput = true
+					break
 				}
 
 				ctxVar := context[variable.Name]
@@ -342,7 +341,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 
 						ctxBytes, err := json.Marshal(allowedVars)
 						if err != nil {
-							return nil, err
+							return nil, fmt.Errorf("unable to marshal allowed vars: %w", err)
 						}
 
 						ret, err := feel.EvalString("list contains(Allowed Vars, Allowed Var)", string(ctxBytes))
@@ -373,15 +372,20 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			}
 		}
 
+		if missingInput {
+			decisionOutputs[d.ID] = feel.Null
+			continue
+		}
+
 		if d.LiteralExpression != nil {
 			ctxBytes, err := json.Marshal(ctx)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("unable to marshal ctx in literal expression: %w", err)
 			}
 
 			ret, err := feel.EvalString(d.LiteralExpression.Text, string(ctxBytes))
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
 			}
 
 			feelNum, isNum := ret.(*feel.Number)
@@ -564,6 +568,13 @@ func main() {
 		"RiskCategory":      "Medium",
 		"isAffordable":      true,
 		"loan":              map[string]any{"principal": float64(600000), "rate": float64(0.0375), "termMonths": float64(360)},
+		"numList":           []any{},
+		"list1":             []any{"a", "b", "c"},
+		"list2":             []any{"x", "y", "z"},
+		"string1":           "a",
+		"num1":              1,
+		"num2":              2,
+		"num3":              3,
 	}
 
 	evaluation, err := d.Evaluate(inputs)
