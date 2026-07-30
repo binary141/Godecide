@@ -38,7 +38,11 @@ func loadDecisionIDs(dmnPath string) (map[string]string, error) {
 	}
 	m := make(map[string]string, len(d.Decisions))
 	for _, dec := range d.Decisions {
-		m[dec.Name] = dec.ID
+		id := dec.ID
+		if id == "" {
+			id = dec.Name
+		}
+		m[dec.Name] = id
 	}
 	return m, nil
 }
@@ -98,6 +102,20 @@ func (v tckValue) xsiType() string {
 		}
 	}
 	return ""
+}
+
+// values returns the scalar values carried by a list item: the field values
+// of each component for a structured (record) item, or the item's own value
+// for a plain scalar item.
+func (li tckListItem) values() []tckValue {
+	if len(li.Components) > 0 {
+		vs := make([]tckValue, len(li.Components))
+		for i, c := range li.Components {
+			vs[i] = c.Value
+		}
+		return vs
+	}
+	return []tckValue{li.Value}
 }
 
 func (v tckValue) isNil() bool {
@@ -181,8 +199,8 @@ type assertEntry struct {
 	decID     string
 	scalar    string     // non-empty for scalar assertions
 	scalarRaw *tckValue  // raw TCK value for scalar (nil for list assertions)
-	isList    bool       // true for list assertions
-	listItems []tckValue // items for list assertions
+	isList    bool           // true for list assertions
+	listItems []tckListItem  // items for list assertions
 }
 
 type genTest struct {
@@ -266,10 +284,7 @@ func main() {
 						continue
 					}
 					if rn.Expected.List != nil {
-						var items []tckValue
-						for _, item := range rn.Expected.List.Items {
-							items = append(items, item.Value)
-						}
+						items := rn.Expected.List.Items
 						asserts = append(asserts, assertEntry{
 							decID:     decID,
 							isList:    true,
@@ -386,8 +401,22 @@ func isNumericXSIType(t string) bool {
 	return false
 }
 
-func isDurationXSIType(t string) bool {
-	return t == "xsd:duration"
+// stringerGoType returns the Go FEEL type that xsi type t evaluates to when
+// it isn't a plain scalar (duration, date, time, dateTime all wrap a
+// time.Time and compare by their String() form rather than by equality with
+// a Go string), or "" if t is a plain scalar.
+func stringerGoType(t string) string {
+	switch t {
+	case "xsd:duration":
+		return "*feel.FEELDuration"
+	case "xsd:date":
+		return "*feel.FEELDate"
+	case "xsd:time":
+		return "*feel.FEELTime"
+	case "xsd:dateTime":
+		return "*feel.FEELDatetime"
+	}
+	return ""
 }
 
 func buildFolderSource(tests []genTest) string {
@@ -408,20 +437,18 @@ outer:
 					usesFeel = true
 					break outer
 				}
-				if a.scalarRaw != nil && (isNumericXSIType(a.scalarRaw.xsiType()) || isDurationXSIType(a.scalarRaw.xsiType())) {
+				if a.scalarRaw != nil && (isNumericXSIType(a.scalarRaw.xsiType()) || stringerGoType(a.scalarRaw.xsiType()) != "") {
 					usesFeel = true
 					break outer
 				}
 				continue
 			}
 			for _, item := range a.listItems {
-				if item.isNil() {
-					usesFeel = true
-					break outer
-				}
-				if isNumericXSIType(item.xsiType()) {
-					usesFeel = true
-					break outer
+				for _, v := range item.values() {
+					if v.isNil() || isNumericXSIType(v.xsiType()) || stringerGoType(v.xsiType()) != "" {
+						usesFeel = true
+						break outer
+					}
 				}
 			}
 		}
@@ -460,10 +487,11 @@ outer:
 				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
 				fmt.Fprintf(&sb, "\t\trequire.Equal(t, 0, actual.CompareRounded(*feel.NewNumber(%s), %d))\n", strconv.Quote(content), dp)
 				fmt.Fprintf(&sb, "\t}\n")
-			} else if a.scalarRaw != nil && isDurationXSIType(a.scalarRaw.xsiType()) {
+			} else if a.scalarRaw != nil && stringerGoType(a.scalarRaw.xsiType()) != "" {
 				content := strings.TrimSpace(a.scalarRaw.Content)
+				goType := stringerGoType(a.scalarRaw.xsiType())
 				fmt.Fprintf(&sb, "\t{\n")
-				fmt.Fprintf(&sb, "\t\tactual, ok := result[%s].(*feel.FEELDuration)\n", strconv.Quote(a.decID))
+				fmt.Fprintf(&sb, "\t\tactual, ok := result[%s].(%s)\n", strconv.Quote(a.decID), goType)
 				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
 				fmt.Fprintf(&sb, "\t\trequire.Equal(t, %s, actual.String())\n", strconv.Quote(content))
 				fmt.Fprintf(&sb, "\t}\n")
@@ -477,6 +505,38 @@ outer:
 	return sb.String()
 }
 
+// writeScalarValueAssert emits an assertion comparing the Go expression
+// actualExpr against the given TCK-expected scalar value.
+func writeScalarValueAssert(sb *strings.Builder, actualExpr string, v tckValue) {
+	if v.isNil() {
+		fmt.Fprintf(sb, "\t\trequire.Equal(t, feel.Null, %s)\n", actualExpr)
+		return
+	}
+	switch v.xsiType() {
+	case "xsd:decimal", "xsd:double", "xsd:float", "xsd:integer", "xsd:long", "xsd:int":
+		fVal, err := strconv.ParseFloat(strings.TrimSpace(v.Content), 64)
+		if err == nil {
+			fmt.Fprintf(sb, "\t\t{\n")
+			fmt.Fprintf(sb, "\t\t\tactual, ok := (%s).(*feel.Number)\n", actualExpr)
+			fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+			fmt.Fprintf(sb, "\t\t\trequire.Equal(t, int64(%d), actual.Int64())\n", int64(fVal))
+			fmt.Fprintf(sb, "\t\t}\n")
+		}
+	case "xsd:duration", "xsd:date", "xsd:time", "xsd:dateTime":
+		fmt.Fprintf(sb, "\t\t{\n")
+		fmt.Fprintf(sb, "\t\t\tactual, ok := (%s).(%s)\n", actualExpr, stringerGoType(v.xsiType()))
+		fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+		fmt.Fprintf(sb, "\t\t\trequire.Equal(t, %s, actual.String())\n", strconv.Quote(strings.TrimSpace(v.Content)))
+		fmt.Fprintf(sb, "\t\t}\n")
+	case "xsd:string":
+		fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, %s)\n", strconv.Quote(v.Content), actualExpr)
+	case "xsd:boolean":
+		fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, %s)\n", strings.TrimSpace(v.Content), actualExpr)
+	default:
+		fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, %s)\n", strconv.Quote(v.Content), actualExpr)
+	}
+}
+
 func writeListAssert(sb *strings.Builder, a assertEntry) {
 	fmt.Fprintf(sb, "\t{\n")
 	fmt.Fprintf(sb, "\t\tdRes := result[%s]\n", strconv.Quote(a.decID))
@@ -484,27 +544,17 @@ func writeListAssert(sb *strings.Builder, a assertEntry) {
 	fmt.Fprintf(sb, "\t\trequire.True(t, isSlice)\n")
 	fmt.Fprintf(sb, "\t\trequire.Equal(t, %d, len(vSlice))\n", len(a.listItems))
 	for i, item := range a.listItems {
-		if item.isNil() {
-			fmt.Fprintf(sb, "\t\trequire.Equal(t, feel.Null, vSlice[%d])\n", i)
-		} else {
-			switch item.xsiType() {
-			case "xsd:decimal", "xsd:double", "xsd:float", "xsd:integer", "xsd:long", "xsd:int":
-				fVal, err := strconv.ParseFloat(strings.TrimSpace(item.Content), 64)
-				if err == nil {
-					fmt.Fprintf(sb, "\t\t{\n")
-					fmt.Fprintf(sb, "\t\t\tactual, ok := vSlice[%d].(*feel.Number)\n", i)
-					fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
-					fmt.Fprintf(sb, "\t\t\trequire.Equal(t, int64(%d), actual.Int64())\n", int64(fVal))
-					fmt.Fprintf(sb, "\t\t}\n")
-				}
-			case "xsd:string":
-				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strconv.Quote(item.Content), i)
-			case "xsd:boolean":
-				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strings.TrimSpace(item.Content), i)
-			default:
-				fmt.Fprintf(sb, "\t\trequire.Equal(t, %s, vSlice[%d])\n", strconv.Quote(item.Content), i)
+		if len(item.Components) > 0 {
+			fmt.Fprintf(sb, "\t\t{\n")
+			fmt.Fprintf(sb, "\t\t\tm, ok := vSlice[%d].(map[string]any)\n", i)
+			fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+			for _, c := range item.Components {
+				writeScalarValueAssert(sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
 			}
+			fmt.Fprintf(sb, "\t\t}\n")
+			continue
 		}
+		writeScalarValueAssert(sb, fmt.Sprintf("vSlice[%d]", i), item.Value)
 	}
 	fmt.Fprintf(sb, "\t}\n")
 }

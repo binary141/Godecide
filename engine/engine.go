@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"maps"
 	"slices"
 	"strconv"
 	"strings"
@@ -24,7 +25,21 @@ type Definitions struct {
 	InputData               []InputData              `xml:"inputData"`
 	ItemDefinition          []ItemDefinition         `xml:"itemDefinition"`
 	BusinessKnowledgeModels []BusinessKnowledgeModel `xml:"businessKnowledgeModel"`
+	DecisionServices        []DecisionService        `xml:"decisionService"`
 	Version                 string
+}
+
+// DecisionService packages one or more decisions behind a callable interface:
+// invoking it by name runs its outputDecision (and whatever that decision
+// depends on) against fresh inputs bound from the call's positional
+// arguments, independent of the enclosing evaluation's context.
+type DecisionService struct {
+	ID              string             `xml:"id,attr"`
+	Name            string             `xml:"name,attr"`
+	Variable        Variable           `xml:"variable"`
+	OutputDecisions []RequiredDecision `xml:"outputDecision"`
+	InputDecisions  []RequiredDecision `xml:"inputDecision"`
+	InputData       []RequiredInput    `xml:"inputData"`
 }
 
 // BusinessKnowledgeModel represents a reusable function invoked from decision logic
@@ -37,8 +52,9 @@ type BusinessKnowledgeModel struct {
 
 // EncapsulatedLogic holds the parameters and expression body of a business knowledge model
 type EncapsulatedLogic struct {
-	FormalParameters  []FormalParameter `xml:"formalParameter"`
-	LiteralExpression LiteralExpression `xml:"literalExpression"`
+	FormalParameters   []FormalParameter   `xml:"formalParameter"`
+	LiteralExpression  LiteralExpression   `xml:"literalExpression"`
+	FunctionDefinition *FunctionDefinition `xml:"functionDefinition"`
 }
 
 // FormalParameter is a single named parameter of a business knowledge model
@@ -55,7 +71,12 @@ func (b BusinessKnowledgeModel) FEELFunctionLiteral() string {
 		params[i] = p.Name
 	}
 
-	return fmt.Sprintf("function(%s) %s", strings.Join(params, ", "), b.EncapsulatedLogic.LiteralExpression.Text)
+	body := b.EncapsulatedLogic.LiteralExpression.Text
+	if b.EncapsulatedLogic.FunctionDefinition != nil {
+		body = b.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral()
+	}
+
+	return fmt.Sprintf("function(%s) %s", strings.Join(params, ", "), body)
 }
 
 type ItemDefinition struct {
@@ -79,6 +100,81 @@ type Decision struct {
 	KnowledgeRequirements   []KnowledgeRequirement   `xml:"knowledgeRequirement"`
 	DecisionTables          []DecisionTable          `xml:"decisionTable"`
 	LiteralExpression       *LiteralExpression       `xml:"literalExpression"`
+	Context                 *Context                 `xml:"context"`
+	FunctionDefinition      *FunctionDefinition      `xml:"functionDefinition"`
+	Invocation              *Invocation              `xml:"invocation"`
+}
+
+// Invocation represents a DMN <invocation> element: a call to a business
+// knowledge model (referenced by name, not id) with named parameter
+// bindings, e.g. "Some BKM"(Param One: expr1, Param Two: expr2).
+type Invocation struct {
+	LiteralExpression LiteralExpression `xml:"literalExpression"`
+	Bindings          []Binding         `xml:"binding"`
+}
+
+// Binding is a single "parameter: expression" argument of an Invocation.
+type Binding struct {
+	Parameter         Parameter         `xml:"parameter"`
+	LiteralExpression LiteralExpression `xml:"literalExpression"`
+}
+
+// Parameter names a single formal parameter bound by an Invocation.
+type Parameter struct {
+	Name string `xml:"name,attr"`
+}
+
+// FEELCallExpression renders the invocation as a FEEL named-argument function
+// call so it can be evaluated like any other literal expression.
+func (inv Invocation) FEELCallExpression() string {
+	args := make([]string, len(inv.Bindings))
+	for i, b := range inv.Bindings {
+		args[i] = fmt.Sprintf("%s: %s", b.Parameter.Name, b.LiteralExpression.Text)
+	}
+
+	return fmt.Sprintf("%s(%s)", strings.TrimSpace(inv.LiteralExpression.Text), strings.Join(args, ", "))
+}
+
+// FunctionDefinition represents a DMN <functionDefinition> element: a
+// decision (or BKM) body that evaluates to a callable FEEL function rather
+// than a plain value.
+type FunctionDefinition struct {
+	FormalParameters   []FormalParameter   `xml:"formalParameter"`
+	LiteralExpression  LiteralExpression   `xml:"literalExpression"`
+	FunctionDefinition *FunctionDefinition `xml:"functionDefinition"`
+}
+
+// FEELFunctionLiteral renders the function definition as a FEEL function
+// literal so it can be parsed and bound to the decision's variable. A
+// functionDefinition's body is either a literal expression or another
+// (nested) functionDefinition, e.g. for currying: function(a) function(b) ...
+func (f FunctionDefinition) FEELFunctionLiteral() string {
+	params := make([]string, len(f.FormalParameters))
+	for i, p := range f.FormalParameters {
+		params[i] = p.Name
+	}
+
+	body := f.LiteralExpression.Text
+	if f.FunctionDefinition != nil {
+		body = f.FunctionDefinition.FEELFunctionLiteral()
+	}
+
+	return fmt.Sprintf("function(%s) %s", strings.Join(params, ", "), body)
+}
+
+// Context represents a DMN <context> element: an ordered list of context
+// entries, each binding a name to a value (or, if unnamed, providing the
+// context's overall result).
+type Context struct {
+	Entries []ContextEntry `xml:"contextEntry"`
+}
+
+// ContextEntry is a single name/value binding within a Context. The value is
+// either a literal FEEL expression or a nested context.
+type ContextEntry struct {
+	Variable          *Variable          `xml:"variable"`
+	LiteralExpression *LiteralExpression `xml:"literalExpression"`
+	Context           *Context           `xml:"context"`
 }
 
 // KnowledgeRequirement is an edge in the DRG pointing to a required business knowledge model
@@ -107,6 +203,7 @@ type DecisionTable struct {
 }
 
 type Output struct {
+	Name         string       `xml:"name,attr"`
 	OutputValues OutputValues `xml:"outputValues"`
 }
 
@@ -311,7 +408,7 @@ func toFEELValue(v any) any {
 // string-encoded scopes. That round trip re-serializes and re-tokenizes the
 // full ctx on every call, so its cost grows with len(ctx); pushing ctx as a
 // feel.Scope directly is O(1) regardless of how many entries it holds.
-func evalFEEL(text string, ctx map[string]any, extraScope string) (any, error) {
+func evalFEEL(text string, ctx map[string]any, extraScope string, nativeScope map[string]any) (any, error) {
 	intp := feel.NewIntepreter()
 	intp.Push(feel.Scope(ctx))
 
@@ -334,12 +431,187 @@ func evalFEEL(text string, ctx map[string]any, extraScope string) (any, error) {
 		intp.Push(scope)
 	}
 
+	if len(nativeScope) > 0 {
+		intp.Push(feel.Scope(nativeScope))
+	}
+
 	ast, err := feel.ParseString(text)
 	if err != nil {
 		return nil, err
 	}
 
 	return ast.Eval(intp)
+}
+
+// decisionServiceFunc builds a callable FEEL value for a DecisionService:
+// invoking it re-evaluates the whole document (root) against a fresh input
+// set built from the call's positional arguments (bound to the service's
+// declared inputData, in order), then returns its outputDecision's value —
+// independent of whatever decision is invoking it.
+func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map[string]InputData) *feel.NativeFun {
+	decisionByID := make(map[string]Decision, len(root.Decisions))
+	for _, dec := range root.Decisions {
+		decisionByID[dec.ID] = dec
+	}
+
+	// A decision service's parameters are its declared inputData (plain
+	// external inputs) plus its inputDecision (another decision's output,
+	// supplied directly instead of being computed) - in document order.
+	inputNames := make([]string, 0, len(ds.InputData)+len(ds.InputDecisions))
+	decisionParamIDs := make(map[string]string, len(ds.InputDecisions)) // param name -> decision ID
+	for _, inp := range ds.InputData {
+		inputNames = append(inputNames, inputDataByID[inp.ResolvedID()].Name)
+	}
+	for _, inp := range ds.InputDecisions {
+		id := inp.ResolvedID()
+		name := decisionByID[id].Variable.Name
+		inputNames = append(inputNames, name)
+		decisionParamIDs[name] = id
+	}
+
+	outputIDs := make([]string, len(ds.OutputDecisions))
+	for i, od := range ds.OutputDecisions {
+		outputIDs[i] = od.ResolvedID()
+	}
+
+	// Restrict the sub-evaluation to the outputDecision(s) and their
+	// transitive decision dependencies. Evaluating the full document would
+	// re-include whatever decision is invoking this service, which (since
+	// that decision's own KnowledgeRequirement rebinds this very function)
+	// recurses forever.
+	included := map[string]bool{}
+	var visit func(id string)
+	visit = func(id string) {
+		if included[id] {
+			return
+		}
+		dec, ok := decisionByID[id]
+		if !ok {
+			return
+		}
+		included[id] = true
+		for _, ir := range dec.InformationRequirements {
+			if ir.RequiredDecision != nil {
+				visit(ir.RequiredDecision.ResolvedID())
+			}
+		}
+	}
+	for _, oid := range outputIDs {
+		visit(oid)
+	}
+
+	subDecisions := make([]Decision, 0, len(included))
+	for _, dec := range root.Decisions {
+		if included[dec.ID] {
+			subDecisions = append(subDecisions, dec)
+		}
+	}
+
+	subDefs := root
+	subDefs.Decisions = subDecisions
+
+	fn := feel.NewNativeFunc(func(args map[string]any) (any, error) {
+		subInputs := make(map[string]any, len(inputNames))
+		var seedDecisions map[string]any
+		for _, name := range inputNames {
+			v, ok := args[name]
+			if !ok {
+				continue
+			}
+			if decID, isDecisionParam := decisionParamIDs[name]; isDecisionParam {
+				if seedDecisions == nil {
+					seedDecisions = map[string]any{}
+				}
+				seedDecisions[decID] = v
+				continue
+			}
+			subInputs[name] = v
+		}
+
+		subResult, err := subDefs.evaluate(subInputs, seedDecisions)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(outputIDs) == 1 {
+			return subResult[outputIDs[0]], nil
+		}
+
+		combined := make(map[string]any, len(outputIDs))
+		for _, oid := range outputIDs {
+			combined[oid] = subResult[oid]
+		}
+		return combined, nil
+	})
+
+	return fn.Required(inputNames...)
+}
+
+// evalContext evaluates a DMN <context> element against the given base
+// scope. Entries are evaluated in document order, with each entry's value
+// visible to the entries that follow it and to the final result. An entry
+// with no name (a "result entry") becomes the context's overall value;
+// otherwise the overall value is the map of all named entries.
+// resolvePrimitiveType follows a chain of custom itemDefinition typeRefs
+// (e.g. "tEligibility" -> "string") down to the underlying FEEL primitive
+// name, so decision-table input matching can special-case "number"/"string"
+// even when the input's declared type is a custom alias for one of them.
+func resolvePrimitiveType(typeRef string, itemDefinitionMap map[string]ItemDefinition) string {
+	seen := map[string]bool{}
+	for {
+		if seen[typeRef] {
+			return typeRef
+		}
+		seen[typeRef] = true
+
+		def, ok := itemDefinitionMap[typeRef]
+		if !ok || def.TypeRef == "" {
+			return typeRef
+		}
+		typeRef = def.TypeRef
+	}
+}
+
+func evalContext(c *Context, ctx map[string]any) (any, error) {
+	local := make(map[string]any, len(ctx)+len(c.Entries))
+	maps.Copy(local, ctx)
+
+	resultMap := map[string]any{}
+
+	var anonResult any
+	hasAnon := false
+
+	for _, entry := range c.Entries {
+		var val any
+		var err error
+
+		switch {
+		case entry.Context != nil:
+			val, err = evalContext(entry.Context, local)
+		case entry.LiteralExpression != nil:
+			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nil)
+		default:
+			val = feel.Null
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		if entry.Variable != nil && entry.Variable.Name != "" {
+			local[entry.Variable.Name] = val
+			resultMap[entry.Variable.Name] = val
+		} else {
+			anonResult = val
+			hasAnon = true
+		}
+	}
+
+	if hasAnon {
+		return anonResult, nil
+	}
+
+	return resultMap, nil
 }
 
 var counter = 0
@@ -385,6 +657,18 @@ func dfs(nodes map[string]node, edges map[string][]edge) []node {
 }
 
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
+	return d.evaluate(context, nil)
+}
+
+// evaluate is Evaluate plus seedDecisions: decision IDs whose value is
+// supplied directly rather than computed. It exists for decision-service
+// invocation, where an inputDecision parameter substitutes a caller-supplied
+// value for a decision that would otherwise need its own upstream inputs.
+func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any) (map[string]any, error) {
+	// kept unshadowed so decision-service invocations (below) can recursively
+	// re-evaluate the whole document against a fresh set of inputs.
+	root := d
+
 	itemDefinitionMap := make(map[string]ItemDefinition, 0)
 
 	d.TopologicalSort()
@@ -396,6 +680,16 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	bkmMap := make(map[string]BusinessKnowledgeModel, len(d.BusinessKnowledgeModels))
 	for _, v := range d.BusinessKnowledgeModels {
 		bkmMap[v.ID] = v
+	}
+
+	dsMap := make(map[string]DecisionService, len(d.DecisionServices))
+	for _, v := range d.DecisionServices {
+		dsMap[v.ID] = v
+	}
+
+	inputDataByID := make(map[string]InputData, len(d.InputData))
+	for _, v := range d.InputData {
+		inputDataByID[v.ID] = v
 	}
 
 	// the string key is the variable name of the input
@@ -417,6 +711,12 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	decisionOutputs := map[string]any{}
 
 	for _, d := range d.Decisions {
+		if v, seeded := seedDecisions[d.ID]; seeded {
+			decisionOutputs[d.ID] = v
+			ctx[d.Variable.Name] = v
+			continue
+		}
+
 		missingInput := false
 		for _, i := range d.InformationRequirements {
 			if i.RequiredInput == nil && i.RequiredDecision == nil {
@@ -494,28 +794,39 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			continue
 		}
 
-		if d.LiteralExpression != nil {
-			functionsScope := ""
+		functionsScope := ""
+		var nativeScope map[string]any
 
-			if len(d.KnowledgeRequirements) > 0 {
-				functions := make([]string, 0, len(d.KnowledgeRequirements))
-				for _, kr := range d.KnowledgeRequirements {
-					if kr.RequiredKnowledge == nil {
-						continue
-					}
-
-					bkm, hasBKM := bkmMap[kr.RequiredKnowledge.ResolvedID()]
-					if !hasBKM {
-						return nil, fmt.Errorf("business knowledge model: %s not found for decision: %v", kr.RequiredKnowledge.ResolvedID(), d.ID)
-					}
-
-					functions = append(functions, fmt.Sprintf("%s: %s", bkm.Variable.Name, bkm.FEELFunctionLiteral()))
+		if len(d.KnowledgeRequirements) > 0 {
+			functions := make([]string, 0, len(d.KnowledgeRequirements))
+			for _, kr := range d.KnowledgeRequirements {
+				if kr.RequiredKnowledge == nil {
+					continue
 				}
 
-				functionsScope = fmt.Sprintf("{%s}", strings.Join(functions, ", "))
+				resolvedID := kr.RequiredKnowledge.ResolvedID()
+
+				if bkm, hasBKM := bkmMap[resolvedID]; hasBKM {
+					functions = append(functions, fmt.Sprintf("%s: %s", bkm.Variable.Name, bkm.FEELFunctionLiteral()))
+					continue
+				}
+
+				ds, hasDS := dsMap[resolvedID]
+				if !hasDS {
+					return nil, fmt.Errorf("business knowledge model: %s not found for decision: %v", resolvedID, d.ID)
+				}
+
+				if nativeScope == nil {
+					nativeScope = map[string]any{}
+				}
+				nativeScope[ds.Variable.Name] = decisionServiceFunc(root, ds, inputDataByID)
 			}
 
-			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, functionsScope)
+			functionsScope = fmt.Sprintf("{%s}", strings.Join(functions, ", "))
+		}
+
+		if d.LiteralExpression != nil {
+			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, functionsScope, nativeScope)
 			if err != nil {
 				// return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
 				decisionOutputs[d.ID] = feel.Null
@@ -536,14 +847,58 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 			ctx[d.Variable.Name] = ret
 		}
 
+		if d.Context != nil {
+			contextCtx := ctx
+			if functionsScope != "" || len(nativeScope) > 0 {
+				kwScope, err := evalFEEL(functionsScope, ctx, "", nativeScope)
+				if err == nil {
+					if m, ok := kwScope.(map[string]any); ok {
+						contextCtx = make(map[string]any, len(ctx)+len(m))
+						maps.Copy(contextCtx, ctx)
+						maps.Copy(contextCtx, m)
+					}
+				}
+			}
+
+			ret, err := evalContext(d.Context, contextCtx)
+			if err != nil {
+				decisionOutputs[d.ID] = feel.Null
+				ctx[d.Variable.Name] = feel.Null
+			} else {
+				decisionOutputs[d.ID] = ret
+				ctx[d.Variable.Name] = ret
+			}
+		}
+
+		if d.FunctionDefinition != nil {
+			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, functionsScope, nativeScope)
+			if err != nil {
+				decisionOutputs[d.ID] = feel.Null
+				ctx[d.Variable.Name] = feel.Null
+			} else {
+				decisionOutputs[d.ID] = ret
+				ctx[d.Variable.Name] = ret
+			}
+		}
+
+		if d.Invocation != nil {
+			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, functionsScope, nativeScope)
+			if err != nil {
+				decisionOutputs[d.ID] = feel.Null
+				ctx[d.Variable.Name] = feel.Null
+			} else {
+				decisionOutputs[d.ID] = ret
+				ctx[d.Variable.Name] = ret
+			}
+		}
+
 		if len(d.DecisionTables) != 0 {
 			for _, dt := range d.DecisionTables {
 				if !IsValidHitPolicy(dt.HitPolicy) {
 					return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
 				}
 
-				// todo find better type?
-				hits := map[string]any{}
+				var hitsList []any
 
 				for _, rule := range dt.Rules {
 					// todo make sure the types are the same from the ctx input to the rule input
@@ -557,7 +912,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 
 						expression := ie.Text
 
-						switch input.InputExpression.TypeRef {
+						switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
 						case "number":
 							expression = fmt.Sprintf("%s %s", input.InputExpression.Text, ie.Text)
 						case "string":
@@ -565,7 +920,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 							expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
 						}
 
-						ret, err := evalFEEL(expression, ctx, "")
+						ret, err := evalFEEL(expression, ctx, "", nil)
 						if err != nil {
 							log.Printf("err: %+v", err)
 						}
@@ -581,53 +936,92 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 					}
 
 					if hit {
-						for _, oe := range rule.OutputEntries {
-							var hitsList []any
-
-							hitsAny, hasEntry := hits[d.ID]
-							if !hasEntry {
-								hitsList = make([]any, 0)
-							} else {
-								hitsList, _ = hitsAny.([]any)
-							}
-
-							oe.Text, _ = strconv.Unquote(oe.Text)
-
-							hitsList = append(hitsList, oe.Text)
-
-							hits[d.ID] = hitsList
-						}
-					}
-				}
-
-				hitsList, isList := hits[d.ID].([]any)
-				if isList {
-					switch dt.HitPolicy {
-					case HitPolicyUnique:
-						if len(hitsList) > 1 {
-							return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
-						}
-					case HitPolicyPriority:
-						outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
-
-						for _, output := range outputs {
-							output, _ = strconv.Unquote(output)
-							for _, hit := range hitsList {
-								if output == hit {
-									hits[d.ID] = output
-									return hits, nil
+						// A rule with multiple output columns produces one
+						// record (keyed by output column name) per match;
+						// a single-output rule produces a bare scalar.
+						var record any
+						if len(dt.Output) > 1 {
+							rec := make(map[string]any, len(rule.OutputEntries))
+							for oi, oe := range rule.OutputEntries {
+								oe.Text, _ = strconv.Unquote(oe.Text)
+								name := ""
+								if oi < len(dt.Output) {
+									name = dt.Output[oi].Name
 								}
+								rec[name] = oe.Text
 							}
+							record = rec
+						} else if len(rule.OutputEntries) > 0 {
+							oe := rule.OutputEntries[0]
+							oe.Text, _ = strconv.Unquote(oe.Text)
+							record = oe.Text
 						}
+						hitsList = append(hitsList, record)
 
-					}
-
-					if len(hitsList) == 1 {
-						hits[d.ID] = hitsList[0]
+						if dt.HitPolicy == HitPolicyFirst {
+							break
+						}
 					}
 				}
 
-				return hits, nil
+				// primaryOutputValue extracts the value of the first output
+				// column from a hit, for use as the sort/priority key when a
+				// decision table has multiple output columns.
+				primaryOutputValue := func(hit any) any {
+					if m, ok := hit.(map[string]any); ok && len(dt.Output) > 0 {
+						return m[dt.Output[0].Name]
+					}
+					return hit
+				}
+
+				var result any = feel.Null
+
+				switch dt.HitPolicy {
+				case HitPolicyUnique:
+					if len(hitsList) > 1 {
+						return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
+					}
+					if len(hitsList) == 1 {
+						result = hitsList[0]
+					}
+				case HitPolicyFirst, HitPolicyAny:
+					if len(hitsList) > 0 {
+						result = hitsList[0]
+					}
+				case HitPolicyPriority:
+					outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
+
+					for _, output := range outputs {
+						output, _ = strconv.Unquote(strings.TrimSpace(output))
+						for _, hit := range hitsList {
+							if output == primaryOutputValue(hit) {
+								result = hit
+							}
+						}
+						if result != feel.Null {
+							break
+						}
+					}
+				case HitPolicyOutputOrder:
+					outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
+					ordered := make([]any, 0, len(hitsList))
+
+					for _, output := range outputs {
+						output, _ = strconv.Unquote(strings.TrimSpace(output))
+						for _, hit := range hitsList {
+							if output == primaryOutputValue(hit) {
+								ordered = append(ordered, hit)
+							}
+						}
+					}
+
+					result = ordered
+				case HitPolicyRuleOrder, HitPolicyCollect:
+					result = hitsList
+				}
+
+				decisionOutputs[d.ID] = result
+				ctx[d.Variable.Name] = result
 			}
 		}
 	}
@@ -651,6 +1045,15 @@ func Parse(data []byte) (Definitions, error) {
 	}
 
 	d.Version = v
+
+	// The DMN schema requires an id on every decision, but some TCK fixtures
+	// omit it on decisions nothing else references; fall back to the name so
+	// every decision still gets a distinct key instead of colliding on "".
+	for i, dec := range d.Decisions {
+		if dec.ID == "" {
+			d.Decisions[i].ID = dec.Name
+		}
+	}
 
 	return d, nil
 }

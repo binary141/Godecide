@@ -5,7 +5,7 @@ go 1.26.2
 replace github.com/binary141/FEEL.go => /home/binary/code/FEEL.go
 
 require (
-	github.com/binary141/FEEL.go v0.0.0-20260729032641-8fc2ca09eabf
+	github.com/binary141/FEEL.go v0.0.0-20260730044914-110d20d01968
 	github.com/stretchr/testify v1.11.1
 )
 
