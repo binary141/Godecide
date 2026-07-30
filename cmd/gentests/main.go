@@ -197,10 +197,10 @@ func toIdentifier(s string) string {
 
 type assertEntry struct {
 	decID     string
-	scalar    string     // non-empty for scalar assertions
-	scalarRaw *tckValue  // raw TCK value for scalar (nil for list assertions)
-	isList    bool           // true for list assertions
-	listItems []tckListItem  // items for list assertions
+	scalar    string        // non-empty for scalar assertions
+	scalarRaw *tckValue     // raw TCK value for scalar (nil for list assertions)
+	isList    bool          // true for list assertions
+	listItems []tckListItem // items for list assertions
 }
 
 type genTest struct {
