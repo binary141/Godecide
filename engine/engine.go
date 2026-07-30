@@ -16,14 +16,46 @@ import (
 
 // Definitions is the root element of a DMN file
 type Definitions struct {
-	XMLName        xml.Name         `xml:"definitions"`
-	ID             string           `xml:"id,attr"`
-	Name           string           `xml:"name,attr"`
-	Namespace      string           `xml:"namespace,attr"`
-	Decisions      []Decision       `xml:"decision"`
-	InputData      []InputData      `xml:"inputData"`
-	ItemDefinition []ItemDefinition `xml:"itemDefinition"`
-	Version        string
+	XMLName                 xml.Name                 `xml:"definitions"`
+	ID                      string                   `xml:"id,attr"`
+	Name                    string                   `xml:"name,attr"`
+	Namespace               string                   `xml:"namespace,attr"`
+	Decisions               []Decision               `xml:"decision"`
+	InputData               []InputData              `xml:"inputData"`
+	ItemDefinition          []ItemDefinition         `xml:"itemDefinition"`
+	BusinessKnowledgeModels []BusinessKnowledgeModel `xml:"businessKnowledgeModel"`
+	Version                 string
+}
+
+// BusinessKnowledgeModel represents a reusable function invoked from decision logic
+type BusinessKnowledgeModel struct {
+	ID                string            `xml:"id,attr"`
+	Name              string            `xml:"name,attr"`
+	Variable          Variable          `xml:"variable"`
+	EncapsulatedLogic EncapsulatedLogic `xml:"encapsulatedLogic"`
+}
+
+// EncapsulatedLogic holds the parameters and expression body of a business knowledge model
+type EncapsulatedLogic struct {
+	FormalParameters  []FormalParameter `xml:"formalParameter"`
+	LiteralExpression LiteralExpression `xml:"literalExpression"`
+}
+
+// FormalParameter is a single named parameter of a business knowledge model
+type FormalParameter struct {
+	Name    string `xml:"name,attr"`
+	TypeRef string `xml:"typeRef,attr"`
+}
+
+// FEELFunctionLiteral renders the business knowledge model as a FEEL function literal
+// so it can be injected into the evaluation context and invoked by name.
+func (b BusinessKnowledgeModel) FEELFunctionLiteral() string {
+	params := make([]string, len(b.EncapsulatedLogic.FormalParameters))
+	for i, p := range b.EncapsulatedLogic.FormalParameters {
+		params[i] = p.Name
+	}
+
+	return fmt.Sprintf("function(%s) %s", strings.Join(params, ", "), b.EncapsulatedLogic.LiteralExpression.Text)
 }
 
 type ItemDefinition struct {
@@ -44,8 +76,25 @@ type Decision struct {
 	Name                    string                   `xml:"name,attr"`
 	Variable                Variable                 `xml:"variable"`
 	InformationRequirements []InformationRequirement `xml:"informationRequirement"`
+	KnowledgeRequirements   []KnowledgeRequirement   `xml:"knowledgeRequirement"`
 	DecisionTables          []DecisionTable          `xml:"decisionTable"`
 	LiteralExpression       *LiteralExpression       `xml:"literalExpression"`
+}
+
+// KnowledgeRequirement is an edge in the DRG pointing to a required business knowledge model
+type KnowledgeRequirement struct {
+	ID                string             `xml:"id,attr"`
+	RequiredKnowledge *RequiredKnowledge `xml:"requiredKnowledge"`
+}
+
+// RequiredKnowledge holds the href reference to a businessKnowledgeModel element
+type RequiredKnowledge struct {
+	Href string `xml:"href,attr"`
+}
+
+// ResolvedID strips the "#" prefix from the href to get the raw element ID
+func (r RequiredKnowledge) ResolvedID() string {
+	return strings.TrimPrefix(r.Href, "#")
 }
 
 type DecisionTable struct {
@@ -277,6 +326,11 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 		itemDefinitionMap[v.Name] = v
 	}
 
+	bkmMap := make(map[string]BusinessKnowledgeModel, len(d.BusinessKnowledgeModels))
+	for _, v := range d.BusinessKnowledgeModels {
+		bkmMap[v.ID] = v
+	}
+
 	// the string key is the variable name of the input
 	inputMap := make(map[string]Variable, len(context))
 
@@ -379,17 +433,42 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 				return nil, fmt.Errorf("unable to marshal ctx in literal expression: %w", err)
 			}
 
-			ret, err := feel.EvalString(d.LiteralExpression.Text, string(ctxBytes))
-			if err != nil {
-				return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
+			evalArgs := []string{string(ctxBytes)}
+
+			if len(d.KnowledgeRequirements) > 0 {
+				functions := make([]string, 0, len(d.KnowledgeRequirements))
+				for _, kr := range d.KnowledgeRequirements {
+					if kr.RequiredKnowledge == nil {
+						continue
+					}
+
+					bkm, hasBKM := bkmMap[kr.RequiredKnowledge.ResolvedID()]
+					if !hasBKM {
+						return nil, fmt.Errorf("business knowledge model: %s not found for decision: %v", kr.RequiredKnowledge.ResolvedID(), d.ID)
+					}
+
+					functions = append(functions, fmt.Sprintf("%s: %s", bkm.Variable.Name, bkm.FEELFunctionLiteral()))
+				}
+
+				evalArgs = append(evalArgs, fmt.Sprintf("{%s}", strings.Join(functions, ", ")))
 			}
 
-			feelNum, isNum := ret.(*feel.Number)
-			if isNum {
-				decisionOutputs[d.ID] = feelNum.Float64()
-				ctx[d.Variable.Name] = feelNum.Float64()
-				continue
+			ret, err := feel.EvalString(d.LiteralExpression.Text, evalArgs...)
+			if err != nil {
+				return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
+				//decisionOutputs[d.ID] = feel.Null
+				// ctx[d.Variable.Name] = feel.Null
+				// continue
 			}
+
+			// feelNum, isNum := ret.(*feel.Number)
+			// if isNum {
+			// 	decisionOutputs[d.ID] = feelNum.Float64()
+			// 	ctx[d.Variable.Name] = feelNum.Float64()
+			// 	fmt.Println(feelNum.Float64())
+			// 	fmt.Println(feelNum)
+			// 	continue
+			// }
 
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret

@@ -386,6 +386,10 @@ func isNumericXSIType(t string) bool {
 	return false
 }
 
+func isDurationXSIType(t string) bool {
+	return t == "xsd:duration"
+}
+
 func buildFolderSource(tests []genTest) string {
 	// Determine whether any test in this folder references the feel package
 	// (feel.Null for nil values, feel.Number for numeric assertions).
@@ -404,7 +408,7 @@ outer:
 					usesFeel = true
 					break outer
 				}
-				if a.scalarRaw != nil && isNumericXSIType(a.scalarRaw.xsiType()) {
+				if a.scalarRaw != nil && (isNumericXSIType(a.scalarRaw.xsiType()) || isDurationXSIType(a.scalarRaw.xsiType())) {
 					usesFeel = true
 					break outer
 				}
@@ -436,6 +440,7 @@ outer:
 
 	for _, fn := range tests {
 		fmt.Fprintf(&sb, "func %s(t *testing.T) {\n", fn.name)
+		sb.WriteString("\tt.Parallel()\n")
 		fmt.Fprintf(&sb, "\td := mustParse(%s)\n", strconv.Quote("../"+fn.dmnPath))
 		sb.WriteString("\tinputs := map[string]any{\n")
 		for _, in := range fn.inputs {
@@ -454,6 +459,13 @@ outer:
 				fmt.Fprintf(&sb, "\t\tactual, ok := result[%s].(*feel.Number)\n", strconv.Quote(a.decID))
 				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
 				fmt.Fprintf(&sb, "\t\trequire.Equal(t, 0, actual.CompareRounded(*feel.NewNumber(%s), %d))\n", strconv.Quote(content), dp)
+				fmt.Fprintf(&sb, "\t}\n")
+			} else if a.scalarRaw != nil && isDurationXSIType(a.scalarRaw.xsiType()) {
+				content := strings.TrimSpace(a.scalarRaw.Content)
+				fmt.Fprintf(&sb, "\t{\n")
+				fmt.Fprintf(&sb, "\t\tactual, ok := result[%s].(*feel.FEELDuration)\n", strconv.Quote(a.decID))
+				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
+				fmt.Fprintf(&sb, "\t\trequire.Equal(t, %s, actual.String())\n", strconv.Quote(content))
 				fmt.Fprintf(&sb, "\t}\n")
 			} else {
 				fmt.Fprintf(&sb, "\trequire.Equal(t, %s, result[%s])\n", a.scalar, strconv.Quote(a.decID))

@@ -4,6 +4,7 @@
 package main
 
 import (
+	"dmn/engine"
 	"fmt"
 	"io"
 	"log"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	filename := "./out-of-order-2.dmn"
+	filename := "testdata/tck/TestCases/compliance-level-3/0003-iteration/0003-iteration.dmn"
 
 	if len(os.Args) == 2 {
 		filename = os.Args[1]
@@ -35,33 +36,14 @@ func main() {
 		return
 	}
 
-	d, err := Parse(fileBytes)
+	d, err := engine.Parse(fileBytes)
 	if err != nil {
 		log.Printf("Couldn't parse file bytes: %v", err)
 		return
 	}
 
 	inputs := map[string]any{
-		"First Name":        "Jane",
-		"Last Name":         "Smith",
-		"Department":        "Engineering",
-		"Job Title":         "Engineer",
-		"City":              "Austin",
-		"Country":           "USA",
-		"Company":           "Acme",
-		"Team":              "Platform",
-		"Employment Status": "\"EMPLOYED\"",
-		"Age":               18,
-		"RiskCategory":      "Medium",
-		"isAffordable":      true,
-		"loan":              map[string]any{"principal": float64(600000), "rate": float64(0.0375), "termMonths": float64(360)},
-		"numList":           []any{},
-		"list1":             []any{"a", "b", "c"},
-		"list2":             []any{"x", "y", "z"},
-		"string1":           "a",
-		"num1":              1,
-		"num2":              2,
-		"num3":              3,
+		"Loans": []any{map[string]any{"amount": float64(200000), "rate": float64(.041), "term": float64(360)}, map[string]any{"amount": float64(20000), "rate": float64(.049), "term": float64(60)}},
 	}
 
 	evaluation, err := d.Evaluate(inputs)
@@ -71,6 +53,15 @@ func main() {
 	}
 
 	for k, v := range evaluation {
-		fmt.Printf("%s -> %+v\n", k, v)
+		switch v := v.(type) {
+		case []any:
+			for _, v2 := range v {
+				fmt.Println(v2)
+			}
+		default:
+			break
+		}
+
+		fmt.Printf("%s -> %+v %T\n", k, v, v)
 	}
 }
