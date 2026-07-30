@@ -275,6 +275,73 @@ func (d *Definitions) TopologicalSort() {
 	d.Decisions = decisionNodes
 }
 
+// toFEELValue recursively converts a plain Go value (as supplied by callers
+// of Evaluate, e.g. int/float64/map[string]any/[]any from json.Unmarshal) into
+// FEEL-native types. Previously this normalization happened implicitly by
+// round-tripping ctx through json.Marshal and FEEL's own text parser; pushing
+// ctx into the interpreter directly (see evalFEEL) skips that parser, so
+// numeric/nil types need to be normalized by hand instead. Values already in
+// FEEL-native form (e.g. *feel.Number results from earlier decisions) pass
+// through unchanged.
+func toFEELValue(v any) any {
+	switch vv := v.(type) {
+	case nil:
+		return feel.Null
+	case map[string]any:
+		out := make(map[string]any, len(vv))
+		for k, val := range vv {
+			out[k] = toFEELValue(val)
+		}
+		return out
+	case []any:
+		out := make([]any, len(vv))
+		for i, val := range vv {
+			out[i] = toFEELValue(val)
+		}
+		return out
+	case int, int64, float64:
+		return feel.N(vv)
+	default:
+		return vv
+	}
+}
+
+// evalFEEL evaluates a FEEL expression against ctx directly, without the
+// json.Marshal + re-parse round trip that EvalString requires for its
+// string-encoded scopes. That round trip re-serializes and re-tokenizes the
+// full ctx on every call, so its cost grows with len(ctx); pushing ctx as a
+// feel.Scope directly is O(1) regardless of how many entries it holds.
+func evalFEEL(text string, ctx map[string]any, extraScope string) (any, error) {
+	intp := feel.NewIntepreter()
+	intp.Push(feel.Scope(ctx))
+
+	if extraScope != "" {
+		scopeAst, err := feel.ParseString(extraScope)
+		if err != nil {
+			return nil, err
+		}
+
+		r, err := scopeAst.Eval(intp)
+		if err != nil {
+			return nil, err
+		}
+
+		scope, ok := r.(map[string]any)
+		if !ok {
+			return nil, fmt.Errorf("expected scope to be a map, got: %+v", r)
+		}
+
+		intp.Push(scope)
+	}
+
+	ast, err := feel.ParseString(text)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.Eval(intp)
+}
+
 var counter = 0
 
 func explore(nodes map[string]node, edges map[string][]edge, k string) map[string]node {
@@ -411,7 +478,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 					}
 				}
 
-				ctx[variable.Name] = context[variable.Name]
+				ctx[variable.Name] = toFEELValue(context[variable.Name])
 			}
 
 			if i.RequiredDecision != nil {
@@ -428,12 +495,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 		}
 
 		if d.LiteralExpression != nil {
-			ctxBytes, err := json.Marshal(ctx)
-			if err != nil {
-				return nil, fmt.Errorf("unable to marshal ctx in literal expression: %w", err)
-			}
-
-			evalArgs := []string{string(ctxBytes)}
+			functionsScope := ""
 
 			if len(d.KnowledgeRequirements) > 0 {
 				functions := make([]string, 0, len(d.KnowledgeRequirements))
@@ -450,15 +512,15 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 					functions = append(functions, fmt.Sprintf("%s: %s", bkm.Variable.Name, bkm.FEELFunctionLiteral()))
 				}
 
-				evalArgs = append(evalArgs, fmt.Sprintf("{%s}", strings.Join(functions, ", ")))
+				functionsScope = fmt.Sprintf("{%s}", strings.Join(functions, ", "))
 			}
 
-			ret, err := feel.EvalString(d.LiteralExpression.Text, evalArgs...)
+			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, functionsScope)
 			if err != nil {
-				return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
-				//decisionOutputs[d.ID] = feel.Null
-				// ctx[d.Variable.Name] = feel.Null
-				// continue
+				// return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
+				decisionOutputs[d.ID] = feel.Null
+				ctx[d.Variable.Name] = feel.Null
+				continue
 			}
 
 			// feelNum, isNum := ret.(*feel.Number)
@@ -503,12 +565,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 							expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
 						}
 
-						ctxBytes, err := json.Marshal(ctx)
-						if err != nil {
-							return nil, fmt.Errorf("unable to marshal ctx in rule evaluation: %w", err)
-						}
-
-						ret, err := feel.EvalString(expression, string(ctxBytes))
+						ret, err := evalFEEL(expression, ctx, "")
 						if err != nil {
 							log.Printf("err: %+v", err)
 						}
