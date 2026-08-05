@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DMN Table Builder</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <h1>DMN Table Builder</h1>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="row">
+      <label>Decision name
+        <input id="decisionName" type="text" value="My Decision" />
+      </label>
+      <label>Hit policy
+        <select id="hitPolicy">
+          <option>UNIQUE</option>
+          <option>FIRST</option>
+          <option>ANY</option>
+          <option>PRIORITY</option>
+          <option>RULE ORDER</option>
+          <option>OUTPUT ORDER</option>
+          <option>COLLECT</option>
+        </select>
+      </label>
+      <label id="aggregationLabel" class="hidden">Aggregation
+        <select id="aggregation">
+          <option value="">(none)</option>
+          <option value="SUM">SUM</option>
+          <option value="MIN">MIN</option>
+          <option value="MAX">MAX</option>
+          <option value="COUNT">COUNT</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="toolbar">
+      <button id="addInput">+ Input column</button>
+      <button id="addOutput">+ Output column</button>
+      <button id="addRule">+ Rule</button>
+    </div>
+    <div class="table-scroll">
+      <table id="dtable"></table>
+    </div>
+    <p class="hint">
+      Cells accept plain values ("Gold", 18) or raw FEEL unary tests
+      (&lt; 18, [18..65], "Gold","Silver", -). Number cells without an
+      operator are treated as equality; string cells are auto-quoted.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Evaluate</h2>
+    <p class="hint">Provide one JSON value per input column, then run the table against it.</p>
+    <textarea id="inputsJSON" rows="6"></textarea>
+    <div class="toolbar">
+      <button id="runEval">Evaluate</button>
+      <button id="exportXML">Export XML</button>
+    </div>
+    <pre id="result" class="result"></pre>
+  </section>
+
+  <section class="panel">
+    <h2>Exported XML</h2>
+    <textarea id="xmlOut" rows="14" readonly></textarea>
+    <div class="toolbar">
+      <button id="downloadXML">Download .dmn</button>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

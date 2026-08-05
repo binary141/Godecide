@@ -175,6 +175,7 @@ type ContextEntry struct {
 	Variable          *Variable          `xml:"variable"`
 	LiteralExpression *LiteralExpression `xml:"literalExpression"`
 	Context           *Context           `xml:"context"`
+	DecisionTable     *DecisionTable     `xml:"decisionTable"`
 }
 
 // KnowledgeRequirement is an edge in the DRG pointing to a required business knowledge model
@@ -188,13 +189,16 @@ type RequiredKnowledge struct {
 	Href string `xml:"href,attr"`
 }
 
-// ResolvedID strips the "#" prefix from the href to get the raw element ID
+// ResolvedID returns the fragment of the href (the part after the last "#"),
+// which is the raw element ID. Handles both local ("#_id") and fully-qualified
+// ("http://.../ns#_id") hrefs.
 func (r RequiredKnowledge) ResolvedID() string {
-	return strings.TrimPrefix(r.Href, "#")
+	return resolveHrefID(r.Href)
 }
 
 type DecisionTable struct {
 	HitPolicy            string   `xml:"hitPolicy,attr"`
+	Aggregation          string   `xml:"aggregation,attr"`
 	OutputLabel          string   `xml:"outputLabel,attr"`
 	PreferredOrientation string   `xml:"preferredOrientation,attr"`
 	Inputs               []Input  `xml:"input"`
@@ -261,9 +265,11 @@ type RequiredDecision struct {
 	Href string `xml:"href,attr"`
 }
 
-// ResolvedID strips the "#" prefix from the href to get the raw element ID
+// ResolvedID returns the fragment of the href (the part after the last "#"),
+// which is the raw element ID. Handles both local ("#_id") and fully-qualified
+// ("http://.../ns#_id") hrefs.
 func (r RequiredDecision) ResolvedID() string {
-	return strings.TrimPrefix(r.Href, "#")
+	return resolveHrefID(r.Href)
 }
 
 // RequiredInput holds the href reference to an inputData element
@@ -271,14 +277,27 @@ type RequiredInput struct {
 	Href string `xml:"href,attr"`
 }
 
-// ResolvedID strips the "#" prefix from the href to get the raw element ID
+// ResolvedID returns the fragment of the href (the part after the last "#"),
+// which is the raw element ID. Handles both local ("#_id") and fully-qualified
+// ("http://.../ns#_id") hrefs.
 func (r RequiredInput) ResolvedID() string {
-	return strings.TrimPrefix(r.Href, "#")
+	return resolveHrefID(r.Href)
+}
+
+// resolveHrefID extracts the element-ID fragment from a DMN href, which may
+// be a bare local reference ("#_id") or a fully-qualified URL with a
+// fragment ("http://.../namespace#_id").
+func resolveHrefID(href string) string {
+	if i := strings.LastIndex(href, "#"); i != -1 {
+		return href[i+1:]
+	}
+	return href
 }
 
 // LiteralExpression holds a single FEEL expression as text
 type LiteralExpression struct {
-	Text string `xml:"text"`
+	Text    string `xml:"text"`
+	TypeRef string `xml:"typeRef,attr"`
 }
 
 // InputData represents an external input to the decision graph
@@ -547,6 +566,58 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 	return fn.Required(inputNames...)
 }
 
+// bkmFunc builds a callable FEEL value for a BusinessKnowledgeModel, so its
+// formal-parameter and return-type coercion (declared on the encapsulated
+// logic's literalExpression) can be enforced in Go rather than purely inside
+// FEEL text: an argument that fails to conform to its declared typeRef makes
+// the whole call null (the body is never evaluated), and a body result that
+// fails to conform to the declared return typeRef becomes null.
+func bkmFunc(bkm BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefinition) *feel.NativeFun {
+	params := bkm.EncapsulatedLogic.FormalParameters
+	paramNames := make([]string, len(params))
+	for i, p := range params {
+		paramNames[i] = p.Name
+	}
+
+	fn := feel.NewNativeFunc(func(args map[string]any) (any, error) {
+		argCtx := make(map[string]any, len(params))
+		for _, p := range params {
+			v, ok := args[p.Name]
+			if !ok {
+				v = feel.Null
+			}
+			if p.TypeRef != "" {
+				coerced := coerceToType(v, p.TypeRef, itemDefinitionMap)
+				if isFEELNull(coerced) && !isFEELNull(v) {
+					return feel.Null, nil
+				}
+				v = coerced
+			}
+			argCtx[p.Name] = v
+		}
+
+		if bkm.EncapsulatedLogic.FunctionDefinition != nil {
+			// Curried BKM (a functionDefinition returning another
+			// functionDefinition): return-type coercion isn't modeled for
+			// this shape, evaluate the literal text as-is.
+			return evalFEEL(bkm.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral(), argCtx, "", nil)
+		}
+
+		body := bkm.EncapsulatedLogic.LiteralExpression
+		ret, err := evalFEEL(body.Text, argCtx, "", nil)
+		if err != nil {
+			return nil, err
+		}
+
+		if body.TypeRef != "" {
+			return coerceToType(ret, body.TypeRef, itemDefinitionMap), nil
+		}
+		return ret, nil
+	})
+
+	return fn.Required(paramNames...)
+}
+
 // evalContext evaluates a DMN <context> element against the given base
 // scope. Entries are evaluated in document order, with each entry's value
 // visible to the entries that follow it and to the final result. An entry
@@ -572,7 +643,274 @@ func resolvePrimitiveType(typeRef string, itemDefinitionMap map[string]ItemDefin
 	}
 }
 
-func evalContext(c *Context, ctx map[string]any) (any, error) {
+// isFEELNull reports whether v is FEEL's null value.
+func isFEELNull(v any) bool {
+	_, ok := v.(*feel.NullValue)
+	return ok
+}
+
+// coerceToType coerces value to conform to typeRef (a FEEL primitive name
+// or a custom itemDefinition name resolved via itemDefinitionMap), per the
+// DMN FEEL type-conformance rules: a value that cannot be made to conform
+// becomes null; a singleton list is unwrapped when the target type is not
+// itself a collection; a scalar is wrapped into a singleton list when the
+// target type is a collection; a context conforms to a structural type when
+// it has (at least) every declared component, each itself conforming to its
+// declared type (extra components are allowed).
+func coerceToType(value any, typeRef string, itemDefinitionMap map[string]ItemDefinition) any {
+	if typeRef == "" || isFEELNull(value) {
+		return value
+	}
+
+	def, hasDef := itemDefinitionMap[typeRef]
+
+	if !(hasDef && def.IsCollection == "true") {
+		if list, ok := value.([]any); ok && len(list) == 1 {
+			value = list[0]
+		}
+	}
+
+	if hasDef {
+		switch {
+		case def.IsCollection == "true":
+			return coerceToList(value, def.TypeRef, itemDefinitionMap)
+		case len(def.ItemComponent) > 0:
+			return coerceToContext(value, def.ItemComponent, itemDefinitionMap)
+		case def.TypeRef != "":
+			return coerceToType(value, def.TypeRef, itemDefinitionMap)
+		default:
+			// e.g. a functionItem type: no representable shape to check, accept as-is.
+			return value
+		}
+	}
+
+	return coercePrimitive(value, typeRef)
+}
+
+// coerceToList coerces value into a list whose every element conforms to
+// elemTypeRef. A non-list value is treated as an implicit singleton list.
+func coerceToList(value any, elemTypeRef string, itemDefinitionMap map[string]ItemDefinition) any {
+	list, ok := value.([]any)
+	if !ok {
+		list = []any{value}
+	}
+
+	out := make([]any, len(list))
+	for i, v := range list {
+		coerced := coerceToType(v, elemTypeRef, itemDefinitionMap)
+		if isFEELNull(coerced) && !isFEELNull(v) {
+			return feel.Null
+		}
+		out[i] = coerced
+	}
+	return out
+}
+
+// coerceToContext coerces value into a context conforming to a structural
+// type: every declared component must be present and itself conform to its
+// declared type. Components not declared by the type are left untouched.
+func coerceToContext(value any, components []ItemDefinition, itemDefinitionMap map[string]ItemDefinition) any {
+	m, ok := value.(map[string]any)
+	if !ok {
+		return feel.Null
+	}
+
+	out := make(map[string]any, len(m))
+	maps.Copy(out, m)
+
+	for _, comp := range components {
+		v, present := m[comp.Name]
+		if !present {
+			return feel.Null
+		}
+		coerced := coerceToType(v, comp.TypeRef, itemDefinitionMap)
+		if isFEELNull(coerced) && !isFEELNull(v) {
+			return feel.Null
+		}
+		out[comp.Name] = coerced
+	}
+
+	return out
+}
+
+// coercePrimitive checks value against a FEEL primitive type name. Types
+// this engine doesn't model precisely enough to validate (date, time,
+// duration, ...) are accepted as-is rather than risk false negatives.
+func coercePrimitive(value any, typeRef string) any {
+	switch typeRef {
+	case "number":
+		if _, ok := value.(*feel.Number); ok {
+			return value
+		}
+		return feel.Null
+	case "string":
+		if _, ok := value.(string); ok {
+			return value
+		}
+		return feel.Null
+	case "boolean":
+		if _, ok := value.(bool); ok {
+			return value
+		}
+		return feel.Null
+	default:
+		return value
+	}
+}
+
+// startsWithComparisonOperator reports whether a decision table input entry
+// text opens with a range/comparison operator (e.g. ">1", "<=3") rather than
+// being a bare value that should be matched by equality.
+func startsWithComparisonOperator(text string) bool {
+	for _, op := range []string{"<=", ">=", "<", ">"} {
+		if strings.HasPrefix(text, op) {
+			return true
+		}
+	}
+	return false
+}
+
+// evalDecisionTable evaluates a single DMN decisionTable against ctx,
+// applying its hit policy (and, for COLLECT, its aggregation) to the rules
+// that match. Shared by top-level decision bodies and decisionTables nested
+// inside a context entry.
+func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, error) {
+	if !IsValidHitPolicy(dt.HitPolicy) {
+		return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
+	}
+
+	var hitsList []any
+
+	for _, rule := range dt.Rules {
+		// todo make sure the types are the same from the ctx input to the rule input
+		hit := true
+		for j, ie := range rule.InputEntries {
+			if ie.Text == "-" {
+				continue
+			}
+
+			input := dt.Inputs[j]
+
+			expression := ie.Text
+
+			switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
+			case "number":
+				text := strings.TrimSpace(ie.Text)
+				if startsWithComparisonOperator(text) {
+					expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
+				} else {
+					// A bare number/expression with no comparison operator is
+					// an implicit equality test per FEEL unary-tests grammar.
+					expression = fmt.Sprintf("%s = %s", input.InputExpression.Text, text)
+				}
+			case "string":
+				// todo make sure this is right
+				expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+			}
+
+			ret, err := evalFEEL(expression, ctx, "", nil)
+			if err != nil {
+				log.Printf("err: %+v", err)
+			}
+
+			r, ok := ret.(bool)
+			if !ok {
+				return nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
+			}
+
+			if hit {
+				hit = r
+			}
+		}
+
+		if hit {
+			// A rule with multiple output columns produces one
+			// record (keyed by output column name) per match;
+			// a single-output rule produces a bare scalar.
+			var record any
+			if len(dt.Output) > 1 {
+				rec := make(map[string]any, len(rule.OutputEntries))
+				for oi, oe := range rule.OutputEntries {
+					name := ""
+					if oi < len(dt.Output) {
+						name = dt.Output[oi].Name
+					}
+					rec[name] = evalOutputEntry(oe.Text, ctx)
+				}
+				record = rec
+			} else if len(rule.OutputEntries) > 0 {
+				record = evalOutputEntry(rule.OutputEntries[0].Text, ctx)
+			}
+			hitsList = append(hitsList, record)
+
+			if dt.HitPolicy == HitPolicyFirst {
+				break
+			}
+		}
+	}
+
+	// primaryOutputValue extracts the value of the first output
+	// column from a hit, for use as the sort/priority key when a
+	// decision table has multiple output columns.
+	primaryOutputValue := func(hit any) any {
+		if m, ok := hit.(map[string]any); ok && len(dt.Output) > 0 {
+			return m[dt.Output[0].Name]
+		}
+		return hit
+	}
+
+	var result any = feel.Null
+
+	switch dt.HitPolicy {
+	case HitPolicyUnique:
+		if len(hitsList) > 1 {
+			return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
+		}
+		if len(hitsList) == 1 {
+			result = hitsList[0]
+		}
+	case HitPolicyFirst, HitPolicyAny:
+		if len(hitsList) > 0 {
+			result = hitsList[0]
+		}
+	case HitPolicyPriority:
+		outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
+
+		for _, output := range outputs {
+			output, _ = strconv.Unquote(strings.TrimSpace(output))
+			for _, hit := range hitsList {
+				if output == primaryOutputValue(hit) {
+					result = hit
+				}
+			}
+			if result != feel.Null {
+				break
+			}
+		}
+	case HitPolicyOutputOrder:
+		outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
+		ordered := make([]any, 0, len(hitsList))
+
+		for _, output := range outputs {
+			output, _ = strconv.Unquote(strings.TrimSpace(output))
+			for _, hit := range hitsList {
+				if output == primaryOutputValue(hit) {
+					ordered = append(ordered, hit)
+				}
+			}
+		}
+
+		result = ordered
+	case HitPolicyRuleOrder:
+		result = hitsList
+	case HitPolicyCollect:
+		result = aggregateCollect(dt.Aggregation, hitsList)
+	}
+
+	return result, nil
+}
+
+func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
 	local := make(map[string]any, len(ctx)+len(c.Entries))
 	maps.Copy(local, ctx)
 
@@ -587,9 +925,11 @@ func evalContext(c *Context, ctx map[string]any) (any, error) {
 
 		switch {
 		case entry.Context != nil:
-			val, err = evalContext(entry.Context, local)
+			val, err = evalContext(entry.Context, local, itemDefinitionMap, nativeScope)
+		case entry.DecisionTable != nil:
+			val, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
 		case entry.LiteralExpression != nil:
-			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nil)
+			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope)
 		default:
 			val = feel.Null
 		}
@@ -612,6 +952,79 @@ func evalContext(c *Context, ctx map[string]any) (any, error) {
 	}
 
 	return resultMap, nil
+}
+
+// evalOutputEntry evaluates a decision table output entry as a FEEL
+// expression against ctx, so entries can be literals ("Gold", 98.83) or
+// arbitrary formulas referencing the table's inputs (e.g.
+// "(Principal*Rate/12)/(1-(1+Rate/12)**-Term)+Fees"). Falls back to the
+// unquoted literal text if the expression fails to evaluate.
+func evalOutputEntry(text string, ctx map[string]any) any {
+	ret, err := evalFEEL(text, ctx, "", nil)
+	if err == nil {
+		return ret
+	}
+
+	unquoted, err := strconv.Unquote(text)
+	if err != nil {
+		return text
+	}
+	return unquoted
+}
+
+// aggregateCollect applies a COLLECT hit policy's aggregation function
+// (SUM/MIN/MAX/COUNT) to a decision table's collected hits. With no
+// aggregation attribute (or a non-numeric aggregation), COLLECT behaves like
+// RULE_ORDER and returns the raw list.
+func aggregateCollect(aggregation string, hits []any) any {
+	if aggregation == "" {
+		return hits
+	}
+
+	if aggregation == AggregationCount {
+		return feel.NewNumberFromInt64(int64(len(hits)))
+	}
+
+	if len(hits) == 0 {
+		return feel.Null
+	}
+
+	nums := make([]*feel.Number, 0, len(hits))
+	for _, h := range hits {
+		n, err := feel.ParseNumberWithErr(h)
+		if err != nil {
+			// not a numeric aggregation after all; fall back to the raw list
+			return hits
+		}
+		nums = append(nums, n)
+	}
+
+	switch aggregation {
+	case AggregationSum:
+		result := feel.NewNumberFromInt64(0)
+		for _, n := range nums {
+			result = result.Add(n)
+		}
+		return result
+	case AggregationMin:
+		result := nums[0]
+		for _, n := range nums[1:] {
+			if n.Cmp(result) < 0 {
+				result = n
+			}
+		}
+		return result
+	case AggregationMax:
+		result := nums[0]
+		for _, n := range nums[1:] {
+			if n.Cmp(result) > 0 {
+				result = n
+			}
+		}
+		return result
+	default:
+		return hits
+	}
 }
 
 var counter = 0
@@ -778,7 +1191,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 					}
 				}
 
-				ctx[variable.Name] = toFEELValue(context[variable.Name])
+				ctx[variable.Name] = coerceToType(toFEELValue(context[variable.Name]), variable.TypeRef, itemDefinitionMap)
 			}
 
 			if i.RequiredDecision != nil {
@@ -794,11 +1207,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 			continue
 		}
 
-		functionsScope := ""
 		var nativeScope map[string]any
 
 		if len(d.KnowledgeRequirements) > 0 {
-			functions := make([]string, 0, len(d.KnowledgeRequirements))
+			nativeScope = map[string]any{}
 			for _, kr := range d.KnowledgeRequirements {
 				if kr.RequiredKnowledge == nil {
 					continue
@@ -807,7 +1219,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				resolvedID := kr.RequiredKnowledge.ResolvedID()
 
 				if bkm, hasBKM := bkmMap[resolvedID]; hasBKM {
-					functions = append(functions, fmt.Sprintf("%s: %s", bkm.Variable.Name, bkm.FEELFunctionLiteral()))
+					nativeScope[bkm.Variable.Name] = bkmFunc(bkm, itemDefinitionMap)
 					continue
 				}
 
@@ -816,17 +1228,18 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 					return nil, fmt.Errorf("business knowledge model: %s not found for decision: %v", resolvedID, d.ID)
 				}
 
-				if nativeScope == nil {
-					nativeScope = map[string]any{}
-				}
 				nativeScope[ds.Variable.Name] = decisionServiceFunc(root, ds, inputDataByID)
 			}
+		}
 
-			functionsScope = fmt.Sprintf("{%s}", strings.Join(functions, ", "))
+		// coerceResult applies the decision's declared output type (if any)
+		// to a just-evaluated result, per DMN FEEL type-conformance rules.
+		coerceResult := func(v any) any {
+			return coerceToType(v, d.Variable.TypeRef, itemDefinitionMap)
 		}
 
 		if d.LiteralExpression != nil {
-			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, functionsScope, nativeScope)
+			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, "", nativeScope)
 			if err != nil {
 				// return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
 				decisionOutputs[d.ID] = feel.Null
@@ -834,59 +1247,43 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				continue
 			}
 
-			// feelNum, isNum := ret.(*feel.Number)
-			// if isNum {
-			// 	decisionOutputs[d.ID] = feelNum.Float64()
-			// 	ctx[d.Variable.Name] = feelNum.Float64()
-			// 	fmt.Println(feelNum.Float64())
-			// 	fmt.Println(feelNum)
-			// 	continue
-			// }
-
+			ret = coerceResult(ret)
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
 
 		if d.Context != nil {
-			contextCtx := ctx
-			if functionsScope != "" || len(nativeScope) > 0 {
-				kwScope, err := evalFEEL(functionsScope, ctx, "", nativeScope)
-				if err == nil {
-					if m, ok := kwScope.(map[string]any); ok {
-						contextCtx = make(map[string]any, len(ctx)+len(m))
-						maps.Copy(contextCtx, ctx)
-						maps.Copy(contextCtx, m)
-					}
-				}
-			}
+			ret, err := evalContext(d.Context, ctx, itemDefinitionMap, nativeScope)
 
-			ret, err := evalContext(d.Context, contextCtx)
 			if err != nil {
 				decisionOutputs[d.ID] = feel.Null
 				ctx[d.Variable.Name] = feel.Null
 			} else {
+				ret = coerceResult(ret)
 				decisionOutputs[d.ID] = ret
 				ctx[d.Variable.Name] = ret
 			}
 		}
 
 		if d.FunctionDefinition != nil {
-			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, functionsScope, nativeScope)
+			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope)
 			if err != nil {
 				decisionOutputs[d.ID] = feel.Null
 				ctx[d.Variable.Name] = feel.Null
 			} else {
+				ret = coerceResult(ret)
 				decisionOutputs[d.ID] = ret
 				ctx[d.Variable.Name] = ret
 			}
 		}
 
 		if d.Invocation != nil {
-			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, functionsScope, nativeScope)
+			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, "", nativeScope)
 			if err != nil {
 				decisionOutputs[d.ID] = feel.Null
 				ctx[d.Variable.Name] = feel.Null
 			} else {
+				ret = coerceResult(ret)
 				decisionOutputs[d.ID] = ret
 				ctx[d.Variable.Name] = ret
 			}
@@ -894,132 +1291,12 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 
 		if len(d.DecisionTables) != 0 {
 			for _, dt := range d.DecisionTables {
-				if !IsValidHitPolicy(dt.HitPolicy) {
-					return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
+				result, err := evalDecisionTable(dt, ctx, itemDefinitionMap)
+				if err != nil {
+					return nil, err
 				}
 
-				var hitsList []any
-
-				for _, rule := range dt.Rules {
-					// todo make sure the types are the same from the ctx input to the rule input
-					hit := true
-					for j, ie := range rule.InputEntries {
-						if ie.Text == "-" {
-							continue
-						}
-
-						input := dt.Inputs[j]
-
-						expression := ie.Text
-
-						switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
-						case "number":
-							expression = fmt.Sprintf("%s %s", input.InputExpression.Text, ie.Text)
-						case "string":
-							// todo make sure this is right
-							expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
-						}
-
-						ret, err := evalFEEL(expression, ctx, "", nil)
-						if err != nil {
-							log.Printf("err: %+v", err)
-						}
-
-						r, ok := ret.(bool)
-						if !ok {
-							return nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
-						}
-
-						if hit {
-							hit = r
-						}
-					}
-
-					if hit {
-						// A rule with multiple output columns produces one
-						// record (keyed by output column name) per match;
-						// a single-output rule produces a bare scalar.
-						var record any
-						if len(dt.Output) > 1 {
-							rec := make(map[string]any, len(rule.OutputEntries))
-							for oi, oe := range rule.OutputEntries {
-								oe.Text, _ = strconv.Unquote(oe.Text)
-								name := ""
-								if oi < len(dt.Output) {
-									name = dt.Output[oi].Name
-								}
-								rec[name] = oe.Text
-							}
-							record = rec
-						} else if len(rule.OutputEntries) > 0 {
-							oe := rule.OutputEntries[0]
-							oe.Text, _ = strconv.Unquote(oe.Text)
-							record = oe.Text
-						}
-						hitsList = append(hitsList, record)
-
-						if dt.HitPolicy == HitPolicyFirst {
-							break
-						}
-					}
-				}
-
-				// primaryOutputValue extracts the value of the first output
-				// column from a hit, for use as the sort/priority key when a
-				// decision table has multiple output columns.
-				primaryOutputValue := func(hit any) any {
-					if m, ok := hit.(map[string]any); ok && len(dt.Output) > 0 {
-						return m[dt.Output[0].Name]
-					}
-					return hit
-				}
-
-				var result any = feel.Null
-
-				switch dt.HitPolicy {
-				case HitPolicyUnique:
-					if len(hitsList) > 1 {
-						return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
-					}
-					if len(hitsList) == 1 {
-						result = hitsList[0]
-					}
-				case HitPolicyFirst, HitPolicyAny:
-					if len(hitsList) > 0 {
-						result = hitsList[0]
-					}
-				case HitPolicyPriority:
-					outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
-
-					for _, output := range outputs {
-						output, _ = strconv.Unquote(strings.TrimSpace(output))
-						for _, hit := range hitsList {
-							if output == primaryOutputValue(hit) {
-								result = hit
-							}
-						}
-						if result != feel.Null {
-							break
-						}
-					}
-				case HitPolicyOutputOrder:
-					outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
-					ordered := make([]any, 0, len(hitsList))
-
-					for _, output := range outputs {
-						output, _ = strconv.Unquote(strings.TrimSpace(output))
-						for _, hit := range hitsList {
-							if output == primaryOutputValue(hit) {
-								ordered = append(ordered, hit)
-							}
-						}
-					}
-
-					result = ordered
-				case HitPolicyRuleOrder, HitPolicyCollect:
-					result = hitsList
-				}
-
+				result = coerceResult(result)
 				decisionOutputs[d.ID] = result
 				ctx[d.Variable.Name] = result
 			}
