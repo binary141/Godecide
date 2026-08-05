@@ -67,8 +67,32 @@ type tckInputNode struct {
 }
 
 type tckComponent struct {
-	Name  string   `xml:"name,attr"`
-	Value tckValue `xml:"value"`
+	Name       string         `xml:"name,attr"`
+	Value      tckValue       `xml:"value"`
+	List       *tckList       `xml:"list"`
+	Components []tckComponent `xml:"component"` // nested context: a component whose own value is a structure
+}
+
+// componentUsesFeel reports whether a component (including any it nests)
+// carries a value that requires the feel package to assert against.
+func componentUsesFeel(c tckComponent) bool {
+	if len(c.Components) > 0 {
+		for _, cc := range c.Components {
+			if componentUsesFeel(cc) {
+				return true
+			}
+		}
+		return false
+	}
+	if c.List != nil {
+		for _, it := range c.List.Items {
+			if itemUsesFeel(it) {
+				return true
+			}
+		}
+		return false
+	}
+	return c.Value.isNil() || isNumericXSIType(c.Value.xsiType()) || stringerGoType(c.Value.xsiType()) != ""
 }
 
 type tckResultNode struct {
@@ -106,20 +130,6 @@ func (v tckValue) xsiType() string {
 	return ""
 }
 
-// values returns the scalar values carried by a list item: the field values
-// of each component for a structured (record) item, or the item's own value
-// for a plain scalar item.
-func (li tckListItem) values() []tckValue {
-	if len(li.Components) > 0 {
-		vs := make([]tckValue, len(li.Components))
-		for i, c := range li.Components {
-			vs[i] = c.Value
-		}
-		return vs
-	}
-	return []tckValue{li.Value}
-}
-
 func (v tckValue) isNil() bool {
 	for _, a := range v.Attrs {
 		if a.Name.Local == "nil" && a.Value == "true" {
@@ -153,6 +163,12 @@ func goLiteral(v tckValue) string {
 		return "int64(" + v.Content + ")"
 	case "xsd:boolean":
 		return v.Content // "true" or "false"
+	case "xsd:date", "xsd:time", "xsd:dateTime", "xsd:duration":
+		// Parse through the FEEL "@" temporal literal at test run time
+		// rather than passing the raw ISO text, so date/time/duration
+		// -typed inputs reach the engine as real FEEL values (matching how
+		// the TCK's xsi:type declares them) instead of bare Go strings.
+		return "mustFeelValue(" + strconv.Quote("@"+strconv.Quote(v.Content)) + ")"
 	default:
 		return strconv.Quote(v.Content)
 	}
@@ -399,6 +415,7 @@ func buildHelperSource() string {
 	sb.WriteString("\t\"io\"\n")
 	sb.WriteString("\t\"os\"\n\n")
 	sb.WriteString("\t\"dmn/engine\"\n")
+	sb.WriteString("\tfeel \"github.com/binary141/FEEL.go\"\n")
 	sb.WriteString(")\n\n")
 	sb.WriteString("func mustParse(path string) engine.Definitions {\n")
 	sb.WriteString("\tf, err := os.Open(path)\n")
@@ -409,6 +426,14 @@ func buildHelperSource() string {
 	sb.WriteString("\td, err := engine.Parse(data)\n")
 	sb.WriteString("\tif err != nil {\n\t\tpanic(err)\n\t}\n")
 	sb.WriteString("\treturn d\n")
+	sb.WriteString("}\n\n")
+	sb.WriteString("// mustFeelValue parses a FEEL literal (e.g. an `@\"...\"` temporal\n")
+	sb.WriteString("// literal) at test run time, for TCK inputs whose xsi:type declares a\n")
+	sb.WriteString("// date/time/dateTime/duration value rather than a plain string.\n")
+	sb.WriteString("func mustFeelValue(expr string) any {\n")
+	sb.WriteString("\tv, err := feel.EvalString(expr)\n")
+	sb.WriteString("\tif err != nil {\n\t\tpanic(err)\n\t}\n")
+	sb.WriteString("\treturn v\n")
 	sb.WriteString("}\n")
 	return sb.String()
 }
@@ -458,12 +483,16 @@ func itemUsesFeel(item tckListItem) bool {
 		}
 		return false
 	}
-	for _, v := range item.values() {
-		if v.isNil() || isNumericXSIType(v.xsiType()) || stringerGoType(v.xsiType()) != "" {
-			return true
+	if len(item.Components) > 0 {
+		for _, c := range item.Components {
+			if componentUsesFeel(c) {
+				return true
+			}
 		}
+		return false
 	}
-	return false
+	v := item.Value
+	return v.isNil() || isNumericXSIType(v.xsiType()) || stringerGoType(v.xsiType()) != ""
 }
 
 func buildFolderSource(tests []genTest) string {
@@ -481,7 +510,7 @@ outer:
 		for _, a := range fn.asserts {
 			if a.isStruct {
 				for _, c := range a.structComponents {
-					if c.Value.isNil() || isNumericXSIType(c.Value.xsiType()) || stringerGoType(c.Value.xsiType()) != "" {
+					if componentUsesFeel(c) {
 						usesFeel = true
 						break outer
 					}
@@ -536,7 +565,7 @@ outer:
 				fmt.Fprintf(&sb, "\t\tm, ok := result[%s].(map[string]any)\n", strconv.Quote(a.decID))
 				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
 				for _, c := range a.structComponents {
-					writeScalarValueAssert(&sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
+					writeComponentAssert(&sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c)
 				}
 				fmt.Fprintf(&sb, "\t}\n")
 			} else if a.isList {
@@ -550,13 +579,8 @@ outer:
 				fmt.Fprintf(&sb, "\t\trequire.Equal(t, 0, actual.CompareRounded(*feel.NewNumber(%s), %d))\n", strconv.Quote(content), dp)
 				fmt.Fprintf(&sb, "\t}\n")
 			} else if a.scalarRaw != nil && stringerGoType(a.scalarRaw.xsiType()) != "" {
-				content := strings.TrimSpace(a.scalarRaw.Content)
-				goType := stringerGoType(a.scalarRaw.xsiType())
-				fmt.Fprintf(&sb, "\t{\n")
-				fmt.Fprintf(&sb, "\t\tactual, ok := result[%s].(%s)\n", strconv.Quote(a.decID), goType)
-				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
-				fmt.Fprintf(&sb, "\t\trequire.Equal(t, %s, actual.String())\n", strconv.Quote(content))
-				fmt.Fprintf(&sb, "\t}\n")
+				actualExpr := fmt.Sprintf("result[%s]", strconv.Quote(a.decID))
+				writeScalarValueAssert(&sb, actualExpr, *a.scalarRaw)
 			} else {
 				fmt.Fprintf(&sb, "\trequire.Equal(t, %s, result[%s])\n", a.scalar, strconv.Quote(a.decID))
 			}
@@ -584,7 +608,25 @@ func writeScalarValueAssert(sb *strings.Builder, actualExpr string, v tckValue) 
 			fmt.Fprintf(sb, "\t\t\trequire.Equal(t, int64(%d), actual.Int64())\n", int64(fVal))
 			fmt.Fprintf(sb, "\t\t}\n")
 		}
-	case "xsd:duration", "xsd:date", "xsd:time", "xsd:dateTime":
+	case "xsd:duration":
+		// Durations have more than one valid textual form for the same value
+		// (e.g. "P0Y" and "P0M" both denote a zero year-month duration), so
+		// compare normalized values rather than the exact ISO-8601 text -
+		// this mirrors how the official TCK grader compares durations.
+		fmt.Fprintf(sb, "\t\t{\n")
+		fmt.Fprintf(sb, "\t\t\tactual, ok := (%s).(*feel.FEELDuration)\n", actualExpr)
+		fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+		fmt.Fprintf(sb, "\t\t\texpected, err := feel.ParseDuration(%s)\n", strconv.Quote(strings.TrimSpace(v.Content)))
+		fmt.Fprintf(sb, "\t\t\trequire.NoError(t, err)\n")
+		fmt.Fprintf(sb, "\t\t\tif expected.IsYearMonth() {\n")
+		fmt.Fprintf(sb, "\t\t\t\trequire.True(t, actual.IsYearMonth())\n")
+		fmt.Fprintf(sb, "\t\t\t\trequire.Equal(t, expected.TotalMonths(), actual.TotalMonths())\n")
+		fmt.Fprintf(sb, "\t\t\t} else {\n")
+		fmt.Fprintf(sb, "\t\t\t\trequire.False(t, actual.IsYearMonth())\n")
+		fmt.Fprintf(sb, "\t\t\t\trequire.Equal(t, expected.Duration(), actual.Duration())\n")
+		fmt.Fprintf(sb, "\t\t\t}\n")
+		fmt.Fprintf(sb, "\t\t}\n")
+	case "xsd:date", "xsd:time", "xsd:dateTime":
 		fmt.Fprintf(sb, "\t\t{\n")
 		fmt.Fprintf(sb, "\t\t\tactual, ok := (%s).(%s)\n", actualExpr, stringerGoType(v.xsiType()))
 		fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
@@ -632,10 +674,31 @@ func writeItemAssert(sb *strings.Builder, actualExpr string, item tckListItem) {
 		fmt.Fprintf(sb, "\t\tm, ok := (%s).(map[string]any)\n", actualExpr)
 		fmt.Fprintf(sb, "\t\trequire.True(t, ok)\n")
 		for _, c := range item.Components {
-			writeScalarValueAssert(sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
+			writeComponentAssert(sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c)
 		}
 		fmt.Fprintf(sb, "\t}\n")
 		return
 	}
 	writeScalarValueAssert(sb, actualExpr, item.Value)
+}
+
+// writeComponentAssert emits an assertion for a single expected structural
+// component, which may itself nest further components (a sub-context), a
+// list, or be a plain scalar value.
+func writeComponentAssert(sb *strings.Builder, actualExpr string, c tckComponent) {
+	if len(c.Components) > 0 {
+		fmt.Fprintf(sb, "\t\t{\n")
+		fmt.Fprintf(sb, "\t\t\tcm, ok := (%s).(map[string]any)\n", actualExpr)
+		fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
+		for _, cc := range c.Components {
+			writeComponentAssert(sb, fmt.Sprintf("cm[%s]", strconv.Quote(cc.Name)), cc)
+		}
+		fmt.Fprintf(sb, "\t\t}\n")
+		return
+	}
+	if c.List != nil {
+		writeListValueAssert(sb, actualExpr, *c.List)
+		return
+	}
+	writeScalarValueAssert(sb, actualExpr, c.Value)
 }

@@ -593,9 +593,12 @@ func toFEELValue(v any) any {
 // string-encoded scopes. That round trip re-serializes and re-tokenizes the
 // full ctx on every call, so its cost grows with len(ctx); pushing ctx as a
 // feel.Scope directly is O(1) regardless of how many entries it holds.
-func evalFEEL(text string, ctx map[string]any, extraScope string, nativeScope map[string]any) (any, error) {
+func evalFEEL(text string, ctx map[string]any, extraScope string, nativeScope map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, error) {
 	intp := feel.NewIntepreter()
 	intp.Push(feel.Scope(ctx))
+	intp.TypeResolver = func(name string) (string, bool) {
+		return instanceOfTypeDescriptor(name, itemDefinitionMap)
+	}
 
 	if extraScope != "" {
 		scopeAst, err := feel.ParseString(extraScope)
@@ -766,11 +769,11 @@ func bkmFunc(bkm BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefini
 			// Curried BKM (a functionDefinition returning another
 			// functionDefinition): return-type coercion isn't modeled for
 			// this shape, evaluate the literal text as-is.
-			return evalFEEL(bkm.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral(), argCtx, "", nil)
+			return evalFEEL(bkm.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral(), argCtx, "", nil, itemDefinitionMap)
 		}
 
 		body := bkm.EncapsulatedLogic.LiteralExpression
-		ret, err := evalFEEL(body.Text, argCtx, "", nil)
+		ret, err := evalFEEL(body.Text, argCtx, "", nil, itemDefinitionMap)
 		if err != nil {
 			return nil, err
 		}
@@ -807,6 +810,56 @@ func resolvePrimitiveType(typeRef string, itemDefinitionMap map[string]ItemDefin
 		}
 		typeRef = def.TypeRef
 	}
+}
+
+// instanceOfTypeDescriptor resolves a custom itemDefinition name into the
+// structural type descriptor "instance of" understands: a builtin FEEL
+// primitive name, or a "list<...>" / "context<field: type, ...>" descriptor
+// built recursively from the itemDefinition's shape. ok is false for names
+// that aren't a registered itemDefinition, leaving the type name to be
+// checked as-is (e.g. a builtin like "number" or "context<...>" spelled
+// directly in the FEEL text).
+func instanceOfTypeDescriptor(name string, itemDefinitionMap map[string]ItemDefinition) (string, bool) {
+	def, ok := itemDefinitionMap[name]
+	if !ok {
+		return "", false
+	}
+	return itemDefinitionDescriptor(def, itemDefinitionMap, map[string]bool{name: true}), true
+}
+
+// itemDefinitionDescriptor builds the structural descriptor for a resolved
+// itemDefinition, following further custom typeRefs down to a primitive.
+// seen guards against a typeRef cycle across itemDefinitions.
+func itemDefinitionDescriptor(def ItemDefinition, itemDefinitionMap map[string]ItemDefinition, seen map[string]bool) string {
+	if def.IsCollection == "true" {
+		return "list<" + resolveInstanceOfType(def.TypeRef, itemDefinitionMap, seen) + ">"
+	}
+	if len(def.ItemComponent) > 0 {
+		parts := make([]string, len(def.ItemComponent))
+		for i, comp := range def.ItemComponent {
+			parts[i] = comp.Name + ": " + itemDefinitionDescriptor(comp, itemDefinitionMap, seen)
+		}
+		return "context<" + strings.Join(parts, ", ") + ">"
+	}
+	if def.TypeRef == "" {
+		return "Any"
+	}
+	return resolveInstanceOfType(def.TypeRef, itemDefinitionMap, seen)
+}
+
+// resolveInstanceOfType follows typeRef to either a further itemDefinition
+// (recursing, with cycle protection) or a bare primitive name (returned
+// as-is).
+func resolveInstanceOfType(typeRef string, itemDefinitionMap map[string]ItemDefinition, seen map[string]bool) string {
+	if seen[typeRef] {
+		return typeRef
+	}
+	def, ok := itemDefinitionMap[typeRef]
+	if !ok {
+		return typeRef
+	}
+	seen[typeRef] = true
+	return itemDefinitionDescriptor(def, itemDefinitionMap, seen)
 }
 
 // isFEELNull reports whether v is FEEL's null value.
@@ -1025,7 +1078,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 				}
 			}
 
-			ret, err := evalFEEL(expression, ctx, "", nil)
+			ret, err := evalFEEL(expression, ctx, "", nil, itemDefinitionMap)
 			if err != nil {
 				log.Printf("err: %+v", err)
 			}
@@ -1052,11 +1105,11 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 					if oi < len(dt.Output) {
 						name = dt.Output[oi].Name
 					}
-					rec[name] = evalOutputEntry(oe.Text, ctx)
+					rec[name] = evalOutputEntry(oe.Text, ctx, itemDefinitionMap)
 				}
 				record = rec
 			} else if len(rule.OutputEntries) > 0 {
-				record = evalOutputEntry(rule.OutputEntries[0].Text, ctx)
+				record = evalOutputEntry(rule.OutputEntries[0].Text, ctx, itemDefinitionMap)
 			}
 			hitsList = append(hitsList, record)
 
@@ -1220,7 +1273,7 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 		case entry.DecisionTable != nil:
 			val, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
 		case entry.LiteralExpression != nil:
-			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope)
+			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope, itemDefinitionMap)
 		case entry.Relation != nil:
 			val, err = evalRelation(entry.Relation, local, itemDefinitionMap, nativeScope)
 		case entry.List != nil:
@@ -1270,13 +1323,13 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 func evalExpression(e Expression, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
 	switch {
 	case e.LiteralExpression != nil:
-		return evalFEEL(e.LiteralExpression.Text, ctx, "", nativeScope)
+		return evalFEEL(e.LiteralExpression.Text, ctx, "", nativeScope, itemDefinitionMap)
 	case e.Context != nil:
 		return evalContext(e.Context, ctx, itemDefinitionMap, nativeScope)
 	case e.FunctionDefinition != nil:
-		return evalFEEL(e.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope)
+		return evalFEEL(e.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope, itemDefinitionMap)
 	case e.Invocation != nil:
-		return evalFEEL(e.Invocation.FEELCallExpression(), ctx, "", nativeScope)
+		return evalFEEL(e.Invocation.FEELCallExpression(), ctx, "", nativeScope, itemDefinitionMap)
 	case e.DecisionTable != nil:
 		return evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap)
 	case e.Relation != nil:
@@ -1462,8 +1515,8 @@ func evalQuantified(q *Quantified, ctx map[string]any, itemDefinitionMap map[str
 // arbitrary formulas referencing the table's inputs (e.g.
 // "(Principal*Rate/12)/(1-(1+Rate/12)**-Term)+Fees"). Falls back to the
 // unquoted literal text if the expression fails to evaluate.
-func evalOutputEntry(text string, ctx map[string]any) any {
-	ret, err := evalFEEL(text, ctx, "", nil)
+func evalOutputEntry(text string, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) any {
+	ret, err := evalFEEL(text, ctx, "", nil, itemDefinitionMap)
 	if err == nil {
 		return ret
 	}
@@ -1741,7 +1794,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		}
 
 		if d.LiteralExpression != nil {
-			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, "", nativeScope)
+			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, "", nativeScope, itemDefinitionMap)
 			if err != nil {
 				if isFatalEvalError(err) {
 					return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
@@ -1771,7 +1824,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		}
 
 		if d.FunctionDefinition != nil {
-			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope)
+			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope, itemDefinitionMap)
 			if err != nil {
 				if isFatalEvalError(err) {
 					return nil, err
@@ -1786,7 +1839,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		}
 
 		if d.Invocation != nil {
-			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, "", nativeScope)
+			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, "", nativeScope, itemDefinitionMap)
 			if err != nil {
 				if isFatalEvalError(err) {
 					return nil, err
