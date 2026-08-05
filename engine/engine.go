@@ -846,7 +846,7 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 			subInputs[name] = v
 		}
 
-		subResult, err := subDefs.evaluate(subInputs, seedDecisions)
+		subResult, err := subDefs.evaluate(subInputs, seedDecisions, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -1867,7 +1867,19 @@ func dfs(nodes map[string]node, edges map[string][]edge) []node {
 }
 
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
-	return d.evaluate(context, nil)
+	return d.evaluate(context, nil, nil)
+}
+
+// EvaluateDecisions is Evaluate, but only computes wantIDs and whatever they
+// transitively depend on (via informationRequirement) instead of every
+// decision in the model. For a document with many independent decisions
+// (e.g. a generated compliance-suite file with hundreds of unrelated
+// decisions in one model), this avoids paying for the ones the caller
+// doesn't want. Decisions reached only through a decisionService or BKM
+// invocation are unaffected - those are always resolved against the full,
+// unpruned document.
+func (d Definitions) EvaluateDecisions(context map[string]any, wantIDs ...string) (map[string]any, error) {
+	return d.evaluate(context, nil, wantIDs)
 }
 
 // EvaluateService invokes the named decisionService directly (as the DMN TCK
@@ -1919,10 +1931,48 @@ func (d Definitions) EvaluateService(serviceName string, inputs map[string]any) 
 // supplied directly rather than computed. It exists for decision-service
 // invocation, where an inputDecision parameter substitutes a caller-supplied
 // value for a decision that would otherwise need its own upstream inputs.
-func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any) (map[string]any, error) {
+// wantIDs, if non-empty, restricts the decisions actually computed to those
+// IDs and their transitive informationRequirement dependencies (see
+// EvaluateDecisions); root - used for decisionService/BKM resolution -
+// always sees the full, unpruned document regardless.
+func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any, wantIDs []string) (map[string]any, error) {
 	// kept unshadowed so decision-service invocations (below) can recursively
 	// re-evaluate the whole document against a fresh set of inputs.
 	root := d
+
+	if len(wantIDs) > 0 {
+		decisionByID := make(map[string]Decision, len(d.Decisions))
+		for _, dec := range d.Decisions {
+			decisionByID[dec.ID] = dec
+		}
+		included := map[string]bool{}
+		var visit func(id string)
+		visit = func(id string) {
+			if included[id] {
+				return
+			}
+			dec, ok := decisionByID[id]
+			if !ok {
+				return
+			}
+			included[id] = true
+			for _, ir := range dec.InformationRequirements {
+				if ir.RequiredDecision != nil {
+					visit(ir.RequiredDecision.ResolvedID())
+				}
+			}
+		}
+		for _, id := range wantIDs {
+			visit(id)
+		}
+		pruned := make([]Decision, 0, len(included))
+		for _, dec := range d.Decisions {
+			if included[dec.ID] {
+				pruned = append(pruned, dec)
+			}
+		}
+		d.Decisions = pruned
+	}
 
 	itemDefinitionMap := make(map[string]ItemDefinition, 0)
 
