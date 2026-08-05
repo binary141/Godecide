@@ -1191,6 +1191,16 @@ func lessRank(a, b []int) bool {
 	return false
 }
 
+// isFatalEvalError reports whether err represents a genuine evaluation
+// crash (e.g. malformed FEEL syntax) as opposed to a FEEL-spec-mandated
+// "invalid operation/argument" result, which per the FEEL spec must
+// evaluate to null rather than propagate as a hard error (e.g. `1 + true`,
+// or calling a built-in with a wrongly typed argument).
+func isFatalEvalError(err error) bool {
+	var unexpectedToken *feel.UnexpectedToken
+	return errors.As(err, &unexpectedToken)
+}
+
 func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
 	local := make(map[string]any, len(ctx)+len(c.Entries))
 	maps.Copy(local, ctx)
@@ -1230,7 +1240,11 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 		}
 
 		if err != nil {
-			return nil, err
+			if isFatalEvalError(err) {
+				return nil, err
+			}
+
+			val = feel.Null
 		}
 
 		if entry.Variable != nil && entry.Variable.Name != "" {
@@ -1729,10 +1743,11 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		if d.LiteralExpression != nil {
 			ret, err := evalFEEL(d.LiteralExpression.Text, ctx, "", nativeScope)
 			if err != nil {
-				// return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
-				decisionOutputs[d.ID] = feel.Null
-				ctx[d.Variable.Name] = feel.Null
-				continue
+				if isFatalEvalError(err) {
+					return nil, fmt.Errorf("unable to eval string: '%s' with ctx: %+v: %w", d.LiteralExpression.Text, ctx, err)
+				}
+
+				ret = feel.Null
 			}
 
 			ret = coerceResult(ret)
@@ -1742,39 +1757,47 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 
 		if d.Context != nil {
 			ret, err := evalContext(d.Context, ctx, itemDefinitionMap, nativeScope)
-
 			if err != nil {
-				decisionOutputs[d.ID] = feel.Null
-				ctx[d.Variable.Name] = feel.Null
-			} else {
-				ret = coerceResult(ret)
-				decisionOutputs[d.ID] = ret
-				ctx[d.Variable.Name] = ret
+				if isFatalEvalError(err) {
+					return nil, err
+				}
+
+				ret = feel.Null
 			}
+
+			ret = coerceResult(ret)
+			decisionOutputs[d.ID] = ret
+			ctx[d.Variable.Name] = ret
 		}
 
 		if d.FunctionDefinition != nil {
 			ret, err := evalFEEL(d.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope)
 			if err != nil {
-				decisionOutputs[d.ID] = feel.Null
-				ctx[d.Variable.Name] = feel.Null
-			} else {
-				ret = coerceResult(ret)
-				decisionOutputs[d.ID] = ret
-				ctx[d.Variable.Name] = ret
+				if isFatalEvalError(err) {
+					return nil, err
+				}
+
+				ret = feel.Null
 			}
+
+			ret = coerceResult(ret)
+			decisionOutputs[d.ID] = ret
+			ctx[d.Variable.Name] = ret
 		}
 
 		if d.Invocation != nil {
 			ret, err := evalFEEL(d.Invocation.FEELCallExpression(), ctx, "", nativeScope)
 			if err != nil {
-				decisionOutputs[d.ID] = feel.Null
-				ctx[d.Variable.Name] = feel.Null
-			} else {
-				ret = coerceResult(ret)
-				decisionOutputs[d.ID] = ret
-				ctx[d.Variable.Name] = ret
+				if isFatalEvalError(err) {
+					return nil, err
+				}
+
+				ret = feel.Null
 			}
+
+			ret = coerceResult(ret)
+			decisionOutputs[d.ID] = ret
+			ctx[d.Variable.Name] = ret
 		}
 
 		if len(d.DecisionTables) != 0 {
@@ -1810,13 +1833,16 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 
 			ret, err := be.eval()
 			if err != nil {
-				decisionOutputs[d.ID] = feel.Null
-				ctx[d.Variable.Name] = feel.Null
-			} else {
-				ret = coerceResult(ret)
-				decisionOutputs[d.ID] = ret
-				ctx[d.Variable.Name] = ret
+				if isFatalEvalError(err) {
+					return nil, err
+				}
+
+				ret = feel.Null
 			}
+
+			ret = coerceResult(ret)
+			decisionOutputs[d.ID] = ret
+			ctx[d.Variable.Name] = ret
 		}
 	}
 
