@@ -733,9 +733,14 @@ func coerceToContext(value any, components []ItemDefinition, itemDefinitionMap m
 	return out
 }
 
-// coercePrimitive checks value against a FEEL primitive type name. Types
-// this engine doesn't model precisely enough to validate (date, time,
-// duration, ...) are accepted as-is rather than risk false negatives.
+// coercePrimitive checks value against a FEEL primitive type name. date,
+// time, dateTime, and duration string values (as supplied by callers of
+// Evaluate, which have no way to express FEEL-native temporal types) are
+// parsed into FEEL's temporal types here so that comparison operators
+// (</>/<=/>=) work against them instead of silently returning null on a
+// string-vs-temporal type mismatch. Values that are already FEEL-native
+// (not a string) are accepted as-is, since this engine doesn't model these
+// types precisely enough to validate them beyond that.
 func coercePrimitive(value any, typeRef string) any {
 	switch typeRef {
 	case "number":
@@ -753,6 +758,38 @@ func coercePrimitive(value any, typeRef string) any {
 			return value
 		}
 		return feel.Null
+	case "date":
+		if s, ok := value.(string); ok {
+			if d, err := feel.ParseDate(s); err == nil {
+				return d
+			}
+			return feel.Null
+		}
+		return value
+	case "time":
+		if s, ok := value.(string); ok {
+			if t, err := feel.ParseTime(s); err == nil {
+				return t
+			}
+			return feel.Null
+		}
+		return value
+	case "dateTime":
+		if s, ok := value.(string); ok {
+			if dt, err := feel.ParseDatetime(s); err == nil {
+				return dt
+			}
+			return feel.Null
+		}
+		return value
+	case "duration", "dayTimeDuration", "yearMonthDuration":
+		if s, ok := value.(string); ok {
+			if d, err := feel.ParseDuration(s); err == nil {
+				return d
+			}
+			return feel.Null
+		}
+		return value
 	default:
 		return value
 	}
