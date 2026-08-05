@@ -77,8 +77,9 @@ type tckResultNode struct {
 }
 
 type tckExpected struct {
-	Value *tckValue `xml:"value"`
-	List  *tckList  `xml:"list"`
+	Value      *tckValue      `xml:"value"`
+	List       *tckList       `xml:"list"`
+	Components []tckComponent `xml:"component"`
 }
 
 type tckList struct {
@@ -87,6 +88,7 @@ type tckList struct {
 
 type tckListItem struct {
 	Value      tckValue       `xml:"value"`
+	List       *tckList       `xml:"list"`
 	Components []tckComponent `xml:"component"`
 }
 
@@ -156,29 +158,45 @@ func goLiteral(v tckValue) string {
 	}
 }
 
+// itemLiteral returns the Go literal for a single list item: a nested list
+// literal (recursively), a map literal for a structured (component) item, or
+// a scalar literal otherwise.
+func itemLiteral(item tckListItem) string {
+	if item.List != nil {
+		return listLiteral(*item.List)
+	}
+	if len(item.Components) > 0 {
+		var sb strings.Builder
+		sb.WriteString("map[string]any{")
+		for _, c := range item.Components {
+			fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value))
+		}
+		sb.WriteString("}")
+		return sb.String()
+	}
+	return goLiteral(item.Value)
+}
+
+func listLiteral(l tckList) string {
+	var sb strings.Builder
+	sb.WriteString("[]any{")
+	for _, item := range l.Items {
+		fmt.Fprintf(&sb, "%s,", itemLiteral(item))
+	}
+	sb.WriteString("}")
+	return sb.String()
+}
+
 // inputLiteral returns the Go literal for an inputNode.
-// Simple values produce a scalar literal; list inputs produce a []any literal;
-// component inputs produce a map literal.
+// Simple values produce a scalar literal; list inputs produce a []any literal
+// (with nested lists-of-lists handled recursively); component inputs produce
+// a map literal.
 func inputLiteral(n tckInputNode) string {
 	if n.Value != nil {
 		return goLiteral(*n.Value)
 	}
 	if n.List != nil {
-		var sb strings.Builder
-		sb.WriteString("[]any{")
-		for _, item := range n.List.Items {
-			if len(item.Components) > 0 {
-				sb.WriteString("map[string]any{")
-				for _, c := range item.Components {
-					fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value))
-				}
-				sb.WriteString("},")
-			} else {
-				fmt.Fprintf(&sb, "%s,", goLiteral(item.Value))
-			}
-		}
-		sb.WriteString("}")
-		return sb.String()
+		return listLiteral(*n.List)
 	}
 	var sb strings.Builder
 	sb.WriteString("map[string]any{")
@@ -201,6 +219,9 @@ type assertEntry struct {
 	scalarRaw *tckValue     // raw TCK value for scalar (nil for list assertions)
 	isList    bool          // true for list assertions
 	listItems []tckListItem // items for list assertions
+
+	isStruct         bool           // true for structural (context/component) assertions
+	structComponents []tckComponent // components for structural assertions
 }
 
 type genTest struct {
@@ -295,6 +316,12 @@ func main() {
 							decID:     decID,
 							scalar:    goLiteral(*rn.Expected.Value),
 							scalarRaw: rn.Expected.Value,
+						})
+					} else if len(rn.Expected.Components) > 0 {
+						asserts = append(asserts, assertEntry{
+							decID:            decID,
+							isStruct:         true,
+							structComponents: rn.Expected.Components,
 						})
 					}
 				}
@@ -419,6 +446,26 @@ func stringerGoType(t string) string {
 	return ""
 }
 
+// itemUsesFeel reports whether a list item (possibly a nested list or a
+// structured/component item) contains a value that requires the feel
+// package to assert against.
+func itemUsesFeel(item tckListItem) bool {
+	if item.List != nil {
+		for _, it := range item.List.Items {
+			if itemUsesFeel(it) {
+				return true
+			}
+		}
+		return false
+	}
+	for _, v := range item.values() {
+		if v.isNil() || isNumericXSIType(v.xsiType()) || stringerGoType(v.xsiType()) != "" {
+			return true
+		}
+	}
+	return false
+}
+
 func buildFolderSource(tests []genTest) string {
 	// Determine whether any test in this folder references the feel package
 	// (feel.Null for nil values, feel.Number for numeric assertions).
@@ -432,6 +479,15 @@ outer:
 			}
 		}
 		for _, a := range fn.asserts {
+			if a.isStruct {
+				for _, c := range a.structComponents {
+					if c.Value.isNil() || isNumericXSIType(c.Value.xsiType()) || stringerGoType(c.Value.xsiType()) != "" {
+						usesFeel = true
+						break outer
+					}
+				}
+				continue
+			}
 			if !a.isList {
 				if a.scalar == "feel.Null" {
 					usesFeel = true
@@ -444,11 +500,9 @@ outer:
 				continue
 			}
 			for _, item := range a.listItems {
-				for _, v := range item.values() {
-					if v.isNil() || isNumericXSIType(v.xsiType()) || stringerGoType(v.xsiType()) != "" {
-						usesFeel = true
-						break outer
-					}
+				if itemUsesFeel(item) {
+					usesFeel = true
+					break outer
 				}
 			}
 		}
@@ -477,7 +531,15 @@ outer:
 		sb.WriteString("\tresult, err := d.Evaluate(inputs)\n")
 		sb.WriteString("\trequire.NoError(t, err)\n")
 		for _, a := range fn.asserts {
-			if a.isList {
+			if a.isStruct {
+				fmt.Fprintf(&sb, "\t{\n")
+				fmt.Fprintf(&sb, "\t\tm, ok := result[%s].(map[string]any)\n", strconv.Quote(a.decID))
+				fmt.Fprintf(&sb, "\t\trequire.True(t, ok)\n")
+				for _, c := range a.structComponents {
+					writeScalarValueAssert(&sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
+				}
+				fmt.Fprintf(&sb, "\t}\n")
+			} else if a.isList {
 				writeListAssert(&sb, a)
 			} else if a.scalarRaw != nil && isNumericXSIType(a.scalarRaw.xsiType()) {
 				content := strings.TrimSpace(a.scalarRaw.Content)
@@ -540,21 +602,40 @@ func writeScalarValueAssert(sb *strings.Builder, actualExpr string, v tckValue) 
 func writeListAssert(sb *strings.Builder, a assertEntry) {
 	fmt.Fprintf(sb, "\t{\n")
 	fmt.Fprintf(sb, "\t\tdRes := result[%s]\n", strconv.Quote(a.decID))
-	fmt.Fprintf(sb, "\t\tvSlice, isSlice := dRes.([]any)\n")
+	writeListValueAssert(sb, "dRes", tckList{Items: a.listItems})
+	fmt.Fprintf(sb, "\t}\n")
+}
+
+// writeListValueAssert emits an assertion that the Go expression actualExpr
+// is a []any matching the given expected list, recursing into nested lists
+// and structured (component) items.
+func writeListValueAssert(sb *strings.Builder, actualExpr string, list tckList) {
+	fmt.Fprintf(sb, "\t{\n")
+	fmt.Fprintf(sb, "\t\tvSlice, isSlice := (%s).([]any)\n", actualExpr)
 	fmt.Fprintf(sb, "\t\trequire.True(t, isSlice)\n")
-	fmt.Fprintf(sb, "\t\trequire.Equal(t, %d, len(vSlice))\n", len(a.listItems))
-	for i, item := range a.listItems {
-		if len(item.Components) > 0 {
-			fmt.Fprintf(sb, "\t\t{\n")
-			fmt.Fprintf(sb, "\t\t\tm, ok := vSlice[%d].(map[string]any)\n", i)
-			fmt.Fprintf(sb, "\t\t\trequire.True(t, ok)\n")
-			for _, c := range item.Components {
-				writeScalarValueAssert(sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
-			}
-			fmt.Fprintf(sb, "\t\t}\n")
-			continue
-		}
-		writeScalarValueAssert(sb, fmt.Sprintf("vSlice[%d]", i), item.Value)
+	fmt.Fprintf(sb, "\t\trequire.Equal(t, %d, len(vSlice))\n", len(list.Items))
+	for i, item := range list.Items {
+		writeItemAssert(sb, fmt.Sprintf("vSlice[%d]", i), item)
 	}
 	fmt.Fprintf(sb, "\t}\n")
+}
+
+// writeItemAssert emits an assertion for a single expected list item, which
+// may itself be a nested list, a structured (component) item, or a scalar.
+func writeItemAssert(sb *strings.Builder, actualExpr string, item tckListItem) {
+	if item.List != nil {
+		writeListValueAssert(sb, actualExpr, *item.List)
+		return
+	}
+	if len(item.Components) > 0 {
+		fmt.Fprintf(sb, "\t{\n")
+		fmt.Fprintf(sb, "\t\tm, ok := (%s).(map[string]any)\n", actualExpr)
+		fmt.Fprintf(sb, "\t\trequire.True(t, ok)\n")
+		for _, c := range item.Components {
+			writeScalarValueAssert(sb, fmt.Sprintf("m[%s]", strconv.Quote(c.Name)), c.Value)
+		}
+		fmt.Fprintf(sb, "\t}\n")
+		return
+	}
+	writeScalarValueAssert(sb, actualExpr, item.Value)
 }
