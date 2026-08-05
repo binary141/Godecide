@@ -1027,37 +1027,36 @@ func aggregateCollect(aggregation string, hits []any) any {
 	}
 }
 
-var counter = 0
-
-func explore(nodes map[string]node, edges map[string][]edge, k string) map[string]node {
+func explore(nodes map[string]node, edges map[string][]edge, k string, counter *int) map[string]node {
 	n := nodes[k]
 	n.Visited = true
-	n.Pre = counter
-	counter++
+	n.Pre = *counter
+	*counter++
 	nodes[k] = n
 
 	for _, e := range edges[k] {
 		if !nodes[e.To].Visited {
-			explore(nodes, edges, e.To)
+			explore(nodes, edges, e.To, counter)
 		}
 	}
 
 	n = nodes[k]
-	n.Post = counter
-	counter++
+	n.Post = *counter
+	*counter++
 	nodes[k] = n
 
 	return nodes
 }
 
 func dfs(nodes map[string]node, edges map[string][]edge) []node {
+	counter := 0
 
 	for k, n := range nodes {
 		if n.Visited {
 			continue
 		}
 
-		explore(nodes, edges, k)
+		explore(nodes, edges, k, &counter)
 	}
 
 	nodeList := []node{}
