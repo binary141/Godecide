@@ -803,9 +803,18 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 					// an implicit equality test per FEEL unary-tests grammar.
 					expression = fmt.Sprintf("%s = %s", input.InputExpression.Text, text)
 				}
-			case "string":
-				// todo make sure this is right
-				expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+			default:
+				// string, boolean, date, time, dateTime, duration, and
+				// structural types: a leading comparison operator is a
+				// range/comparison test, otherwise the (possibly
+				// comma-separated) cell is a membership-equality test
+				// against the input.
+				text := strings.TrimSpace(ie.Text)
+				if startsWithComparisonOperator(text) {
+					expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
+				} else {
+					expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+				}
 			}
 
 			ret, err := evalFEEL(expression, ctx, "", nil)
