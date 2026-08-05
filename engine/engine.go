@@ -2,13 +2,13 @@ package engine
 
 import (
 	"dmn/versions"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
 	"log"
 	"maps"
 	"reflect"
+	"regexp"
 	"slices"
 	"sort"
 	"strconv"
@@ -46,10 +46,11 @@ type DecisionService struct {
 
 // BusinessKnowledgeModel represents a reusable function invoked from decision logic
 type BusinessKnowledgeModel struct {
-	ID                string            `xml:"id,attr"`
-	Name              string            `xml:"name,attr"`
-	Variable          Variable          `xml:"variable"`
-	EncapsulatedLogic EncapsulatedLogic `xml:"encapsulatedLogic"`
+	ID                    string                 `xml:"id,attr"`
+	Name                  string                 `xml:"name,attr"`
+	Variable              Variable               `xml:"variable"`
+	EncapsulatedLogic     EncapsulatedLogic      `xml:"encapsulatedLogic"`
+	KnowledgeRequirements []KnowledgeRequirement `xml:"knowledgeRequirement"`
 }
 
 // EncapsulatedLogic holds the parameters and expression body of a business knowledge model
@@ -57,6 +58,8 @@ type EncapsulatedLogic struct {
 	FormalParameters   []FormalParameter   `xml:"formalParameter"`
 	LiteralExpression  LiteralExpression   `xml:"literalExpression"`
 	FunctionDefinition *FunctionDefinition `xml:"functionDefinition"`
+	DecisionTable      *DecisionTable      `xml:"decisionTable"`
+	Context            *Context            `xml:"context"`
 }
 
 // FormalParameter is a single named parameter of a business knowledge model
@@ -87,6 +90,13 @@ type ItemDefinition struct {
 	TypeRef       string           `xml:"typeRef"`
 	AllowedValues *AllowedValues   `xml:"allowedValues"`
 	ItemComponent []ItemDefinition `xml:"itemComponent"`
+	FunctionItem  *FunctionItem    `xml:"functionItem"`
+}
+
+// FunctionItem declares a function-typed itemDefinition's return type, e.g.
+// for a decisionService's own typeRef.
+type FunctionItem struct {
+	OutputTypeRef string `xml:"outputTypeRef,attr"`
 }
 
 type AllowedValues struct {
@@ -138,10 +148,10 @@ type Parameter struct {
 func (inv Invocation) FEELCallExpression() string {
 	args := make([]string, len(inv.Bindings))
 	for i, b := range inv.Bindings {
-		args[i] = fmt.Sprintf("%s: %s", b.Parameter.Name, b.LiteralExpression.Text)
+		args[i] = fmt.Sprintf("%s: %s", mangleHyphenName(b.Parameter.Name), b.LiteralExpression.Text)
 	}
 
-	return fmt.Sprintf("%s(%s)", strings.TrimSpace(inv.LiteralExpression.Text), strings.Join(args, ", "))
+	return fmt.Sprintf("%s(%s)", mangleHyphenName(strings.TrimSpace(inv.LiteralExpression.Text)), strings.Join(args, ", "))
 }
 
 // FunctionDefinition represents a DMN <functionDefinition> element: a
@@ -181,17 +191,19 @@ type Context struct {
 // ContextEntry is a single name/value binding within a Context. The value is
 // either a literal FEEL expression or a nested context.
 type ContextEntry struct {
-	Variable          *Variable          `xml:"variable"`
-	LiteralExpression *LiteralExpression `xml:"literalExpression"`
-	Context           *Context           `xml:"context"`
-	DecisionTable     *DecisionTable     `xml:"decisionTable"`
-	Relation          *Relation          `xml:"relation"`
-	List              *List              `xml:"list"`
-	Filter            *Filter            `xml:"filter"`
-	For               *For               `xml:"for"`
-	Conditional       *Conditional       `xml:"conditional"`
-	Some              *Quantified        `xml:"some"`
-	Every             *Quantified        `xml:"every"`
+	Variable           *Variable           `xml:"variable"`
+	LiteralExpression  *LiteralExpression  `xml:"literalExpression"`
+	Context            *Context            `xml:"context"`
+	DecisionTable      *DecisionTable      `xml:"decisionTable"`
+	Relation           *Relation           `xml:"relation"`
+	List               *List               `xml:"list"`
+	Filter             *Filter             `xml:"filter"`
+	For                *For                `xml:"for"`
+	Conditional        *Conditional        `xml:"conditional"`
+	Some               *Quantified         `xml:"some"`
+	Every              *Quantified         `xml:"every"`
+	FunctionDefinition *FunctionDefinition `xml:"functionDefinition"`
+	Invocation         *Invocation         `xml:"invocation"`
 }
 
 // Expression is a generic holder for any of the DMN expression variants that
@@ -373,8 +385,15 @@ type DecisionTable struct {
 }
 
 type Output struct {
-	Name         string       `xml:"name,attr"`
-	OutputValues OutputValues `xml:"outputValues"`
+	Name               string              `xml:"name,attr"`
+	OutputValues       OutputValues        `xml:"outputValues"`
+	DefaultOutputEntry *DefaultOutputEntry `xml:"defaultOutputEntry"`
+}
+
+// DefaultOutputEntry is the value a decision table output column takes when
+// no rule matches.
+type DefaultOutputEntry struct {
+	Text string `xml:"text"`
 }
 
 type OutputValues struct {
@@ -593,7 +612,88 @@ func toFEELValue(v any) any {
 // string-encoded scopes. That round trip re-serializes and re-tokenizes the
 // full ctx on every call, so its cost grows with len(ctx); pushing ctx as a
 // feel.Scope directly is O(1) regardless of how many entries it holds.
+// bareNameEntry matches a decision-table input entry that's nothing but a
+// (possibly multi-word) identifier - i.e. a reference to a variable rather
+// than a literal value - so it can be tested with FEEL's polymorphic "in"
+// semantics (list membership, or equality if the variable isn't a list).
+var bareNameEntry = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_ ]*$`)
+
+// notUnaryTest matches a decision-table input entry using FEEL's unary-tests
+// "not(...)" negation form, capturing its (possibly comma-separated) list
+// of excluded values.
+var notUnaryTest = regexp.MustCompile(`(?s)^not\((.*)\)$`)
+
+// hyphenMangler rewrites '-' to a combining-mark placeholder that's a valid
+// FEEL name-part character, so business names like "Pre-Bureau Risk
+// Category" (legal in DMN but unparseable by FEEL.go's tokenizer, which
+// treats '-' as the minus operator) can round-trip through a single Var
+// token. It's applied consistently by name (never inverted), so any two
+// call sites mangling the same original string agree on the result.
+var hyphenMangler = strings.NewReplacer("-", "̲", " ", "̲", "'", "̲")
+
+// ambiguousNameKeywords are FEEL reserved words that the parser only allows
+// to continue a multi-word business name for a small prefix whitelist (e.g.
+// "date and time", "years and months duration" - see
+// specialNameKeywordPrefixes in FEEL.go's parser). A name like "Another
+// Days and Time Duration" doesn't match that whitelist, so the parser
+// splits on "and" and misparses the rest as the boolean operator.
+var ambiguousNameKeywords = []string{"and", "or"}
+
+// needsNameMangling reports whether s can't round-trip through FEEL.go's
+// tokenizer as a single Var: it contains a literal '-' (parsed as minus) or
+// one of its whitespace-separated words is a reserved keyword the parser
+// won't fold into a name outside its fixed prefix whitelist.
+func needsNameMangling(s string) bool {
+	if strings.Contains(s, "-") || strings.Contains(s, "'") {
+		return true
+	}
+	for _, word := range strings.Fields(s) {
+		if slices.Contains(ambiguousNameKeywords, word) {
+			return true
+		}
+	}
+	return false
+}
+
+func mangleHyphenName(s string) string {
+	if !needsNameMangling(s) {
+		return s
+	}
+	return hyphenMangler.Replace(s)
+}
+
+// mangleHyphenatedRefs makes text and ctx agree on names FEEL.go's tokenizer
+// can't parse as-is before parsing: for every ctx key needing mangling, it
+// aliases ctx[mangled] to the same value (ctx itself is never mutated) and
+// rewrites occurrences of the literal key within text to its mangled form,
+// so a Var reference to a hyphenated name (e.g. "Pre-bureauRiskCategory")
+// or one containing "and"/"or" as a literal word (e.g. "Another Days and
+// Time Duration") tokenizes as one name and resolves correctly.
+func mangleHyphenatedRefs(text string, ctx map[string]any) (string, map[string]any) {
+	var needMangling []string
+	for k := range ctx {
+		if needsNameMangling(k) {
+			needMangling = append(needMangling, k)
+		}
+	}
+	if len(needMangling) == 0 {
+		return text, ctx
+	}
+	sort.Slice(needMangling, func(i, j int) bool { return len(needMangling[i]) > len(needMangling[j]) })
+
+	newCtx := make(map[string]any, len(ctx)+len(needMangling))
+	maps.Copy(newCtx, ctx)
+	for _, k := range needMangling {
+		newCtx[mangleHyphenName(k)] = ctx[k]
+		text = strings.ReplaceAll(text, k, mangleHyphenName(k))
+	}
+	return text, newCtx
+}
+
 func evalFEEL(text string, ctx map[string]any, extraScope string, nativeScope map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, error) {
+	text, ctx = mangleHyphenatedRefs(text, ctx)
+	text, nativeScope = mangleHyphenatedRefs(text, nativeScope)
+
 	intp := feel.NewIntepreter()
 	intp.Push(feel.Scope(ctx))
 	intp.TypeResolver = func(name string) (string, bool) {
@@ -636,10 +736,18 @@ func evalFEEL(text string, ctx map[string]any, extraScope string, nativeScope ma
 // set built from the call's positional arguments (bound to the service's
 // declared inputData, in order), then returns its outputDecision's value —
 // independent of whatever decision is invoking it.
-func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map[string]InputData) *feel.NativeFun {
+func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map[string]InputData, itemDefinitionMap map[string]ItemDefinition) *feel.NativeFun {
 	decisionByID := make(map[string]Decision, len(root.Decisions))
 	for _, dec := range root.Decisions {
 		decisionByID[dec.ID] = dec
+	}
+
+	// A decisionService's own typeRef, when declared, is a functionItem
+	// naming the service's return type - the single-output-decision result
+	// must conform to it the same way any other value does.
+	var outputTypeRef string
+	if def, ok := itemDefinitionMap[ds.Variable.TypeRef]; ok && def.FunctionItem != nil {
+		outputTypeRef = def.FunctionItem.OutputTypeRef
 	}
 
 	// A decision service's parameters are its declared inputData (plain
@@ -699,6 +807,17 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 	subDefs.Decisions = subDecisions
 
 	fn := feel.NewNativeFunc(func(args map[string]any) (any, error) {
+		// All declared inputData/inputDecision parameters are required: an
+		// inputDecision in particular must come from the caller - it's
+		// never computed from the decision's own logic when invoked via
+		// the service (that logic only applies to a direct, non-service
+		// evaluation of the whole model).
+		for _, name := range inputNames {
+			if _, ok := args[name]; !ok {
+				return feel.Null, nil
+			}
+		}
+
 		subInputs := make(map[string]any, len(inputNames))
 		var seedDecisions map[string]any
 		for _, name := range inputNames {
@@ -710,7 +829,18 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 				if seedDecisions == nil {
 					seedDecisions = map[string]any{}
 				}
-				seedDecisions[decID] = v
+				// An inputDecision parameter substitutes for the decision
+				// it names, so it must conform to that decision's declared
+				// type the same way any other value flowing into the
+				// decision would - and, like a non-conforming BKM argument,
+				// a failure here makes the whole invocation null rather
+				// than letting downstream logic run against a null it
+				// didn't expect.
+				coerced := coerceToType(v, decisionByID[decID].Variable.TypeRef, itemDefinitionMap)
+				if isFEELNull(coerced) && !isFEELNull(v) {
+					return feel.Null, nil
+				}
+				seedDecisions[decID] = coerced
 				continue
 			}
 			subInputs[name] = v
@@ -722,7 +852,11 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 		}
 
 		if len(outputIDs) == 1 {
-			return subResult[outputIDs[0]], nil
+			ret := subResult[outputIDs[0]]
+			if outputTypeRef != "" {
+				ret = coerceToType(ret, outputTypeRef, itemDefinitionMap)
+			}
+			return ret, nil
 		}
 
 		combined := make(map[string]any, len(outputIDs))
@@ -741,17 +875,37 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 // FEEL text: an argument that fails to conform to its declared typeRef makes
 // the whole call null (the body is never evaluated), and a body result that
 // fails to conform to the declared return typeRef becomes null.
-func bkmFunc(bkm BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefinition) *feel.NativeFun {
+func bkmFunc(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefinition) *feel.NativeFun {
 	params := bkm.EncapsulatedLogic.FormalParameters
 	paramNames := make([]string, len(params))
 	for i, p := range params {
-		paramNames[i] = p.Name
+		// Named-argument matching happens inside FEEL.go against whatever
+		// argName the caller's (mangled) invocation text produced, so the
+		// required-argument names registered here must be mangled the same
+		// way for a hyphenated parameter name to match.
+		paramNames[i] = mangleHyphenName(p.Name)
+	}
+
+	// A BKM's own logic may call other BKMs it declares a knowledgeRequirement
+	// on - make those callable from within its body the same way a
+	// decision's directly-required BKMs are.
+	var bkmNativeScope map[string]any
+	if len(bkm.KnowledgeRequirements) > 0 {
+		bkmNativeScope = map[string]any{}
+		for _, kr := range bkm.KnowledgeRequirements {
+			if kr.RequiredKnowledge == nil {
+				continue
+			}
+			if dep, ok := bkmMap[kr.RequiredKnowledge.ResolvedID()]; ok {
+				bkmNativeScope[dep.Variable.Name] = bkmFunc(dep, bkmMap, itemDefinitionMap)
+			}
+		}
 	}
 
 	fn := feel.NewNativeFunc(func(args map[string]any) (any, error) {
 		argCtx := make(map[string]any, len(params))
 		for _, p := range params {
-			v, ok := args[p.Name]
+			v, ok := args[mangleHyphenName(p.Name)]
 			if !ok {
 				v = feel.Null
 			}
@@ -762,18 +916,40 @@ func bkmFunc(bkm BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefini
 				}
 				v = coerced
 			}
-			argCtx[p.Name] = v
+			// A dotted formal parameter name (e.g. "Person.Gender") is a
+			// qualified reference into a structural parameter ("Person"),
+			// not a literal identifier - bind it as a nested field so dot
+			// access against the parameter name inside the body resolves.
+			if dot := strings.Index(p.Name, "."); dot >= 0 {
+				top, field := p.Name[:dot], p.Name[dot+1:]
+				sub, ok := argCtx[top].(map[string]any)
+				if !ok {
+					sub = map[string]any{}
+				}
+				sub[field] = v
+				argCtx[top] = sub
+			} else {
+				argCtx[p.Name] = v
+			}
 		}
 
 		if bkm.EncapsulatedLogic.FunctionDefinition != nil {
 			// Curried BKM (a functionDefinition returning another
 			// functionDefinition): return-type coercion isn't modeled for
 			// this shape, evaluate the literal text as-is.
-			return evalFEEL(bkm.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral(), argCtx, "", nil, itemDefinitionMap)
+			return evalFEEL(bkm.EncapsulatedLogic.FunctionDefinition.FEELFunctionLiteral(), argCtx, "", bkmNativeScope, itemDefinitionMap)
+		}
+
+		if bkm.EncapsulatedLogic.DecisionTable != nil {
+			return evalDecisionTable(*bkm.EncapsulatedLogic.DecisionTable, argCtx, itemDefinitionMap)
+		}
+
+		if bkm.EncapsulatedLogic.Context != nil {
+			return evalContext(bkm.EncapsulatedLogic.Context, argCtx, itemDefinitionMap, bkmNativeScope)
 		}
 
 		body := bkm.EncapsulatedLogic.LiteralExpression
-		ret, err := evalFEEL(body.Text, argCtx, "", nil, itemDefinitionMap)
+		ret, err := evalFEEL(body.Text, argCtx, "", bkmNativeScope, itemDefinitionMap)
 		if err != nil {
 			return nil, err
 		}
@@ -963,8 +1139,15 @@ func coerceToContext(value any, components []ItemDefinition, itemDefinitionMap m
 func coercePrimitive(value any, typeRef string) any {
 	switch typeRef {
 	case "number":
-		if _, ok := value.(*feel.Number); ok {
+		switch n := value.(type) {
+		case *feel.Number:
 			return value
+		case float64:
+			return feel.NewNumberFromFloat(n)
+		case int:
+			return feel.NewNumberFromInt64(int64(n))
+		case int64:
+			return feel.NewNumberFromInt64(n)
 		}
 		return feel.Null
 	case "string":
@@ -1054,27 +1237,44 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 
 			expression := ie.Text
 
-			switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
-			case "number":
-				text := strings.TrimSpace(ie.Text)
-				if startsWithComparisonOperator(text) {
-					expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
-				} else {
-					// A bare number/expression with no comparison operator is
-					// an implicit equality test per FEEL unary-tests grammar.
-					expression = fmt.Sprintf("%s = %s", input.InputExpression.Text, text)
-				}
-			default:
-				// string, boolean, date, time, dateTime, duration, and
-				// structural types: a leading comparison operator is a
-				// range/comparison test, otherwise the (possibly
-				// comma-separated) cell is a membership-equality test
-				// against the input.
-				text := strings.TrimSpace(ie.Text)
-				if startsWithComparisonOperator(text) {
-					expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
-				} else {
-					expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+			if m := notUnaryTest.FindStringSubmatch(strings.TrimSpace(ie.Text)); m != nil {
+				// FEEL unary-tests grammar's "not(v1, ..., vn)": true when
+				// the input matches none of the listed values - not a call
+				// to a boolean-negation function, so it applies regardless
+				// of the column's type (a bare "not(x)" only happens to
+				// double as boolean negation when x is itself boolean).
+				expression = fmt.Sprintf("not(list contains([%s], %s))", m[1], input.InputExpression.Text)
+			} else {
+				switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
+				case "number":
+					text := strings.TrimSpace(ie.Text)
+					if startsWithComparisonOperator(text) {
+						expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
+					} else {
+						// A bare number/expression with no comparison operator
+						// follows FEEL's polymorphic "in" semantics: a range
+						// literal (e.g. "[0..9]") tests containment, anything
+						// else is an equality test.
+						expression = fmt.Sprintf("%s in (%s)", input.InputExpression.Text, text)
+					}
+				default:
+					// string, boolean, date, time, dateTime, duration, and
+					// structural types: a leading comparison operator is a
+					// range/comparison test, otherwise the (possibly
+					// comma-separated) cell is a membership-equality test
+					// against the input.
+					text := strings.TrimSpace(ie.Text)
+					if startsWithComparisonOperator(text) {
+						expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
+					} else if !strings.Contains(text, ",") && bareNameEntry.MatchString(text) && text != "true" && text != "false" && text != "null" {
+						// A single bare-name entry (e.g. "Flu Symtoms") is a
+						// reference to a list-valued variable: FEEL's "in"
+						// semantics test membership against it directly, rather
+						// than equality against the list as a whole value.
+						expression = fmt.Sprintf("%s in (%s)", input.InputExpression.Text, ie.Text)
+					} else {
+						expression = fmt.Sprintf("list contains([%s], %s)", ie.Text, input.InputExpression.Text)
+					}
 				}
 			}
 
@@ -1116,6 +1316,35 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 			if hitPolicy == HitPolicyFirst {
 				break
 			}
+		}
+	}
+
+	if len(hitsList) == 0 {
+		// No rule matched: fall back to each output column's declared
+		// default value, if any.
+		hasDefault := false
+		for _, out := range dt.Output {
+			if out.DefaultOutputEntry != nil {
+				hasDefault = true
+				break
+			}
+		}
+		if hasDefault {
+			var record any
+			if len(dt.Output) > 1 {
+				rec := make(map[string]any, len(dt.Output))
+				for _, out := range dt.Output {
+					if out.DefaultOutputEntry != nil {
+						rec[out.Name] = evalOutputEntry(out.DefaultOutputEntry.Text, ctx, itemDefinitionMap)
+					} else {
+						rec[out.Name] = feel.Null
+					}
+				}
+				record = rec
+			} else {
+				record = evalOutputEntry(dt.Output[0].DefaultOutputEntry.Text, ctx, itemDefinitionMap)
+			}
+			hitsList = append(hitsList, record)
 		}
 	}
 
@@ -1288,6 +1517,10 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 			val, err = evalQuantified(entry.Some, local, itemDefinitionMap, nativeScope, false)
 		case entry.Every != nil:
 			val, err = evalQuantified(entry.Every, local, itemDefinitionMap, nativeScope, true)
+		case entry.FunctionDefinition != nil:
+			val, err = evalFEEL(entry.FunctionDefinition.FEELFunctionLiteral(), local, "", nativeScope, itemDefinitionMap)
+		case entry.Invocation != nil:
+			val, err = evalFEEL(entry.Invocation.FEELCallExpression(), local, "", nativeScope, itemDefinitionMap)
 		default:
 			val = feel.Null
 		}
@@ -1423,8 +1656,17 @@ func evalFilter(f *Filter, ctx map[string]any, itemDefinitionMap map[string]Item
 			return nil, err
 		}
 
-		if b, ok := matched.(bool); ok && b {
-			result = append(result, item)
+		switch b := matched.(type) {
+		case bool:
+			if b {
+				result = append(result, item)
+			}
+		case *feel.NullValue:
+			// A null predicate simply excludes the item.
+		default:
+			// A non-boolean, non-null match predicate makes the whole
+			// filter result invalid (null), not just that one item.
+			return feel.Null, nil
 		}
 	}
 
@@ -1628,6 +1870,51 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 	return d.evaluate(context, nil)
 }
 
+// EvaluateService invokes the named decisionService directly (as the DMN TCK
+// does for testCases of type "decisionService"), rather than evaluating the
+// whole model: only inputs is consulted (a decision that's also declared as
+// the service's inputDecision is never independently computed - the caller
+// must supply it), and the result is keyed by output-decision ID like
+// Evaluate's, for a uniform result shape regardless of entry point.
+func (d Definitions) EvaluateService(serviceName string, inputs map[string]any) (map[string]any, error) {
+	inputDataByID := make(map[string]InputData, len(d.InputData))
+	for _, v := range d.InputData {
+		inputDataByID[v.ID] = v
+	}
+
+	itemDefinitionMap := make(map[string]ItemDefinition, len(d.ItemDefinition))
+	for _, v := range d.ItemDefinition {
+		itemDefinitionMap[v.Name] = v
+	}
+
+	for _, ds := range d.DecisionServices {
+		if ds.Name != serviceName {
+			continue
+		}
+
+		fn := decisionServiceFunc(d, ds, inputDataByID, itemDefinitionMap)
+		args := make(map[string]any, len(inputs))
+		for k, v := range inputs {
+			args[k] = toFEELValue(v)
+		}
+
+		ret, err := fn.Call(nil, args)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(ds.OutputDecisions) == 1 {
+			return map[string]any{ds.OutputDecisions[0].ResolvedID(): ret}, nil
+		}
+		if m, ok := ret.(map[string]any); ok {
+			return m, nil
+		}
+		return nil, fmt.Errorf("unexpected decision service result: %+v", ret)
+	}
+
+	return nil, fmt.Errorf("decision service %q not found", serviceName)
+}
+
 // evaluate is Evaluate plus seedDecisions: decision IDs whose value is
 // supplied directly rather than computed. It exists for decision-service
 // invocation, where an inputDecision parameter substitutes a caller-supplied
@@ -1707,31 +1994,15 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				itemDef, hasDefinition := itemDefinitionMap[variable.TypeRef]
 				if hasDefinition {
 					if itemDef.AllowedValues != nil {
-						allowedList := strings.Split(itemDef.AllowedValues.Text, ",")
-
-						for i, v := range allowedList {
-							v, err := strconv.Unquote(v)
-							if err != nil {
-								log.Printf("unable to unquote '%s': %v\n", v, err)
-							}
-
-							allowedList[i] = v
-						}
-
-						// todo move this to be go logic
-						allowedVars := map[string]any{
-							"Allowed Var":  ctxVar,
-							"Allowed Vars": allowedList,
-						}
-
-						ctxBytes, err := json.Marshal(allowedVars)
+						// allowedValues' text is itself a FEEL unary-tests
+						// expression - either a comma-separated enumeration
+						// ("A","B","C") or a range ([0..255]) - so let FEEL's
+						// polymorphic "in" evaluate it directly instead of
+						// hand-parsing the enumeration case.
+						allowedCtx := map[string]any{"Allowed Var": ctxVar}
+						ret, err := evalFEEL(fmt.Sprintf("Allowed Var in (%s)", itemDef.AllowedValues.Text), allowedCtx, "", nil, itemDefinitionMap)
 						if err != nil {
-							return nil, fmt.Errorf("unable to marshal allowed vars: %w", err)
-						}
-
-						ret, err := feel.EvalString("list contains(Allowed Vars, Allowed Var)", string(ctxBytes))
-						if err != nil {
-							log.Printf("err: %+v", err)
+							return nil, fmt.Errorf("unable to evaluate allowed values %q: %w", itemDef.AllowedValues.Text, err)
 						}
 
 						r, ok := ret.(bool)
@@ -1740,7 +2011,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 						}
 
 						if !r {
-							return nil, fmt.Errorf("expected input: %v to be one of %v", ctxVar, allowedList)
+							return nil, fmt.Errorf("expected input: %v to be one of %s", ctxVar, itemDef.AllowedValues.Text)
 						}
 
 					}
@@ -1774,7 +2045,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				resolvedID := kr.RequiredKnowledge.ResolvedID()
 
 				if bkm, hasBKM := bkmMap[resolvedID]; hasBKM {
-					nativeScope[bkm.Variable.Name] = bkmFunc(bkm, itemDefinitionMap)
+					nativeScope[bkm.Variable.Name] = bkmFunc(bkm, bkmMap, itemDefinitionMap)
 					continue
 				}
 
@@ -1783,7 +2054,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 					return nil, fmt.Errorf("business knowledge model: %s not found for decision: %v", resolvedID, d.ID)
 				}
 
-				nativeScope[ds.Variable.Name] = decisionServiceFunc(root, ds, inputDataByID)
+				nativeScope[ds.Variable.Name] = decisionServiceFunc(root, ds, inputDataByID, itemDefinitionMap)
 			}
 		}
 

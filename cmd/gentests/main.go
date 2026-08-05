@@ -54,9 +54,11 @@ type tckTestCases struct {
 }
 
 type tckTestCase struct {
-	ID          string          `xml:"id,attr"`
-	InputNodes  []tckInputNode  `xml:"inputNode"`
-	ResultNodes []tckResultNode `xml:"resultNode"`
+	ID            string          `xml:"id,attr"`
+	Type          string          `xml:"type,attr"`
+	InvocableName string          `xml:"invocableName,attr"`
+	InputNodes    []tckInputNode  `xml:"inputNode"`
+	ResultNodes   []tckResultNode `xml:"resultNode"`
 }
 
 type tckInputNode struct {
@@ -241,11 +243,12 @@ type assertEntry struct {
 }
 
 type genTest struct {
-	folder  string
-	name    string
-	dmnPath string
-	inputs  []struct{ name, literal string }
-	asserts []assertEntry
+	folder        string
+	name          string
+	dmnPath       string
+	invocableName string // non-empty: invoke this decisionService instead of evaluating the whole model
+	inputs        []struct{ name, literal string }
+	asserts       []assertEntry
 }
 
 func main() {
@@ -262,6 +265,11 @@ func main() {
 		rel, _ := filepath.Rel(tckRoot, path)
 		topLevel := strings.SplitN(rel, string(filepath.Separator), 2)[0]
 		if topLevel != "compliance-level-2" && topLevel != "compliance-level-3" {
+			return fs.SkipDir
+		}
+
+		// Skip Java external function invocation tests - not supported.
+		if filepath.Base(path) == "0076-feel-external-java" {
 			return fs.SkipDir
 		}
 
@@ -346,12 +354,18 @@ func main() {
 					continue
 				}
 
+				var invocableName string
+				if c.Type == "decisionService" {
+					invocableName = c.InvocableName
+				}
+
 				tests = append(tests, genTest{
-					folder:  folder,
-					name:    fmt.Sprintf("TestTCK_%s_%s", toIdentifier(folder), toIdentifier(c.ID)),
-					dmnPath: dmnFile,
-					inputs:  inputs,
-					asserts: asserts,
+					folder:        folder,
+					name:          fmt.Sprintf("TestTCK_%s_%s", toIdentifier(folder), toIdentifier(c.ID)),
+					dmnPath:       dmnFile,
+					invocableName: invocableName,
+					inputs:        inputs,
+					asserts:       asserts,
 				})
 			}
 		}
@@ -557,7 +571,11 @@ outer:
 			fmt.Fprintf(&sb, "\t\t%s: %s,\n", strconv.Quote(in.name), in.literal)
 		}
 		sb.WriteString("\t}\n")
-		sb.WriteString("\tresult, err := d.Evaluate(inputs)\n")
+		if fn.invocableName != "" {
+			fmt.Fprintf(&sb, "\tresult, err := d.EvaluateService(%s, inputs)\n", strconv.Quote(fn.invocableName))
+		} else {
+			sb.WriteString("\tresult, err := d.Evaluate(inputs)\n")
+		}
 		sb.WriteString("\trequire.NoError(t, err)\n")
 		for _, a := range fn.asserts {
 			if a.isStruct {
