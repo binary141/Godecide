@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"log"
 	"maps"
+	"reflect"
 	"slices"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -812,8 +814,13 @@ func startsWithComparisonOperator(text string) bool {
 // that match. Shared by top-level decision bodies and decisionTables nested
 // inside a context entry.
 func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, error) {
-	if !IsValidHitPolicy(dt.HitPolicy) {
-		return nil, fmt.Errorf("hit policy %s is not valid", dt.HitPolicy)
+	hitPolicy := dt.HitPolicy
+	if hitPolicy == "" {
+		// Blank/omitted hitPolicy defaults to "Unique" per spec.
+		hitPolicy = HitPolicyUnique
+	}
+	if !IsValidHitPolicy(hitPolicy) {
+		return nil, fmt.Errorf("hit policy %s is not valid", hitPolicy)
 	}
 
 	var hitsList []any
@@ -889,25 +896,15 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 			}
 			hitsList = append(hitsList, record)
 
-			if dt.HitPolicy == HitPolicyFirst {
+			if hitPolicy == HitPolicyFirst {
 				break
 			}
 		}
 	}
 
-	// primaryOutputValue extracts the value of the first output
-	// column from a hit, for use as the sort/priority key when a
-	// decision table has multiple output columns.
-	primaryOutputValue := func(hit any) any {
-		if m, ok := hit.(map[string]any); ok && len(dt.Output) > 0 {
-			return m[dt.Output[0].Name]
-		}
-		return hit
-	}
-
 	var result any = feel.Null
 
-	switch dt.HitPolicy {
+	switch hitPolicy {
 	case HitPolicyUnique:
 		if len(hitsList) > 1 {
 			return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
@@ -915,36 +912,51 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 		if len(hitsList) == 1 {
 			result = hitsList[0]
 		}
-	case HitPolicyFirst, HitPolicyAny:
+	case HitPolicyFirst:
 		if len(hitsList) > 0 {
 			result = hitsList[0]
 		}
-	case HitPolicyPriority:
-		outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
-
-		for _, output := range outputs {
-			output, _ = strconv.Unquote(strings.TrimSpace(output))
-			for _, hit := range hitsList {
-				if output == primaryOutputValue(hit) {
-					result = hit
+	case HitPolicyAny:
+		if len(hitsList) > 0 {
+			result = hitsList[0]
+			for _, hit := range hitsList[1:] {
+				if !reflect.DeepEqual(hit, result) {
+					return nil, fmt.Errorf("decision table had conflicting outputs for ANY policy: %+v", hitsList)
 				}
 			}
-			if result != feel.Null {
-				break
+		}
+	case HitPolicyPriority:
+		if len(hitsList) > 0 {
+			best := hitsList[0]
+			bestRank, err := priorityRank(dt, best)
+			if err != nil {
+				return nil, err
 			}
+			for _, hit := range hitsList[1:] {
+				rank, err := priorityRank(dt, hit)
+				if err != nil {
+					return nil, err
+				}
+				if lessRank(rank, bestRank) {
+					best = hit
+					bestRank = rank
+				}
+			}
+			result = best
 		}
 	case HitPolicyOutputOrder:
-		outputs := strings.Split(dt.Output[0].OutputValues.Text, ",")
-		ordered := make([]any, 0, len(hitsList))
-
-		for _, output := range outputs {
-			output, _ = strconv.Unquote(strings.TrimSpace(output))
-			for _, hit := range hitsList {
-				if output == primaryOutputValue(hit) {
-					ordered = append(ordered, hit)
-				}
+		ordered := slices.Clone(hitsList)
+		ranks := make([][]int, len(ordered))
+		for i, hit := range ordered {
+			rank, err := priorityRank(dt, hit)
+			if err != nil {
+				return nil, err
 			}
+			ranks[i] = rank
 		}
+		sort.SliceStable(ordered, func(a, b int) bool {
+			return lessRank(ranks[a], ranks[b])
+		})
 
 		result = ordered
 	case HitPolicyRuleOrder:
@@ -954,6 +966,65 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 	}
 
 	return result, nil
+}
+
+// priorityRank computes, for each output column of hit, the index of that
+// column's value within its outputValues priority list (lower index = higher
+// priority). It returns one rank per output column so PRIORITY/OUTPUT ORDER
+// can compare hits lexicographically across all output columns, not just the
+// first.
+func priorityRank(dt DecisionTable, hit any) ([]int, error) {
+	rank := make([]int, len(dt.Output))
+	for i, out := range dt.Output {
+		var val any
+		if len(dt.Output) > 1 {
+			m, _ := hit.(map[string]any)
+			val = m[out.Name]
+		} else {
+			val = hit
+		}
+
+		idx, err := outputValueRank(out, val)
+		if err != nil {
+			return nil, err
+		}
+		rank[i] = idx
+	}
+	return rank, nil
+}
+
+// outputValueRank returns the priority index of val within out's
+// outputValues list (0 = highest priority). If out has no outputValues
+// list, every value ranks equally (0). A value absent from the list ranks
+// last, after every declared value.
+func outputValueRank(out Output, val any) (int, error) {
+	text := strings.TrimSpace(out.OutputValues.Text)
+	if text == "" {
+		return 0, nil
+	}
+
+	parts := strings.Split(text, ",")
+	for idx, part := range parts {
+		unquoted, err := strconv.Unquote(strings.TrimSpace(part))
+		if err != nil {
+			return 0, fmt.Errorf("invalid output value %q for output %q: %w", part, out.Name, err)
+		}
+		if unquoted == val {
+			return idx, nil
+		}
+	}
+	return len(parts), nil
+}
+
+// lessRank reports whether rank a has strictly higher priority than rank b,
+// comparing output columns lexicographically (first column is primary).
+func lessRank(a, b []int) bool {
+	for i := range a {
+		if a[i] != b[i] {
+			return a[i] < b[i]
+		}
+	}
+	return false
 }
 
 func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
