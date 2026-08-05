@@ -105,6 +105,13 @@ type Decision struct {
 	Context                 *Context                 `xml:"context"`
 	FunctionDefinition      *FunctionDefinition      `xml:"functionDefinition"`
 	Invocation              *Invocation              `xml:"invocation"`
+	Relation                *Relation                `xml:"relation"`
+	List                    *List                    `xml:"list"`
+	Filter                  *Filter                  `xml:"filter"`
+	For                     *For                     `xml:"for"`
+	Conditional             *Conditional             `xml:"conditional"`
+	Some                    *Quantified              `xml:"some"`
+	Every                   *Quantified              `xml:"every"`
 }
 
 // Invocation represents a DMN <invocation> element: a call to a business
@@ -178,6 +185,163 @@ type ContextEntry struct {
 	LiteralExpression *LiteralExpression `xml:"literalExpression"`
 	Context           *Context           `xml:"context"`
 	DecisionTable     *DecisionTable     `xml:"decisionTable"`
+	Relation          *Relation          `xml:"relation"`
+	List              *List              `xml:"list"`
+	Filter            *Filter            `xml:"filter"`
+	For               *For               `xml:"for"`
+	Conditional       *Conditional       `xml:"conditional"`
+	Some              *Quantified        `xml:"some"`
+	Every             *Quantified        `xml:"every"`
+}
+
+// Expression is a generic holder for any of the DMN expression variants that
+// belong to the "expression" substitution group. It's used wherever the DMN
+// schema wraps a single child expression of unspecified kind, e.g. the
+// <if>/<then>/<else> children of <conditional> or the <in>/<match> children
+// of <filter>. Exactly one field is populated after unmarshaling.
+type Expression struct {
+	LiteralExpression  *LiteralExpression  `xml:"literalExpression"`
+	Context            *Context            `xml:"context"`
+	FunctionDefinition *FunctionDefinition `xml:"functionDefinition"`
+	Invocation         *Invocation         `xml:"invocation"`
+	DecisionTable      *DecisionTable      `xml:"decisionTable"`
+	Relation           *Relation           `xml:"relation"`
+	List               *List               `xml:"list"`
+	Filter             *Filter             `xml:"filter"`
+	For                *For                `xml:"for"`
+	Conditional        *Conditional        `xml:"conditional"`
+	Some               *Quantified         `xml:"some"`
+	Every              *Quantified         `xml:"every"`
+}
+
+// InformationItemRef names a single column of a Relation.
+type InformationItemRef struct {
+	Name string `xml:"name,attr"`
+}
+
+// Relation represents a DMN <relation> boxed expression: a table of named
+// columns and rows, where each row is a positional list of expressions (one
+// per column). Evaluates to a list of contexts, one per row.
+type Relation struct {
+	Columns []InformationItemRef `xml:"column"`
+	Rows    []List               `xml:"row"`
+}
+
+// List represents a DMN <list> boxed expression: an ordered sequence of
+// expressions of any (possibly mixed) kind. Also reused for <relation> rows,
+// which share the same tList schema shape.
+type List struct {
+	Expressions []Expression
+}
+
+// UnmarshalXML decodes a <list> (or <row>) element's children in document
+// order, dispatching each child element to the matching Expression field by
+// tag name. encoding/xml struct tags can't express "any element from this
+// set, in any order, possibly repeated" directly, so this walks the token
+// stream by hand.
+func (l *List) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	for {
+		tok, err := d.Token()
+		if err != nil {
+			return err
+		}
+
+		switch t := tok.(type) {
+		case xml.StartElement:
+			expr, err := decodeExpressionElement(d, t)
+			if err != nil {
+				return err
+			}
+			l.Expressions = append(l.Expressions, expr)
+		case xml.EndElement:
+			if t == start.End() {
+				return nil
+			}
+		}
+	}
+}
+
+// decodeExpressionElement decodes a single start element into an Expression,
+// dispatching by tag name to the matching variant.
+func decodeExpressionElement(d *xml.Decoder, t xml.StartElement) (Expression, error) {
+	var e Expression
+
+	switch t.Name.Local {
+	case "literalExpression":
+		e.LiteralExpression = &LiteralExpression{}
+		return e, d.DecodeElement(e.LiteralExpression, &t)
+	case "context":
+		e.Context = &Context{}
+		return e, d.DecodeElement(e.Context, &t)
+	case "functionDefinition":
+		e.FunctionDefinition = &FunctionDefinition{}
+		return e, d.DecodeElement(e.FunctionDefinition, &t)
+	case "invocation":
+		e.Invocation = &Invocation{}
+		return e, d.DecodeElement(e.Invocation, &t)
+	case "decisionTable":
+		e.DecisionTable = &DecisionTable{}
+		return e, d.DecodeElement(e.DecisionTable, &t)
+	case "relation":
+		e.Relation = &Relation{}
+		return e, d.DecodeElement(e.Relation, &t)
+	case "list":
+		e.List = &List{}
+		return e, d.DecodeElement(e.List, &t)
+	case "filter":
+		e.Filter = &Filter{}
+		return e, d.DecodeElement(e.Filter, &t)
+	case "for":
+		e.For = &For{}
+		return e, d.DecodeElement(e.For, &t)
+	case "conditional":
+		e.Conditional = &Conditional{}
+		return e, d.DecodeElement(e.Conditional, &t)
+	case "some":
+		e.Some = &Quantified{}
+		return e, d.DecodeElement(e.Some, &t)
+	case "every":
+		e.Every = &Quantified{}
+		return e, d.DecodeElement(e.Every, &t)
+	default:
+		return e, d.Skip()
+	}
+}
+
+// Filter represents a DMN <filter> boxed expression: list[condition]. The
+// <match> expression is evaluated once per element of <in>, with the
+// implicit variable "item" bound to the element under test.
+type Filter struct {
+	In    Expression `xml:"in"`
+	Match Expression `xml:"match"`
+}
+
+// Iterator holds the fields shared by <for>, <some>, and <every>: the
+// variable bound on each iteration and the list being iterated.
+type Iterator struct {
+	IteratorVariable string     `xml:"iteratorVariable,attr"`
+	In               Expression `xml:"in"`
+}
+
+// For represents a DMN <for> boxed expression: for x in list return expr.
+type For struct {
+	Iterator
+	Return Expression `xml:"return"`
+}
+
+// Quantified represents a DMN <some>/<every> boxed expression:
+// some/every x in list satisfies cond.
+type Quantified struct {
+	Iterator
+	Satisfies Expression `xml:"satisfies"`
+}
+
+// Conditional represents a DMN <conditional> boxed expression:
+// if cond then a else b.
+type Conditional struct {
+	If   Expression `xml:"if"`
+	Then Expression `xml:"then"`
+	Else Expression `xml:"else"`
 }
 
 // KnowledgeRequirement is an edge in the DRG pointing to a required business knowledge model
@@ -1047,6 +1211,20 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 			val, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
 		case entry.LiteralExpression != nil:
 			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope)
+		case entry.Relation != nil:
+			val, err = evalRelation(entry.Relation, local, itemDefinitionMap, nativeScope)
+		case entry.List != nil:
+			val, err = evalList(entry.List, local, itemDefinitionMap, nativeScope)
+		case entry.Filter != nil:
+			val, err = evalFilter(entry.Filter, local, itemDefinitionMap, nativeScope)
+		case entry.For != nil:
+			val, err = evalFor(entry.For, local, itemDefinitionMap, nativeScope)
+		case entry.Conditional != nil:
+			val, err = evalConditional(entry.Conditional, local, itemDefinitionMap, nativeScope)
+		case entry.Some != nil:
+			val, err = evalQuantified(entry.Some, local, itemDefinitionMap, nativeScope, false)
+		case entry.Every != nil:
+			val, err = evalQuantified(entry.Every, local, itemDefinitionMap, nativeScope, true)
 		default:
 			val = feel.Null
 		}
@@ -1069,6 +1247,200 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 	}
 
 	return resultMap, nil
+}
+
+// evalExpression evaluates any of the DMN expression variants wrapped in an
+// Expression, recursing into nested boxed expressions as needed. It's the
+// shared dispatcher used by Relation/List/Filter/For/Conditional/Quantified,
+// mirroring the top-level Decision/ContextEntry dispatch.
+func evalExpression(e Expression, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	switch {
+	case e.LiteralExpression != nil:
+		return evalFEEL(e.LiteralExpression.Text, ctx, "", nativeScope)
+	case e.Context != nil:
+		return evalContext(e.Context, ctx, itemDefinitionMap, nativeScope)
+	case e.FunctionDefinition != nil:
+		return evalFEEL(e.FunctionDefinition.FEELFunctionLiteral(), ctx, "", nativeScope)
+	case e.Invocation != nil:
+		return evalFEEL(e.Invocation.FEELCallExpression(), ctx, "", nativeScope)
+	case e.DecisionTable != nil:
+		return evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap)
+	case e.Relation != nil:
+		return evalRelation(e.Relation, ctx, itemDefinitionMap, nativeScope)
+	case e.List != nil:
+		return evalList(e.List, ctx, itemDefinitionMap, nativeScope)
+	case e.Filter != nil:
+		return evalFilter(e.Filter, ctx, itemDefinitionMap, nativeScope)
+	case e.For != nil:
+		return evalFor(e.For, ctx, itemDefinitionMap, nativeScope)
+	case e.Conditional != nil:
+		return evalConditional(e.Conditional, ctx, itemDefinitionMap, nativeScope)
+	case e.Some != nil:
+		return evalQuantified(e.Some, ctx, itemDefinitionMap, nativeScope, false)
+	case e.Every != nil:
+		return evalQuantified(e.Every, ctx, itemDefinitionMap, nativeScope, true)
+	default:
+		return feel.Null, nil
+	}
+}
+
+// evalRelation evaluates a DMN <relation> boxed expression into a list of
+// contexts, one per row, keyed by column name.
+func evalRelation(r *Relation, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	rows := make([]any, len(r.Rows))
+
+	for i, row := range r.Rows {
+		rowMap := make(map[string]any, len(r.Columns))
+
+		for j, col := range r.Columns {
+			if j >= len(row.Expressions) {
+				rowMap[col.Name] = feel.Null
+				continue
+			}
+
+			val, err := evalExpression(row.Expressions[j], ctx, itemDefinitionMap, nativeScope)
+			if err != nil {
+				return nil, err
+			}
+			rowMap[col.Name] = val
+		}
+
+		rows[i] = rowMap
+	}
+
+	return rows, nil
+}
+
+// evalList evaluates a DMN <list> boxed expression into a plain FEEL list.
+func evalList(l *List, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	result := make([]any, len(l.Expressions))
+
+	for i, e := range l.Expressions {
+		val, err := evalExpression(e, ctx, itemDefinitionMap, nativeScope)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = val
+	}
+
+	return result, nil
+}
+
+// asIterable normalizes a value being iterated/filtered over: FEEL treats a
+// single non-list value the same as a singleton list in these contexts.
+func asIterable(v any) []any {
+	if items, ok := v.([]any); ok {
+		return items
+	}
+	return []any{v}
+}
+
+// evalFilter evaluates a DMN <filter> boxed expression (list[condition]),
+// binding the implicit "item" variable to each element in turn.
+func evalFilter(f *Filter, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	listVal, err := evalExpression(f.In, ctx, itemDefinitionMap, nativeScope)
+	if err != nil {
+		return nil, err
+	}
+
+	items := asIterable(listVal)
+	result := make([]any, 0, len(items))
+
+	for _, item := range items {
+		local := make(map[string]any, len(ctx)+1)
+		maps.Copy(local, ctx)
+		local["item"] = item
+
+		matched, err := evalExpression(f.Match, local, itemDefinitionMap, nativeScope)
+		if err != nil {
+			return nil, err
+		}
+
+		if b, ok := matched.(bool); ok && b {
+			result = append(result, item)
+		}
+	}
+
+	return result, nil
+}
+
+// evalFor evaluates a DMN <for> boxed expression: for x in list return expr.
+func evalFor(f *For, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	listVal, err := evalExpression(f.In, ctx, itemDefinitionMap, nativeScope)
+	if err != nil {
+		return nil, err
+	}
+
+	items := asIterable(listVal)
+	result := make([]any, len(items))
+
+	for i, item := range items {
+		local := make(map[string]any, len(ctx)+1)
+		maps.Copy(local, ctx)
+		local[f.IteratorVariable] = item
+
+		val, err := evalExpression(f.Return, local, itemDefinitionMap, nativeScope)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = val
+	}
+
+	return result, nil
+}
+
+// evalConditional evaluates a DMN <conditional> boxed expression:
+// if cond then a else b.
+func evalConditional(c *Conditional, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any) (any, error) {
+	condVal, err := evalExpression(c.If, ctx, itemDefinitionMap, nativeScope)
+	if err != nil {
+		return nil, err
+	}
+
+	b, ok := condVal.(bool)
+	if !ok {
+		return nil, fmt.Errorf("expected conditional 'if' to evaluate to a bool, got: %+v", condVal)
+	}
+
+	if b {
+		return evalExpression(c.Then, ctx, itemDefinitionMap, nativeScope)
+	}
+	return evalExpression(c.Else, ctx, itemDefinitionMap, nativeScope)
+}
+
+// evalQuantified evaluates a DMN <some>/<every> boxed expression, binding the
+// iterator variable to each element of <in> in turn and short-circuiting as
+// soon as the result is determined.
+func evalQuantified(q *Quantified, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, nativeScope map[string]any, every bool) (any, error) {
+	listVal, err := evalExpression(q.In, ctx, itemDefinitionMap, nativeScope)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, item := range asIterable(listVal) {
+		local := make(map[string]any, len(ctx)+1)
+		maps.Copy(local, ctx)
+		local[q.IteratorVariable] = item
+
+		val, err := evalExpression(q.Satisfies, local, itemDefinitionMap, nativeScope)
+		if err != nil {
+			return nil, err
+		}
+
+		b, ok := val.(bool)
+		if !ok {
+			return nil, fmt.Errorf("expected 'satisfies' to evaluate to a bool, got: %+v", val)
+		}
+
+		if every && !b {
+			return false, nil
+		}
+		if !every && b {
+			return true, nil
+		}
+	}
+
+	return every, nil
 }
 
 // evalOutputEntry evaluates a decision table output entry as a FEEL
@@ -1415,6 +1787,35 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				result = coerceResult(result)
 				decisionOutputs[d.ID] = result
 				ctx[d.Variable.Name] = result
+			}
+		}
+
+		boxedEvaluators := []struct {
+			ok   bool
+			eval func() (any, error)
+		}{
+			{d.Relation != nil, func() (any, error) { return evalRelation(d.Relation, ctx, itemDefinitionMap, nativeScope) }},
+			{d.List != nil, func() (any, error) { return evalList(d.List, ctx, itemDefinitionMap, nativeScope) }},
+			{d.Filter != nil, func() (any, error) { return evalFilter(d.Filter, ctx, itemDefinitionMap, nativeScope) }},
+			{d.For != nil, func() (any, error) { return evalFor(d.For, ctx, itemDefinitionMap, nativeScope) }},
+			{d.Conditional != nil, func() (any, error) { return evalConditional(d.Conditional, ctx, itemDefinitionMap, nativeScope) }},
+			{d.Some != nil, func() (any, error) { return evalQuantified(d.Some, ctx, itemDefinitionMap, nativeScope, false) }},
+			{d.Every != nil, func() (any, error) { return evalQuantified(d.Every, ctx, itemDefinitionMap, nativeScope, true) }},
+		}
+
+		for _, be := range boxedEvaluators {
+			if !be.ok {
+				continue
+			}
+
+			ret, err := be.eval()
+			if err != nil {
+				decisionOutputs[d.ID] = feel.Null
+				ctx[d.Variable.Name] = feel.Null
+			} else {
+				ret = coerceResult(ret)
+				decisionOutputs[d.ID] = ret
+				ctx[d.Variable.Name] = ret
 			}
 		}
 	}
