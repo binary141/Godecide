@@ -846,7 +846,7 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 			subInputs[name] = v
 		}
 
-		subResult, err := subDefs.evaluate(subInputs, seedDecisions, nil)
+		subResult, err := subDefs.evaluate(subInputs, seedDecisions, nil, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -941,7 +941,8 @@ func bkmFunc(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledgeMode
 		}
 
 		if bkm.EncapsulatedLogic.DecisionTable != nil {
-			return evalDecisionTable(*bkm.EncapsulatedLogic.DecisionTable, argCtx, itemDefinitionMap)
+			ret, _, err := evalDecisionTable(*bkm.EncapsulatedLogic.DecisionTable, argCtx, itemDefinitionMap)
+			return ret, err
 		}
 
 		if bkm.EncapsulatedLogic.Context != nil {
@@ -1209,23 +1210,45 @@ func startsWithComparisonOperator(text string) bool {
 	return false
 }
 
+// MatchedRule identifies a single decision-table rule that matched during
+// evaluation, so callers can show "which rule fired" (e.g. Camunda
+// Cockpit's per-evaluation trace) instead of only the final output.
+type MatchedRule struct {
+	// RuleIndex is the rule's 1-based position within the table, in
+	// document order.
+	RuleIndex int `json:"ruleIndex"`
+	// RuleID is the rule's DMN id attribute, when the table declares one.
+	RuleID string `json:"ruleId,omitempty"`
+}
+
+// DecisionTrace records which rule(s) fired for a single decision's
+// decision-table evaluation.
+type DecisionTrace struct {
+	DecisionID   string        `json:"decisionId"`
+	DecisionName string        `json:"decisionName"`
+	MatchedRules []MatchedRule `json:"matchedRules"`
+}
+
 // evalDecisionTable evaluates a single DMN decisionTable against ctx,
 // applying its hit policy (and, for COLLECT, its aggregation) to the rules
 // that match. Shared by top-level decision bodies and decisionTables nested
-// inside a context entry.
-func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, error) {
+// inside a context entry. Also returns which rule(s) matched, in the order
+// they were evaluated (before any hit-policy-driven selection/ordering of
+// the final result).
+func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, []MatchedRule, error) {
 	hitPolicy := dt.HitPolicy
 	if hitPolicy == "" {
 		// Blank/omitted hitPolicy defaults to "Unique" per spec.
 		hitPolicy = HitPolicyUnique
 	}
 	if !IsValidHitPolicy(hitPolicy) {
-		return nil, fmt.Errorf("hit policy %s is not valid", hitPolicy)
+		return nil, nil, fmt.Errorf("hit policy %s is not valid", hitPolicy)
 	}
 
 	var hitsList []any
+	var matchedRules []MatchedRule
 
-	for _, rule := range dt.Rules {
+	for ruleIndex, rule := range dt.Rules {
 		// todo make sure the types are the same from the ctx input to the rule input
 		hit := true
 		for j, ie := range rule.InputEntries {
@@ -1285,7 +1308,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 
 			r, ok := ret.(bool)
 			if !ok {
-				return nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
+				return nil, nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
 			}
 
 			if hit {
@@ -1312,6 +1335,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 				record = evalOutputEntry(rule.OutputEntries[0].Text, ctx, itemDefinitionMap)
 			}
 			hitsList = append(hitsList, record)
+			matchedRules = append(matchedRules, MatchedRule{RuleIndex: ruleIndex + 1, RuleID: rule.ID})
 
 			if hitPolicy == HitPolicyFirst {
 				break
@@ -1353,7 +1377,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 	switch hitPolicy {
 	case HitPolicyUnique:
 		if len(hitsList) > 1 {
-			return nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
+			return nil, nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
 		}
 		if len(hitsList) == 1 {
 			result = hitsList[0]
@@ -1367,7 +1391,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 			result = hitsList[0]
 			for _, hit := range hitsList[1:] {
 				if !reflect.DeepEqual(hit, result) {
-					return nil, fmt.Errorf("decision table had conflicting outputs for ANY policy: %+v", hitsList)
+					return nil, nil, fmt.Errorf("decision table had conflicting outputs for ANY policy: %+v", hitsList)
 				}
 			}
 		}
@@ -1376,12 +1400,12 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 			best := hitsList[0]
 			bestRank, err := priorityRank(dt, best)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			for _, hit := range hitsList[1:] {
 				rank, err := priorityRank(dt, hit)
 				if err != nil {
-					return nil, err
+					return nil, nil, err
 				}
 				if lessRank(rank, bestRank) {
 					best = hit
@@ -1396,7 +1420,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 		for i, hit := range ordered {
 			rank, err := priorityRank(dt, hit)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			ranks[i] = rank
 		}
@@ -1411,7 +1435,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 		result = aggregateCollect(dt.Aggregation, hitsList)
 	}
 
-	return result, nil
+	return result, matchedRules, nil
 }
 
 // priorityRank computes, for each output column of hit, the index of that
@@ -1500,7 +1524,7 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 		case entry.Context != nil:
 			val, err = evalContext(entry.Context, local, itemDefinitionMap, nativeScope)
 		case entry.DecisionTable != nil:
-			val, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
+			val, _, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
 		case entry.LiteralExpression != nil:
 			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope, itemDefinitionMap)
 		case entry.Relation != nil:
@@ -1564,7 +1588,8 @@ func evalExpression(e Expression, ctx map[string]any, itemDefinitionMap map[stri
 	case e.Invocation != nil:
 		return evalFEEL(e.Invocation.FEELCallExpression(), ctx, "", nativeScope, itemDefinitionMap)
 	case e.DecisionTable != nil:
-		return evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap)
+		ret, _, err := evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap)
+		return ret, err
 	case e.Relation != nil:
 		return evalRelation(e.Relation, ctx, itemDefinitionMap, nativeScope)
 	case e.List != nil:
@@ -1867,7 +1892,18 @@ func dfs(nodes map[string]node, edges map[string][]edge) []node {
 }
 
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
-	return d.evaluate(context, nil, nil)
+	return d.evaluate(context, nil, nil, nil)
+}
+
+// EvaluateWithTrace is Evaluate, but also returns a DecisionTrace per
+// decision whose body is a decision table, recording which rule(s) matched -
+// e.g. for showing "which rule fired" the way Camunda Cockpit does per
+// evaluation. Decision tables nested inside a context entry, BKM, or other
+// boxed expression aren't traced, only ones directly attached to a decision.
+func (d Definitions) EvaluateWithTrace(context map[string]any) (map[string]any, []DecisionTrace, error) {
+	trace := []DecisionTrace{}
+	outputs, err := d.evaluate(context, nil, nil, &trace)
+	return outputs, trace, err
 }
 
 // EvaluateDecisions is Evaluate, but only computes wantIDs and whatever they
@@ -1879,7 +1915,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 // invocation are unaffected - those are always resolved against the full,
 // unpruned document.
 func (d Definitions) EvaluateDecisions(context map[string]any, wantIDs ...string) (map[string]any, error) {
-	return d.evaluate(context, nil, wantIDs)
+	return d.evaluate(context, nil, wantIDs, nil)
 }
 
 // EvaluateService invokes the named decisionService directly (as the DMN TCK
@@ -1935,7 +1971,7 @@ func (d Definitions) EvaluateService(serviceName string, inputs map[string]any) 
 // IDs and their transitive informationRequirement dependencies (see
 // EvaluateDecisions); root - used for decisionService/BKM resolution -
 // always sees the full, unpruned document regardless.
-func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any, wantIDs []string) (map[string]any, error) {
+func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any, wantIDs []string, trace *[]DecisionTrace) (map[string]any, error) {
 	// kept unshadowed so decision-service invocations (below) can recursively
 	// re-evaluate the whole document against a fresh set of inputs.
 	root := d
@@ -2176,7 +2212,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 
 		if len(d.DecisionTables) != 0 {
 			for _, dt := range d.DecisionTables {
-				result, err := evalDecisionTable(dt, ctx, itemDefinitionMap)
+				result, matchedRules, err := evalDecisionTable(dt, ctx, itemDefinitionMap)
 				if err != nil {
 					return nil, err
 				}
@@ -2184,6 +2220,14 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				result = coerceResult(result)
 				decisionOutputs[d.ID] = result
 				ctx[d.Variable.Name] = result
+
+				if trace != nil {
+					*trace = append(*trace, DecisionTrace{
+						DecisionID:   d.ID,
+						DecisionName: d.Name,
+						MatchedRules: matchedRules,
+					})
+				}
 			}
 		}
 

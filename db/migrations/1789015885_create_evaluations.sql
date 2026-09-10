@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS evaluations (
     deployment_id INTEGER NOT NULL REFERENCES deployments(id) ON DELETE CASCADE,
     inputs        JSONB NOT NULL,
     outputs       JSONB,
+    trace         JSONB,
     error         TEXT,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

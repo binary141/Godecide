@@ -23,8 +23,9 @@ type evaluateRequest struct {
 }
 
 type evaluateResponse struct {
-	Outputs map[string]any `json:"outputs,omitempty"`
-	Error   string         `json:"error,omitempty"`
+	Outputs map[string]any         `json:"outputs,omitempty"`
+	Trace   []engine.DecisionTrace `json:"trace,omitempty"`
+	Error   string                 `json:"error,omitempty"`
 }
 
 // Create ingests a raw DMN XML document from the request body, parses and
@@ -217,18 +218,18 @@ func Evaluate(c *gin.Context) {
 		return
 	}
 
-	outputs, evalErr := def.Evaluate(req.Inputs)
+	outputs, trace, evalErr := def.EvaluateWithTrace(req.Inputs)
 
-	if err := db.RecordEvaluation(c.Request.Context(), deployment.ID, req.Inputs, outputs, evalErr); err != nil {
+	if err := db.RecordEvaluation(c.Request.Context(), deployment.ID, req.Inputs, outputs, trace, evalErr); err != nil {
 		log.Printf("record evaluation for deployment %d: %v", deployment.ID, err)
 	}
 
 	if evalErr != nil {
-		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: evalErr.Error()})
+		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: evalErr.Error(), Trace: trace})
 		return
 	}
 
-	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs})
+	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs, Trace: trace})
 }
 
 // EvaluationHistory returns a page of past evaluation calls for a
