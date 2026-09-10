@@ -97,8 +97,12 @@ func parseQueryInt(c *gin.Context, key string, fallback int) (int, error) {
 	return strconv.Atoi(raw)
 }
 
-// GetLatestByName returns the most recently created deployment with the
-// given ?name= query param, including its XML body.
+// GetLatestByName returns the deployment for the given ?name= query param,
+// including its XML body. By default it returns the highest-versioned
+// (latest) deployment for that name; passing ?version= pins the lookup to
+// that specific historical version instead, mirroring how engines like
+// Camunda let you evaluate a specific decision version rather than just
+// the newest one.
 func GetLatestByName(c *gin.Context) {
 	name := c.Query("name")
 	if name == "" {
@@ -106,7 +110,22 @@ func GetLatestByName(c *gin.Context) {
 		return
 	}
 
-	deployment, err := db.GetLatestDeploymentByName(c.Request.Context(), name)
+	var (
+		deployment db.Deployment
+		err        error
+	)
+
+	if raw := c.Query("version"); raw != "" {
+		version, convErr := strconv.Atoi(raw)
+		if convErr != nil || version <= 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "version must be a positive integer"})
+			return
+		}
+		deployment, err = db.GetDeploymentByNameVersion(c.Request.Context(), name, version)
+	} else {
+		deployment, err = db.GetLatestDeploymentByName(c.Request.Context(), name)
+	}
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "no deployment found for name"})
