@@ -1,17 +1,24 @@
 package main
 
 import (
+	"context"
 	"embed"
+	"errors"
 	"flag"
 	"io/fs"
 	"log"
 	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"dmn/db"
 	"dmn/deployments"
 
 	"github.com/gin-gonic/gin"
 )
+
+const shutdownTimeout = 10 * time.Second
 
 //go:embed web
 var webFS embed.FS
@@ -99,6 +106,33 @@ func main() {
 	router.POST("/api/deployments/:deploymentId/evaluate", deployments.Evaluate)
 	router.NoRoute(gin.WrapH(http.FileServer(http.FS(static))))
 
-	log.Printf("dmn table builder listening on %s", *addr)
-	log.Fatal(router.Run(*addr))
+	srv := &http.Server{
+		Addr:    *addr,
+		Handler: router,
+	}
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	go func() {
+		log.Printf("dmn table builder listening on %s", *addr)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("listen: %v", err)
+		}
+	}()
+
+	<-ctx.Done()
+	stop()
+	log.Println("shutting down")
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
+
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Printf("graceful shutdown failed: %v", err)
+	}
+
+	if err := db.DB.Close(); err != nil {
+		log.Printf("db close: %v", err)
+	}
 }
