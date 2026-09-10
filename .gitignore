@@ -1,3 +1,5 @@
 dmn_test_output
 
 tests/**
+tmp/
+.env

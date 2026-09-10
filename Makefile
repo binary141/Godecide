@@ -1,4 +1,7 @@
-.PHONY: test
+.PHONY: test up-d
+
+up-d:
+	docker compose up -d
 
 test:
 	@go test -v ./... 2>&1 | tee dmn_test_output; \

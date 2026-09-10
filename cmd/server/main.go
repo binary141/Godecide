@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 
+	"dmn/db"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -71,6 +73,13 @@ func handleExport(c *gin.Context) {
 func main() {
 	addr := flag.String("addr", ":8080", "address to listen on")
 	flag.Parse()
+
+	if err := db.Connect(); err != nil {
+		log.Fatalf("db connect: %v", err)
+	}
+	if err := db.RunMigrations(); err != nil {
+		log.Fatalf("db migrations: %v", err)
+	}
 
 	static, err := fs.Sub(webFS, "web")
 	if err != nil {

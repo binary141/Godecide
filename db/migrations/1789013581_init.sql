@@ -1,0 +1,2 @@
+-- Placeholder migration establishing the migrations pattern.
+-- Add real schema changes as new timestamped .sql files (see README.md).
