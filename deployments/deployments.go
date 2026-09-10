@@ -97,6 +97,28 @@ func parseQueryInt(c *gin.Context, key string, fallback int) (int, error) {
 	return strconv.Atoi(raw)
 }
 
+// GetLatestByName returns the most recently created deployment with the
+// given ?name= query param, including its XML body.
+func GetLatestByName(c *gin.Context) {
+	name := c.Query("name")
+	if name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name query param is required"})
+		return
+	}
+
+	deployment, err := db.GetLatestDeploymentByName(c.Request.Context(), name)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "no deployment found for name"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, deployment)
+}
+
 // Get returns a single deployment, including its XML body.
 func Get(c *gin.Context) {
 	id, err := parseID(c)

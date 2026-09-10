@@ -64,6 +64,19 @@ func GetDeployment(ctx context.Context, id int64) (Deployment, error) {
 	return d, err
 }
 
+// GetLatestDeploymentByName returns the most recently created deployment
+// with the given name.
+func GetLatestDeploymentByName(ctx context.Context, name string) (Deployment, error) {
+	var d Deployment
+	err := DB.GetContext(
+		ctx,
+		&d,
+		`SELECT id, name, namespace, dmn_version, xml, created_at FROM deployments WHERE name = $1 ORDER BY created_at DESC LIMIT 1`,
+		name,
+	)
+	return d, err
+}
+
 // DeleteDeployment removes a deployment by id, reporting whether a row was
 // actually deleted so callers can distinguish "gone" from "never existed".
 func DeleteDeployment(ctx context.Context, id int64) (bool, error) {
