@@ -176,6 +176,28 @@ func goLiteral(v tckValue) string {
 	}
 }
 
+// componentLiteral returns the Go literal for a single component: a nested
+// map literal if it itself has sub-components (a struct nested inside a
+// struct, e.g. "Applicant data.Monthly" being {Income, Repayments,
+// Expenses}), a list literal if it has a list value, or a scalar literal
+// otherwise. Components can nest arbitrarily deep, so this recurses rather
+// than assuming a component's own <value> child is always present.
+func componentLiteral(c tckComponent) string {
+	if len(c.Components) > 0 {
+		var sb strings.Builder
+		sb.WriteString("map[string]any{")
+		for _, cc := range c.Components {
+			fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(cc.Name), componentLiteral(cc))
+		}
+		sb.WriteString("}")
+		return sb.String()
+	}
+	if c.List != nil {
+		return listLiteral(*c.List)
+	}
+	return goLiteral(c.Value)
+}
+
 // itemLiteral returns the Go literal for a single list item: a nested list
 // literal (recursively), a map literal for a structured (component) item, or
 // a scalar literal otherwise.
@@ -187,7 +209,7 @@ func itemLiteral(item tckListItem) string {
 		var sb strings.Builder
 		sb.WriteString("map[string]any{")
 		for _, c := range item.Components {
-			fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value))
+			fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), componentLiteral(c))
 		}
 		sb.WriteString("}")
 		return sb.String()
@@ -219,7 +241,7 @@ func inputLiteral(n tckInputNode) string {
 	var sb strings.Builder
 	sb.WriteString("map[string]any{")
 	for _, c := range n.Components {
-		fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), goLiteral(c.Value))
+		fmt.Fprintf(&sb, "%s: %s,", strconv.Quote(c.Name), componentLiteral(c))
 	}
 	sb.WriteString("}")
 	return sb.String()
