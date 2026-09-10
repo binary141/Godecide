@@ -6,6 +6,7 @@ package deployments
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -53,14 +54,47 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, deployment)
 }
 
-// List returns all deployments, newest first, without their XML bodies.
+const (
+	defaultListLimit = 20
+	maxListLimit     = 100
+)
+
+// List returns a page of deployments, newest first, without their XML
+// bodies. Accepts ?limit= (default 20, max 100) and ?offset= (default 0)
+// query params.
 func List(c *gin.Context) {
-	deploymentList, err := db.ListDeployments()
+	limit, err := parseQueryInt(c, "limit", defaultListLimit)
+	if err != nil || limit <= 0 || limit > maxListLimit {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("limit must be an integer between 1 and %d", maxListLimit)})
+		return
+	}
+
+	offset, err := parseQueryInt(c, "offset", 0)
+	if err != nil || offset < 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "offset must be a non-negative integer"})
+		return
+	}
+
+	deploymentList, total, err := db.ListDeployments(limit, offset)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, deploymentList)
+
+	c.JSON(http.StatusOK, gin.H{
+		"deployments": deploymentList,
+		"total":       total,
+		"limit":       limit,
+		"offset":      offset,
+	})
+}
+
+func parseQueryInt(c *gin.Context, key string, fallback int) (int, error) {
+	raw := c.Query(key)
+	if raw == "" {
+		return fallback, nil
+	}
+	return strconv.Atoi(raw)
 }
 
 // Get returns a single deployment, including its XML body.

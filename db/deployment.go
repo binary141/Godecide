@@ -25,15 +25,27 @@ func CreateDeployment(name, namespace, dmnVersion, xml string) (Deployment, erro
 	return d, err
 }
 
-// ListDeployments returns deployments newest-first, omitting the XML body
-// (which can be large) so the listing stays cheap.
-func ListDeployments() ([]Deployment, error) {
+// ListDeployments returns a page of deployments newest-first, omitting the
+// XML body (which can be large) so the listing stays cheap, along with the
+// total number of deployments so callers can tell when they've paged
+// through everything.
+func ListDeployments(limit, offset int) ([]Deployment, int, error) {
 	deployments := []Deployment{}
 	err := DB.Select(
 		&deployments,
-		`SELECT id, name, namespace, dmn_version, created_at FROM deployments ORDER BY created_at DESC`,
+		`SELECT id, name, namespace, dmn_version, created_at FROM deployments ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+		limit, offset,
 	)
-	return deployments, err
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var total int
+	if err := DB.Get(&total, `SELECT COUNT(*) FROM deployments`); err != nil {
+		return nil, 0, err
+	}
+
+	return deployments, total, nil
 }
 
 func GetDeployment(id int64) (Deployment, error) {
