@@ -118,6 +118,27 @@ func Get(c *gin.Context) {
 	c.JSON(http.StatusOK, deployment)
 }
 
+// Delete removes a deployment by id.
+func Delete(c *gin.Context) {
+	id, err := parseID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid deployment id"})
+		return
+	}
+
+	found, err := db.DeleteDeployment(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if !found {
+		c.JSON(http.StatusNotFound, gin.H{"error": "deployment not found"})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
+
 // Evaluate loads a deployment's DMN, re-parses it, and evaluates it against
 // the posted inputs.
 func Evaluate(c *gin.Context) {

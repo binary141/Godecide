@@ -57,3 +57,19 @@ func GetDeployment(id int64) (Deployment, error) {
 	)
 	return d, err
 }
+
+// DeleteDeployment removes a deployment by id, reporting whether a row was
+// actually deleted so callers can distinguish "gone" from "never existed".
+func DeleteDeployment(id int64) (bool, error) {
+	res, err := DB.Exec(`DELETE FROM deployments WHERE id = $1`, id)
+	if err != nil {
+		return false, err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	return affected > 0, nil
+}
