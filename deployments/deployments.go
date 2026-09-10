@@ -45,6 +45,11 @@ func Create(c *gin.Context) {
 		return
 	}
 
+	if problems := engine.ValidateDefinitions(def); len(problems) > 0 {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "dmn file failed validation", "problems": problems})
+		return
+	}
+
 	deployment, err := db.CreateDeployment(c.Request.Context(), def.Name, def.Namespace, def.Version, string(body))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
