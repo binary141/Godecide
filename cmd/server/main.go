@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"dmn/db"
+	"dmn/deployments"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,6 +91,10 @@ func main() {
 	router.GET("/healthz", handleHealthcheck)
 	router.POST("/api/evaluate", handleEvaluate)
 	router.POST("/api/export", handleExport)
+	router.POST("/api/deployments", deployments.Create)
+	router.GET("/api/deployments", deployments.List)
+	router.GET("/api/deployments/:deploymentId", deployments.Get)
+	router.POST("/api/deployments/:deploymentId/evaluate", deployments.Evaluate)
 	router.NoRoute(gin.WrapH(http.FileServer(http.FS(static))))
 
 	log.Printf("dmn table builder listening on %s", *addr)
