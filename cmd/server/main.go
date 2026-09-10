@@ -104,6 +104,7 @@ func main() {
 	router.GET("/api/deployments/:deploymentId", deployments.Get)
 	router.DELETE("/api/deployments/:deploymentId", deployments.Delete)
 	router.POST("/api/deployments/:deploymentId/evaluate", deployments.Evaluate)
+	router.GET("/api/deployments/:deploymentId/evaluations", deployments.EvaluationHistory)
 	router.NoRoute(gin.WrapH(http.FileServer(http.FS(static))))
 
 	srv := &http.Server{

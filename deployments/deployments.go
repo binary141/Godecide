@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -216,13 +217,54 @@ func Evaluate(c *gin.Context) {
 		return
 	}
 
-	outputs, err := def.Evaluate(req.Inputs)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: err.Error()})
+	outputs, evalErr := def.Evaluate(req.Inputs)
+
+	if err := db.RecordEvaluation(c.Request.Context(), deployment.ID, req.Inputs, outputs, evalErr); err != nil {
+		log.Printf("record evaluation for deployment %d: %v", deployment.ID, err)
+	}
+
+	if evalErr != nil {
+		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: evalErr.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs})
+}
+
+// EvaluationHistory returns a page of past evaluation calls for a
+// deployment, newest first, so callers can ask what a decision returned for
+// given inputs at some point in the past.
+func EvaluationHistory(c *gin.Context) {
+	id, err := parseID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid deployment id"})
+		return
+	}
+
+	limit, err := parseQueryInt(c, "limit", defaultListLimit)
+	if err != nil || limit <= 0 || limit > maxListLimit {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("limit must be an integer between 1 and %d", maxListLimit)})
+		return
+	}
+
+	offset, err := parseQueryInt(c, "offset", 0)
+	if err != nil || offset < 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "offset must be a non-negative integer"})
+		return
+	}
+
+	evaluations, total, err := db.ListEvaluations(c.Request.Context(), id, limit, offset)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"evaluations": evaluations,
+		"total":       total,
+		"limit":       limit,
+		"offset":      offset,
+	})
 }
 
 func parseID(c *gin.Context) (int64, error) {
