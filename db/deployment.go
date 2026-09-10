@@ -1,6 +1,9 @@
 package db
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // Deployment is a single ingested DMN file, stored verbatim so it can be
 // re-parsed and evaluated later. Deployments are append-only: redeploying a
@@ -14,9 +17,10 @@ type Deployment struct {
 	CreatedAt  time.Time `json:"createdAt" db:"created_at"`
 }
 
-func CreateDeployment(name, namespace, dmnVersion, xml string) (Deployment, error) {
+func CreateDeployment(ctx context.Context, name, namespace, dmnVersion, xml string) (Deployment, error) {
 	var d Deployment
-	err := DB.QueryRowx(
+	err := DB.QueryRowxContext(
+		ctx,
 		`INSERT INTO deployments (name, namespace, dmn_version, xml)
 		 VALUES ($1, $2, $3, $4)
 		 RETURNING id, name, namespace, dmn_version, xml, created_at`,
@@ -29,9 +33,10 @@ func CreateDeployment(name, namespace, dmnVersion, xml string) (Deployment, erro
 // XML body (which can be large) so the listing stays cheap, along with the
 // total number of deployments so callers can tell when they've paged
 // through everything.
-func ListDeployments(limit, offset int) ([]Deployment, int, error) {
+func ListDeployments(ctx context.Context, limit, offset int) ([]Deployment, int, error) {
 	deployments := []Deployment{}
-	err := DB.Select(
+	err := DB.SelectContext(
+		ctx,
 		&deployments,
 		`SELECT id, name, namespace, dmn_version, created_at FROM deployments ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
 		limit, offset,
@@ -41,16 +46,17 @@ func ListDeployments(limit, offset int) ([]Deployment, int, error) {
 	}
 
 	var total int
-	if err := DB.Get(&total, `SELECT COUNT(*) FROM deployments`); err != nil {
+	if err := DB.GetContext(ctx, &total, `SELECT COUNT(*) FROM deployments`); err != nil {
 		return nil, 0, err
 	}
 
 	return deployments, total, nil
 }
 
-func GetDeployment(id int64) (Deployment, error) {
+func GetDeployment(ctx context.Context, id int64) (Deployment, error) {
 	var d Deployment
-	err := DB.Get(
+	err := DB.GetContext(
+		ctx,
 		&d,
 		`SELECT id, name, namespace, dmn_version, xml, created_at FROM deployments WHERE id = $1`,
 		id,
@@ -60,8 +66,8 @@ func GetDeployment(id int64) (Deployment, error) {
 
 // DeleteDeployment removes a deployment by id, reporting whether a row was
 // actually deleted so callers can distinguish "gone" from "never existed".
-func DeleteDeployment(id int64) (bool, error) {
-	res, err := DB.Exec(`DELETE FROM deployments WHERE id = $1`, id)
+func DeleteDeployment(ctx context.Context, id int64) (bool, error) {
+	res, err := DB.ExecContext(ctx, `DELETE FROM deployments WHERE id = $1`, id)
 	if err != nil {
 		return false, err
 	}

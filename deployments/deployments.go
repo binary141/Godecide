@@ -45,7 +45,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	deployment, err := db.CreateDeployment(def.Name, def.Namespace, def.Version, string(body))
+	deployment, err := db.CreateDeployment(c.Request.Context(), def.Name, def.Namespace, def.Version, string(body))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -75,7 +75,7 @@ func List(c *gin.Context) {
 		return
 	}
 
-	deploymentList, total, err := db.ListDeployments(limit, offset)
+	deploymentList, total, err := db.ListDeployments(c.Request.Context(), limit, offset)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -105,7 +105,7 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	deployment, err := db.GetDeployment(id)
+	deployment, err := db.GetDeployment(c.Request.Context(), id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "deployment not found"})
@@ -126,7 +126,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	found, err := db.DeleteDeployment(id)
+	found, err := db.DeleteDeployment(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -148,7 +148,7 @@ func Evaluate(c *gin.Context) {
 		return
 	}
 
-	deployment, err := db.GetDeployment(id)
+	deployment, err := db.GetDeployment(c.Request.Context(), id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "deployment not found"})
