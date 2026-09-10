@@ -2,11 +2,12 @@ package main
 
 import (
 	"embed"
-	"encoding/json"
 	"flag"
 	"io/fs"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 //go:embed web
@@ -27,21 +28,14 @@ type exportResponse struct {
 	Error string `json:"error,omitempty"`
 }
 
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(v)
+func handleHealthcheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
-func handleEvaluate(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
+func handleEvaluate(c *gin.Context) {
 	var req evaluateRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSON(w, http.StatusBadRequest, evaluateResponse{Error: "invalid request body: " + err.Error()})
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, evaluateResponse{Error: "invalid request body: " + err.Error()})
 		return
 	}
 
@@ -49,22 +43,17 @@ func handleEvaluate(w http.ResponseWriter, r *http.Request) {
 
 	outputs, err := def.Evaluate(req.Inputs)
 	if err != nil {
-		writeJSON(w, http.StatusUnprocessableEntity, evaluateResponse{Error: err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: err.Error()})
 		return
 	}
 
-	writeJSON(w, http.StatusOK, evaluateResponse{Outputs: outputs})
+	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs})
 }
 
-func handleExport(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
+func handleExport(c *gin.Context) {
 	var spec TableSpec
-	if err := json.NewDecoder(r.Body).Decode(&spec); err != nil {
-		writeJSON(w, http.StatusBadRequest, exportResponse{Error: "invalid request body: " + err.Error()})
+	if err := c.ShouldBindJSON(&spec); err != nil {
+		c.JSON(http.StatusBadRequest, exportResponse{Error: "invalid request body: " + err.Error()})
 		return
 	}
 
@@ -72,11 +61,11 @@ func handleExport(w http.ResponseWriter, r *http.Request) {
 
 	xmlBytes, err := toXML(def)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, exportResponse{Error: err.Error()})
+		c.JSON(http.StatusInternalServerError, exportResponse{Error: err.Error()})
 		return
 	}
 
-	writeJSON(w, http.StatusOK, exportResponse{XML: string(xmlBytes)})
+	c.JSON(http.StatusOK, exportResponse{XML: string(xmlBytes)})
 }
 
 func main() {
@@ -88,11 +77,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.FS(static)))
-	mux.HandleFunc("/api/evaluate", handleEvaluate)
-	mux.HandleFunc("/api/export", handleExport)
+	router := gin.Default()
+	router.GET("/healthz", handleHealthcheck)
+	router.POST("/api/evaluate", handleEvaluate)
+	router.POST("/api/export", handleExport)
+	router.NoRoute(gin.WrapH(http.FileServer(http.FS(static))))
 
 	log.Printf("dmn table builder listening on %s", *addr)
-	log.Fatal(http.ListenAndServe(*addr, mux))
+	log.Fatal(router.Run(*addr))
 }
