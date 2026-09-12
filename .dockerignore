@@ -1,0 +1,49 @@
+# Version control
+.git
+.gitignore
+.gitmodules
+
+# Claude Code / editor tooling
+.claude
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Build artifacts / binaries
+gentests
+dmn_test_output
+tmp/
+*.exe
+*.test
+*.out
+
+# Go build cache / vendor (rely on go.mod, not a vendored copy)
+vendor/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+
+# Docker itself
+Dockerfile
+docker-compose.yaml
+.dockerignore
+
+# Docs, project metadata not needed at runtime
+README.md
+ROADMAP.md
+*.md
+
+# Tests and test fixtures
+tests/
+testdata/
+*_test.go
+
+# Misc dev tooling
+Makefile
