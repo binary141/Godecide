@@ -107,6 +107,7 @@ func main() {
 	router.GET("/api/deployments", deployments.List)
 	router.GET("/api/deployments/latest", deployments.GetLatestByName)
 	router.GET("/api/deployments/:deploymentId", deployments.Get)
+	router.GET("/api/deployments/:deploymentId/decisions", deployments.Decisions)
 	router.DELETE("/api/deployments/:deploymentId", deployments.Delete)
 	router.POST("/api/deployments/:deploymentId/evaluate", deployments.Evaluate)
 	router.GET("/api/deployments/:deploymentId/evaluations", deployments.EvaluationHistory)

@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"dmn/db"
 	"dmn/engine"
@@ -235,6 +236,89 @@ func Evaluate(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs, Trace: trace})
+}
+
+// requirementView describes one edge into a decision: either an external
+// input or another decision it depends on.
+type requirementView struct {
+	Type string `json:"type"` // "input" or "decision"
+	Ref  string `json:"ref"`
+}
+
+// decisionView is a read-only, cockpit-friendly rendering of a single
+// <decision>, carrying just enough of its decision table(s) to display them.
+type decisionView struct {
+	ID       string                 `json:"id"`
+	Name     string                 `json:"name"`
+	Variable engine.Variable        `json:"variable"`
+	Requires []requirementView      `json:"requires"`
+	Tables   []engine.DecisionTable `json:"tables"`
+}
+
+// decisionsResponse is the payload for GET .../decisions: the parsed
+// decision requirement graph of a deployment, for read-only display.
+type decisionsResponse struct {
+	Name      string             `json:"name"`
+	Namespace string             `json:"namespace"`
+	Version   string             `json:"dmnVersion"`
+	InputData []engine.InputData `json:"inputData"`
+	Decisions []decisionView     `json:"decisions"`
+}
+
+// Decisions parses a deployment's stored DMN XML and returns its decisions
+// and their decision tables, for read-only display (e.g. a Camunda
+// Cockpit-style definition view) rather than evaluation.
+func Decisions(c *gin.Context) {
+	id, err := parseID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid deployment id"})
+		return
+	}
+
+	deployment, err := db.GetDeployment(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "deployment not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	def, err := engine.Parse([]byte(deployment.XML))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "unable to parse stored dmn: " + err.Error()})
+		return
+	}
+
+	decisions := make([]decisionView, len(def.Decisions))
+	for i, d := range def.Decisions {
+		var requires []requirementView
+		for _, ir := range d.InformationRequirements {
+			switch {
+			case ir.RequiredInput != nil:
+				requires = append(requires, requirementView{Type: "input", Ref: strings.TrimPrefix(ir.RequiredInput.Href, "#")})
+			case ir.RequiredDecision != nil:
+				requires = append(requires, requirementView{Type: "decision", Ref: strings.TrimPrefix(ir.RequiredDecision.Href, "#")})
+			}
+		}
+
+		decisions[i] = decisionView{
+			ID:       d.ID,
+			Name:     d.Name,
+			Variable: d.Variable,
+			Requires: requires,
+			Tables:   d.DecisionTables,
+		}
+	}
+
+	c.JSON(http.StatusOK, decisionsResponse{
+		Name:      def.Name,
+		Namespace: def.Namespace,
+		Version:   def.Version,
+		InputData: def.InputData,
+		Decisions: decisions,
+	})
 }
 
 // EvaluationHistory returns a page of past evaluation calls for a

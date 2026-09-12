@@ -9,9 +9,13 @@
 <body>
 <header>
   <h1>DMN Table Builder</h1>
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="builder">Builder</button>
+    <button class="tab-btn" data-view="cockpit">Cockpit</button>
+  </nav>
 </header>
 
-<main>
+<main id="view-builder" class="view">
   <section class="panel">
     <div class="toolbar">
       <button id="addNode">+ Decision node</button>
@@ -44,6 +48,39 @@
   </section>
 </main>
 
+<main id="view-cockpit" class="view hidden">
+  <div class="cockpit">
+    <aside class="cockpit-sidebar">
+      <div class="cockpit-sidebar-header">
+        <input id="cockpitSearch" type="text" placeholder="Filter by name…" />
+        <button id="cockpitRefresh" class="secondary" title="Refresh list">⟳</button>
+      </div>
+      <div id="cockpitList" class="cockpit-list">
+        <p class="hint">Loading…</p>
+      </div>
+      <div class="toolbar">
+        <button id="cockpitLoadMore" class="secondary hidden">Load more</button>
+      </div>
+    </aside>
+    <section class="cockpit-main" id="cockpitMain">
+      <p class="hint">Select a deployment on the left to inspect it.</p>
+    </section>
+  </div>
+</main>
+
+<script>
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = btn.dataset.view;
+      document.querySelectorAll(".view").forEach((v) => v.classList.toggle("hidden", v.id !== "view-" + target));
+      document.body.classList.toggle("cockpit-active", target === "cockpit");
+      if (target === "cockpit" && window.Cockpit) window.Cockpit.onShow();
+    });
+  });
+</script>
 <script src="app.js"></script>
+<script src="cockpit.js"></script>
 </body>
 </html>
