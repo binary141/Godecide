@@ -389,16 +389,18 @@
       if (!res.ok || data.error) {
         $("xmlOut").value = "";
         showError(data.error || `HTTP ${res.status}`);
-        return;
+        return null;
       }
       $("xmlOut").value = data.xml;
+      return data.xml;
     } catch (e) {
       showError("Request failed: " + e.message);
+      return null;
     }
   }
 
-  function downloadXML() {
-    const xml = $("xmlOut").value;
+  async function downloadXML() {
+    const xml = await exportXML();
     if (!xml) return;
     const blob = new Blob([xml], { type: "application/xml" });
     const url = URL.createObjectURL(blob);
