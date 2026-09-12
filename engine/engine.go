@@ -846,7 +846,7 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 			subInputs[name] = v
 		}
 
-		subResult, err := subDefs.evaluate(subInputs, seedDecisions, nil, nil)
+		subResult, err := subDefs.evaluate(subInputs, seedDecisions, nil, nil, false)
 		if err != nil {
 			return nil, err
 		}
@@ -1916,7 +1916,18 @@ func dfs(nodes map[string]node, edges map[string][]edge) []node {
 }
 
 func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
-	return d.evaluate(context, nil, nil, nil)
+	return d.evaluate(context, nil, nil, nil, false)
+}
+
+// EvaluateStrict is Evaluate, but returns an error instead of null the
+// moment a decision's result doesn't conform to its declared typeRef (e.g.
+// a decision declared typeRef="number" whose body evaluates to a string).
+// Plain Evaluate follows the DMN FEEL type-conformance rules, which coerce a
+// non-conforming result to null rather than failing - the DMN TCK's
+// feel_coercion suite depends on that - so this stricter, Camunda-like
+// enforcement is opt-in rather than the default.
+func (d Definitions) EvaluateStrict(context map[string]any) (map[string]any, error) {
+	return d.evaluate(context, nil, nil, nil, true)
 }
 
 // EvaluateWithTrace is Evaluate, but also returns a DecisionTrace per
@@ -1926,7 +1937,7 @@ func (d Definitions) Evaluate(context map[string]any) (map[string]any, error) {
 // boxed expression aren't traced, only ones directly attached to a decision.
 func (d Definitions) EvaluateWithTrace(context map[string]any) (map[string]any, []DecisionTrace, error) {
 	trace := []DecisionTrace{}
-	outputs, err := d.evaluate(context, nil, nil, &trace)
+	outputs, err := d.evaluate(context, nil, nil, &trace, false)
 	return outputs, trace, err
 }
 
@@ -1939,7 +1950,7 @@ func (d Definitions) EvaluateWithTrace(context map[string]any) (map[string]any, 
 // invocation are unaffected - those are always resolved against the full,
 // unpruned document.
 func (d Definitions) EvaluateDecisions(context map[string]any, wantIDs ...string) (map[string]any, error) {
-	return d.evaluate(context, nil, wantIDs, nil)
+	return d.evaluate(context, nil, wantIDs, nil, false)
 }
 
 // EvaluateService invokes the named decisionService directly (as the DMN TCK
@@ -1994,8 +2005,10 @@ func (d Definitions) EvaluateService(serviceName string, inputs map[string]any) 
 // wantIDs, if non-empty, restricts the decisions actually computed to those
 // IDs and their transitive informationRequirement dependencies (see
 // EvaluateDecisions); root - used for decisionService/BKM resolution -
-// always sees the full, unpruned document regardless.
-func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any, wantIDs []string, trace *[]DecisionTrace) (map[string]any, error) {
+// always sees the full, unpruned document regardless. strict makes a
+// decision result that doesn't conform to its declared typeRef a hard error
+// instead of the DMN FEEL-mandated null coercion (see EvaluateStrict).
+func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]any, wantIDs []string, trace *[]DecisionTrace, strict bool) (map[string]any, error) {
 	// kept unshadowed so decision-service invocations (below) can recursively
 	// re-evaluate the whole document against a fresh set of inputs.
 	root := d
@@ -2169,9 +2182,18 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		}
 
 		// coerceResult applies the decision's declared output type (if any)
-		// to a just-evaluated result, per DMN FEEL type-conformance rules.
-		coerceResult := func(v any) any {
-			return coerceToType(v, d.Variable.TypeRef, itemDefinitionMap)
+		// to a just-evaluated result, per DMN FEEL type-conformance rules:
+		// a value that can't be made to conform becomes null. In strict
+		// mode (EvaluateStrict) that null-coercion is instead surfaced as
+		// an error, since a non-null value silently turning into null is
+		// exactly the sign of a genuine type mismatch rather than a
+		// legitimately null result.
+		coerceResult := func(v any) (any, error) {
+			coerced := coerceToType(v, d.Variable.TypeRef, itemDefinitionMap)
+			if strict && d.Variable.TypeRef != "" && isFEELNull(coerced) && !isFEELNull(v) {
+				return nil, fmt.Errorf("decision %q (%s): result %#v does not conform to declared type %q", d.ID, d.Name, v, d.Variable.TypeRef)
+			}
+			return coerced, nil
 		}
 
 		if d.LiteralExpression != nil {
@@ -2184,7 +2206,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				ret = feel.Null
 			}
 
-			ret = coerceResult(ret)
+			ret, err = coerceResult(ret)
+			if err != nil {
+				return nil, err
+			}
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -2199,7 +2224,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				ret = feel.Null
 			}
 
-			ret = coerceResult(ret)
+			ret, err = coerceResult(ret)
+			if err != nil {
+				return nil, err
+			}
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -2214,7 +2242,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				ret = feel.Null
 			}
 
-			ret = coerceResult(ret)
+			ret, err = coerceResult(ret)
+			if err != nil {
+				return nil, err
+			}
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -2229,7 +2260,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				ret = feel.Null
 			}
 
-			ret = coerceResult(ret)
+			ret, err = coerceResult(ret)
+			if err != nil {
+				return nil, err
+			}
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
@@ -2241,7 +2275,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 					return nil, err
 				}
 
-				result = coerceResult(result)
+				result, err = coerceResult(result)
+				if err != nil {
+					return nil, err
+				}
 				decisionOutputs[d.ID] = result
 				ctx[d.Variable.Name] = result
 
@@ -2282,7 +2319,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				ret = feel.Null
 			}
 
-			ret = coerceResult(ret)
+			ret, err = coerceResult(ret)
+			if err != nil {
+				return nil, err
+			}
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
