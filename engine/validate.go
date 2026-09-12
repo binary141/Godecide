@@ -25,6 +25,55 @@ func ValidateDefinitions(d Definitions) []string {
 			problems = append(problems, validateDecisionTable(dec.Name, ti, dt)...)
 		}
 	}
+	problems = append(problems, validateBKMCycles(d)...)
+	return problems
+}
+
+// validateBKMCycles flags any businessKnowledgeModel whose knowledgeRequirement
+// graph, directly or transitively, requires itself. A BKM's requirements
+// should form a DAG; evaluating a cyclical one recurses without bound while
+// building its native call scope (see bkmFuncSeen), so this is caught here
+// instead of at evaluation time.
+func validateBKMCycles(d Definitions) []string {
+	bkmByID := make(map[string]BusinessKnowledgeModel, len(d.BusinessKnowledgeModels))
+	for _, bkm := range d.BusinessKnowledgeModels {
+		bkmByID[bkm.ID] = bkm
+	}
+
+	var problems []string
+	reported := map[string]bool{}
+
+	var visit func(id string, path []string, onPath map[string]bool)
+	visit = func(id string, path []string, onPath map[string]bool) {
+		bkm, ok := bkmByID[id]
+		if !ok {
+			return
+		}
+		for _, kr := range bkm.KnowledgeRequirements {
+			if kr.RequiredKnowledge == nil {
+				continue
+			}
+			depID := kr.RequiredKnowledge.ResolvedID()
+			if onPath[depID] {
+				if !reported[depID] {
+					reported[depID] = true
+					cycle := append(append([]string{}, path...), depID)
+					problems = append(problems, fmt.Sprintf(
+						"business knowledge model cycle: %s", strings.Join(cycle, " -> "),
+					))
+				}
+				continue
+			}
+			onPath[depID] = true
+			visit(depID, append(path, depID), onPath)
+			delete(onPath, depID)
+		}
+	}
+
+	for _, bkm := range d.BusinessKnowledgeModels {
+		visit(bkm.ID, []string{bkm.ID}, map[string]bool{bkm.ID: true})
+	}
+
 	return problems
 }
 

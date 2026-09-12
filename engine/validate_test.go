@@ -116,3 +116,50 @@ func TestValidateDefinitions(t *testing.T) {
 		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
 	}
 }
+
+func requiresBKM(id string) KnowledgeRequirement {
+	return KnowledgeRequirement{RequiredKnowledge: &RequiredKnowledge{Href: "#" + id}}
+}
+
+func TestValidateBKMCyclesSelfReference(t *testing.T) {
+	def := Definitions{
+		BusinessKnowledgeModels: []BusinessKnowledgeModel{
+			{ID: "bkm_a", Name: "A", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_a")}},
+		},
+	}
+
+	problems := validateBKMCycles(def)
+	if len(problems) != 1 {
+		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
+	}
+}
+
+func TestValidateBKMCyclesTransitive(t *testing.T) {
+	def := Definitions{
+		BusinessKnowledgeModels: []BusinessKnowledgeModel{
+			{ID: "bkm_a", Name: "A", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_b")}},
+			{ID: "bkm_b", Name: "B", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_c")}},
+			{ID: "bkm_c", Name: "C", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_a")}},
+		},
+	}
+
+	problems := validateBKMCycles(def)
+	if len(problems) == 0 {
+		t.Fatalf("expected at least 1 problem for a -> b -> c -> a cycle, got none")
+	}
+}
+
+func TestValidateBKMCyclesNoFalsePositiveOnDAG(t *testing.T) {
+	def := Definitions{
+		BusinessKnowledgeModels: []BusinessKnowledgeModel{
+			{ID: "bkm_a", Name: "A", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_b"), requiresBKM("bkm_c")}},
+			{ID: "bkm_b", Name: "B", KnowledgeRequirements: []KnowledgeRequirement{requiresBKM("bkm_c")}},
+			{ID: "bkm_c", Name: "C"},
+		},
+	}
+
+	problems := validateBKMCycles(def)
+	if len(problems) != 0 {
+		t.Fatalf("expected no problems for a valid DAG (diamond shape), got %v", problems)
+	}
+}

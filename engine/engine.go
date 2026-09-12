@@ -876,6 +876,23 @@ func decisionServiceFunc(root Definitions, ds DecisionService, inputDataByID map
 // the whole call null (the body is never evaluated), and a body result that
 // fails to conform to the declared return typeRef becomes null.
 func bkmFunc(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefinition) *feel.NativeFun {
+	return bkmFuncSeen(bkm, bkmMap, itemDefinitionMap, map[string]bool{bkm.ID: true})
+}
+
+// bkmFuncSeen is bkmFunc plus seen, the set of BKM IDs already being built in
+// the current call chain. A BKM's knowledgeRequirement graph should be a DAG,
+// but nothing rejects a document where it isn't, and building a cyclical
+// BKM's native scope naively (calling bkmFunc for each dependency, which
+// itself builds its own dependencies, ...) recurses forever - an unbounded
+// Go stack overflow is a fatal, unrecoverable error, not a panic Recovery
+// middleware can catch, so it takes the whole process down rather than just
+// failing one request. seen breaks the recursion by omitting a dependency
+// once its BKM ID has already been seen on this chain: a call into the
+// cyclical name at evaluation time then fails normally (unbound identifier)
+// instead of overflowing the stack. ValidateDefinitions flags the cycle
+// outright at deploy time so this is a defense-in-depth backstop, not the
+// primary guard.
+func bkmFuncSeen(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledgeModel, itemDefinitionMap map[string]ItemDefinition, seen map[string]bool) *feel.NativeFun {
 	params := bkm.EncapsulatedLogic.FormalParameters
 	paramNames := make([]string, len(params))
 	for i, p := range params {
@@ -896,9 +913,16 @@ func bkmFunc(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledgeMode
 			if kr.RequiredKnowledge == nil {
 				continue
 			}
-			if dep, ok := bkmMap[kr.RequiredKnowledge.ResolvedID()]; ok {
-				bkmNativeScope[dep.Variable.Name] = bkmFunc(dep, bkmMap, itemDefinitionMap)
+			dep, ok := bkmMap[kr.RequiredKnowledge.ResolvedID()]
+			if !ok || seen[dep.ID] {
+				continue
 			}
+			depSeen := make(map[string]bool, len(seen)+1)
+			for id := range seen {
+				depSeen[id] = true
+			}
+			depSeen[dep.ID] = true
+			bkmNativeScope[dep.Variable.Name] = bkmFuncSeen(dep, bkmMap, itemDefinitionMap, depSeen)
 		}
 	}
 
