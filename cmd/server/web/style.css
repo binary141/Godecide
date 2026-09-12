@@ -143,3 +143,23 @@ td input[type=text] {
   font-size: 0.9rem;
   padding: 0 0.25rem;
 }
+
+.node-panel {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.node-panel:last-child { margin-bottom: 0; }
+
+.node-header { margin-bottom: 0; }
+
+th select { margin-bottom: 0.25rem; width: 100%; }
+
+.derived {
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.35rem 0;
+  opacity: 0.85;
+}

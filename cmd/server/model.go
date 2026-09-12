@@ -18,10 +18,13 @@ import (
 const dmnNamespace = "https://www.omg.org/spec/DMN/20230324/MODEL/"
 
 // InputSpec is a single input column of a decision table, as sent by the
-// web UI.
+// web UI. Source, when non-empty, is the ID of another NodeSpec in the same
+// GraphSpec whose output feeds this column instead of an external input -
+// the column's Label/TypeRef are then derived from that node's output.
 type InputSpec struct {
 	Label   string `json:"label"`
 	TypeRef string `json:"typeRef"`
+	Source  string `json:"source"`
 }
 
 // OutputSpec is a single output column of a decision table.
@@ -38,14 +41,25 @@ type RuleSpec struct {
 	OutputEntries []string `json:"outputEntries"`
 }
 
-// TableSpec is the whole decision table as built in the web UI.
-type TableSpec struct {
+// NodeSpec is a single decision table node in the graph, as built in the
+// web UI. ID is a client-assigned identifier (e.g. "n1") that doubles as
+// the exported decision's ID, so evaluation results and requiredDecision
+// edges can be keyed by it directly.
+type NodeSpec struct {
+	ID           string       `json:"id"`
 	DecisionName string       `json:"decisionName"`
 	HitPolicy    string       `json:"hitPolicy"`
 	Aggregation  string       `json:"aggregation"`
 	Inputs       []InputSpec  `json:"inputs"`
 	Outputs      []OutputSpec `json:"outputs"`
 	Rules        []RuleSpec   `json:"rules"`
+}
+
+// GraphSpec is the whole decision graph as built in the web UI: one or more
+// decision table nodes, optionally wired to each other's outputs via
+// InputSpec.Source.
+type GraphSpec struct {
+	Nodes []NodeSpec `json:"nodes"`
 }
 
 // exportDoc mirrors engine.Definitions but adds the xmlns attribute that
@@ -129,114 +143,156 @@ func looksLikeFEELOperator(text string) bool {
 	return false
 }
 
-// buildDefinitions turns a TableSpec into an engine.Definitions with one
-// decision, one decision table, and one inputData node per input column
-// (wired up via informationRequirement so the engine binds context values
-// to them during evaluation).
-func buildDefinitions(spec TableSpec) engine.Definitions {
-	decisionID := "d_" + slugify(spec.DecisionName)
+// buildDefinitions turns a GraphSpec into an engine.Definitions: one
+// decision (with one decision table) per node, plus one inputData element
+// per distinct external input label across the whole graph. A node's input
+// column either binds to an external inputData (informationRequirement ->
+// requiredInput) or to another node's output (informationRequirement ->
+// requiredDecision, referencing that node's ID directly - node IDs are
+// client-assigned and used as-is for the exported decision IDs, so
+// evaluation results and graph edges can be keyed by them without a lookup
+// table).
+func buildDefinitions(spec GraphSpec) engine.Definitions {
+	outputVar := make(map[string]string, len(spec.Nodes))
+	outputType := make(map[string]string, len(spec.Nodes))
+	for _, n := range spec.Nodes {
+		v, t := n.DecisionName, ""
+		if len(n.Outputs) == 1 {
+			v, t = n.Outputs[0].Name, n.Outputs[0].TypeRef
+		}
+		outputVar[n.ID] = v
+		outputType[n.ID] = t
+	}
 
-	inputData := make([]engine.InputData, len(spec.Inputs))
-	infoReqs := make([]engine.InformationRequirement, len(spec.Inputs))
-	dtInputs := make([]engine.Input, len(spec.Inputs))
+	var externalInputData []engine.InputData
+	externalInputID := map[string]string{}
+	ensureExternalInput := func(label, typeRef string) string {
+		if id, ok := externalInputID[label]; ok {
+			return id
+		}
+		id := fmt.Sprintf("i_%s_%d", slugify(label), len(externalInputData))
+		externalInputID[label] = id
+		externalInputData = append(externalInputData, engine.InputData{
+			ID:       id,
+			Name:     label,
+			Variable: engine.Variable{Name: label, TypeRef: typeRef},
+		})
+		return id
+	}
 
-	for i, in := range spec.Inputs {
-		id := fmt.Sprintf("i_%s_%d", slugify(in.Label), i)
+	decisions := make([]engine.Decision, len(spec.Nodes))
+	for ni, n := range spec.Nodes {
+		var infoReqs []engine.InformationRequirement
+		seenDecisionDep := map[string]bool{}
+		dtInputs := make([]engine.Input, len(n.Inputs))
+		effectiveType := make([]string, len(n.Inputs))
 
-		inputData[i] = engine.InputData{
-			ID:   id,
-			Name: in.Label,
+		for i, in := range n.Inputs {
+			var exprText, label, typeRef string
+
+			if in.Source != "" {
+				exprText = outputVar[in.Source]
+				label = exprText
+				typeRef = outputType[in.Source]
+				if typeRef == "" {
+					typeRef = in.TypeRef
+				}
+				if !seenDecisionDep[in.Source] {
+					seenDecisionDep[in.Source] = true
+					infoReqs = append(infoReqs, engine.InformationRequirement{
+						ID:               fmt.Sprintf("ir_%s_dec_%d", n.ID, len(infoReqs)),
+						RequiredDecision: &engine.RequiredDecision{Href: "#" + in.Source},
+					})
+				}
+			} else {
+				exprText, label, typeRef = in.Label, in.Label, in.TypeRef
+				id := ensureExternalInput(in.Label, in.TypeRef)
+				infoReqs = append(infoReqs, engine.InformationRequirement{
+					ID:            fmt.Sprintf("ir_%s_in_%d", n.ID, i),
+					RequiredInput: &engine.RequiredInput{Href: "#" + id},
+				})
+			}
+
+			effectiveType[i] = typeRef
+			dtInputs[i] = engine.Input{
+				ID:    fmt.Sprintf("in_%s_%d", n.ID, i),
+				Label: label,
+				InputExpression: engine.InputExpression{
+					Text:    exprText,
+					TypeRef: typeRef,
+				},
+			}
+		}
+
+		dtOutputs := make([]engine.Output, len(n.Outputs))
+		for i, out := range n.Outputs {
+			dtOutputs[i] = engine.Output{Name: out.Name}
+		}
+
+		rules := make([]engine.Rule, len(n.Rules))
+		for ri, r := range n.Rules {
+			inputEntries := make([]engine.InputEntry, len(n.Inputs))
+			for i := range n.Inputs {
+				raw := ""
+				if i < len(r.InputEntries) {
+					raw = r.InputEntries[i]
+				}
+				inputEntries[i] = engine.InputEntry{
+					ID:   fmt.Sprintf("r%d_ie%d_%s", ri, i, n.ID),
+					Text: normalizeInputEntry(raw, effectiveType[i]),
+				}
+			}
+
+			outputEntries := make([]engine.OutputEntry, len(n.Outputs))
+			for i := range n.Outputs {
+				raw := ""
+				if i < len(r.OutputEntries) {
+					raw = r.OutputEntries[i]
+				}
+				outputEntries[i] = engine.OutputEntry{
+					ID:   fmt.Sprintf("r%d_oe%d_%s", ri, i, n.ID),
+					Text: normalizeOutputEntry(raw, n.Outputs[i].TypeRef),
+				}
+			}
+
+			rules[ri] = engine.Rule{
+				ID:            fmt.Sprintf("rule_%s_%d", n.ID, ri),
+				InputEntries:  inputEntries,
+				OutputEntries: outputEntries,
+			}
+		}
+
+		decisions[ni] = engine.Decision{
+			ID:   n.ID,
+			Name: n.DecisionName,
 			Variable: engine.Variable{
-				Name:    in.Label,
-				TypeRef: in.TypeRef,
+				Name:    outputVar[n.ID],
+				TypeRef: outputType[n.ID],
 			},
-		}
-
-		infoReqs[i] = engine.InformationRequirement{
-			ID:            fmt.Sprintf("ir_%d", i),
-			RequiredInput: &engine.RequiredInput{Href: "#" + id},
-		}
-
-		dtInputs[i] = engine.Input{
-			ID:    fmt.Sprintf("in_%d", i),
-			Label: in.Label,
-			InputExpression: engine.InputExpression{
-				Text:    in.Label,
-				TypeRef: in.TypeRef,
+			InformationRequirements: infoReqs,
+			DecisionTables: []engine.DecisionTable{
+				{
+					HitPolicy:   n.HitPolicy,
+					Aggregation: n.Aggregation,
+					Inputs:      dtInputs,
+					Output:      dtOutputs,
+					Rules:       rules,
+				},
 			},
 		}
 	}
 
-	dtOutputs := make([]engine.Output, len(spec.Outputs))
-	for i, out := range spec.Outputs {
-		dtOutputs[i] = engine.Output{Name: out.Name}
-	}
-
-	rules := make([]engine.Rule, len(spec.Rules))
-	for ri, r := range spec.Rules {
-		inputEntries := make([]engine.InputEntry, len(spec.Inputs))
-		for i := range spec.Inputs {
-			raw := ""
-			if i < len(r.InputEntries) {
-				raw = r.InputEntries[i]
-			}
-			inputEntries[i] = engine.InputEntry{
-				ID:   fmt.Sprintf("r%d_ie%d", ri, i),
-				Text: normalizeInputEntry(raw, spec.Inputs[i].TypeRef),
-			}
-		}
-
-		outputEntries := make([]engine.OutputEntry, len(spec.Outputs))
-		for i := range spec.Outputs {
-			raw := ""
-			if i < len(r.OutputEntries) {
-				raw = r.OutputEntries[i]
-			}
-			outputEntries[i] = engine.OutputEntry{
-				ID:   fmt.Sprintf("r%d_oe%d", ri, i),
-				Text: normalizeOutputEntry(raw, spec.Outputs[i].TypeRef),
-			}
-		}
-
-		rules[ri] = engine.Rule{
-			ID:            fmt.Sprintf("rule_%d", ri),
-			InputEntries:  inputEntries,
-			OutputEntries: outputEntries,
-		}
-	}
-
-	decisionVarName := spec.DecisionName
-	decisionVarType := ""
-	if len(spec.Outputs) == 1 {
-		decisionVarName = spec.Outputs[0].Name
-		decisionVarType = spec.Outputs[0].TypeRef
-	}
-
-	decision := engine.Decision{
-		ID:   decisionID,
-		Name: spec.DecisionName,
-		Variable: engine.Variable{
-			Name:    decisionVarName,
-			TypeRef: decisionVarType,
-		},
-		InformationRequirements: infoReqs,
-		DecisionTables: []engine.DecisionTable{
-			{
-				HitPolicy:   spec.HitPolicy,
-				Aggregation: spec.Aggregation,
-				Inputs:      dtInputs,
-				Output:      dtOutputs,
-				Rules:       rules,
-			},
-		},
+	name := "Decision Graph"
+	if len(spec.Nodes) > 0 {
+		name = spec.Nodes[0].DecisionName
 	}
 
 	return engine.Definitions{
-		ID:        "_" + slugify(spec.DecisionName),
-		Name:      spec.DecisionName,
-		Namespace: "https://dmn-builder.local/" + slugify(spec.DecisionName),
-		Decisions: []engine.Decision{decision},
-		InputData: inputData,
+		ID:        "_" + slugify(name),
+		Name:      name,
+		Namespace: "https://dmn-builder.local/" + slugify(name),
+		Decisions: decisions,
+		InputData: externalInputData,
 	}
 }
 

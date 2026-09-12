@@ -218,7 +218,12 @@ func Evaluate(c *gin.Context) {
 		return
 	}
 
-	outputs, trace, evalErr := def.EvaluateWithTrace(req.Inputs)
+	outputs, trace, evalErr := def.EvaluateWithTraceTimeout(req.Inputs, engine.DefaultEvaluationTimeout)
+
+	if errors.Is(evalErr, engine.ErrEvaluationTimeout) {
+		c.JSON(http.StatusGatewayTimeout, evaluateResponse{Error: evalErr.Error()})
+		return
+	}
 
 	if err := db.RecordEvaluation(c.Request.Context(), deployment.ID, req.Inputs, outputs, trace, evalErr); err != nil {
 		log.Printf("record evaluation for deployment %d: %v", deployment.ID, err)

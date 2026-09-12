@@ -14,6 +14,7 @@ import (
 
 	"dmn/db"
 	"dmn/deployments"
+	"dmn/engine"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +25,7 @@ const shutdownTimeout = 10 * time.Second
 var webFS embed.FS
 
 type evaluateRequest struct {
-	Spec   TableSpec      `json:"spec"`
+	Spec   GraphSpec      `json:"spec"`
 	Inputs map[string]any `json:"inputs"`
 }
 
@@ -51,7 +52,11 @@ func handleEvaluate(c *gin.Context) {
 
 	def := buildDefinitions(req.Spec)
 
-	outputs, err := def.Evaluate(req.Inputs)
+	outputs, err := def.EvaluateTimeout(req.Inputs, engine.DefaultEvaluationTimeout)
+	if errors.Is(err, engine.ErrEvaluationTimeout) {
+		c.JSON(http.StatusGatewayTimeout, evaluateResponse{Error: err.Error()})
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, evaluateResponse{Error: err.Error()})
 		return
@@ -61,7 +66,7 @@ func handleEvaluate(c *gin.Context) {
 }
 
 func handleExport(c *gin.Context) {
-	var spec TableSpec
+	var spec GraphSpec
 	if err := c.ShouldBindJSON(&spec); err != nil {
 		c.JSON(http.StatusBadRequest, exportResponse{Error: "invalid request body: " + err.Error()})
 		return
