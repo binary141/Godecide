@@ -214,7 +214,7 @@
     main.lastChild.lastChild.addEventListener("click", () => deleteSelected());
 
     const tabs = el("div", { className: "toolbar cockpit-tabs" });
-    for (const [id, label] of [["definition", "Definition"], ["evaluate", "Evaluate"], ["history", "History"]]) {
+    for (const [id, label] of [["diagram", "Diagram"], ["definition", "Definition"], ["evaluate", "Evaluate"], ["history", "History"]]) {
       const b = el("button", {
         className: "secondary" + (state.tab === id ? " active" : ""),
         textContent: label,
@@ -228,7 +228,8 @@
     }
     main.appendChild(tabs);
 
-    if (state.tab === "definition") main.appendChild(renderDefinitionTab());
+    if (state.tab === "diagram") main.appendChild(renderDiagramTab());
+    else if (state.tab === "definition") main.appendChild(renderDefinitionTab());
     else if (state.tab === "evaluate") main.appendChild(renderEvaluateTab());
     else main.appendChild(renderHistoryTab());
   }
@@ -244,6 +245,161 @@
     } catch (e) {
       alert("Delete failed: " + e.message);
     }
+  }
+
+  const SVG_NS = "http://www.w3.org/2000/svg";
+
+  function svgEl(tag, attrs, ...children) {
+    const e = document.createElementNS(SVG_NS, tag);
+    for (const k in attrs || {}) e.setAttribute(k, attrs[k]);
+    for (const c of children) {
+      if (c == null) continue;
+      e.append(c);
+    }
+    return e;
+  }
+
+  function truncateLabel(s, n) {
+    n = n || 24;
+    if (s == null) return "";
+    return s.length > n ? s.slice(0, n - 1) + "…" : s;
+  }
+
+  // Assigns each input/decision node a layer: external inputs (and any
+  // decision with no requirements) sit at layer 0; every other decision's
+  // layer is one more than the deepest layer of anything it requires. This
+  // gives a simple, dependency-ordered DRD layout without a full graph
+  // layout library.
+  function computeDrdLayers(inputData, decisions) {
+    const decisionById = new Map(decisions.map((d) => [d.id, d]));
+    const inputIds = new Set(inputData.map((i) => i.ID));
+    const layers = new Map();
+
+    function layerOf(id, stack) {
+      if (layers.has(id)) return layers.get(id);
+      if (inputIds.has(id)) {
+        layers.set(id, 0);
+        return 0;
+      }
+      const d = decisionById.get(id);
+      if (!d || stack.has(id)) {
+        layers.set(id, 0);
+        return 0;
+      }
+      stack.add(id);
+      let maxDep = -1;
+      for (const r of d.requires || []) {
+        maxDep = Math.max(maxDep, layerOf(r.ref, stack));
+      }
+      stack.delete(id);
+      const layer = maxDep + 1;
+      layers.set(id, layer);
+      return layer;
+    }
+
+    for (const d of decisions) layerOf(d.id, new Set());
+    for (const i of inputData) layers.set(i.ID, 0);
+    return layers;
+  }
+
+  function renderDiagramTab() {
+    const inputData = state.decisions.inputData || [];
+    const decisions = state.decisions.decisions || [];
+
+    if (inputData.length === 0 && decisions.length === 0) {
+      return el("p", { className: "hint", textContent: "This deployment has no decision requirements graph to display." });
+    }
+
+    const layerMap = computeDrdLayers(inputData, decisions);
+    const rows = [];
+    for (const i of inputData) {
+      const l = layerMap.get(i.ID) || 0;
+      (rows[l] = rows[l] || []).push({ id: i.ID, kind: "input", label: i.Name || i.ID });
+    }
+    for (const d of decisions) {
+      const l = layerMap.get(d.id) || 0;
+      (rows[l] = rows[l] || []).push({ id: d.id, kind: "decision", label: d.name || d.id });
+    }
+    for (const row of rows) if (row) row.sort((a, b) => a.label.localeCompare(b.label));
+
+    const NW = 170, NH = 56, HGAP = 30, VGAP = 70, MARGIN = 30;
+    const maxLayer = rows.length - 1;
+    const rowWidths = rows.map((row) => (row ? row.length * NW + (row.length - 1) * HGAP : 0));
+    const canvasWidth = Math.max(...rowWidths) + MARGIN * 2;
+    const canvasHeight = (maxLayer + 1) * (NH + VGAP) - VGAP + MARGIN * 2;
+
+    const positions = new Map();
+    rows.forEach((row, li) => {
+      if (!row) return;
+      const rowWidth = rowWidths[li];
+      let x = MARGIN + (canvasWidth - MARGIN * 2 - rowWidth) / 2;
+      const y = MARGIN + (maxLayer - li) * (NH + VGAP);
+      for (const node of row) {
+        positions.set(node.id, { ...node, x, y, w: NW, h: NH });
+        x += NW + HGAP;
+      }
+    });
+
+    const svg = svgEl("svg", {
+      class: "drd-svg",
+      viewBox: `0 0 ${canvasWidth} ${canvasHeight}`,
+      width: canvasWidth,
+      height: canvasHeight,
+    });
+    svg.appendChild(
+      svgEl(
+        "defs",
+        {},
+        svgEl(
+          "marker",
+          { id: "drdArrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" },
+          svgEl("path", { d: "M0,0 L10,5 L0,10 z", class: "drd-arrowhead" })
+        )
+      )
+    );
+
+    const edgesG = svgEl("g", { class: "drd-edges" });
+    for (const d of decisions) {
+      const dst = positions.get(d.id);
+      if (!dst) continue;
+      for (const r of d.requires || []) {
+        const src = positions.get(r.ref);
+        if (!src) continue;
+        const x1 = src.x + src.w / 2, y1 = src.y;
+        const x2 = dst.x + dst.w / 2, y2 = dst.y + dst.h;
+        const midY = (y1 + y2) / 2;
+        edgesG.appendChild(
+          svgEl("path", {
+            class: "drd-edge",
+            d: `M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`,
+            "marker-end": "url(#drdArrow)",
+          })
+        );
+      }
+    }
+    svg.appendChild(edgesG);
+
+    const nodesG = svgEl("g", { class: "drd-nodes" });
+    for (const node of positions.values()) {
+      const g = svgEl("g", { class: "drd-node drd-node-" + node.kind, transform: `translate(${node.x},${node.y})` });
+      g.appendChild(
+        svgEl("rect", {
+          class: "drd-node-shape",
+          width: node.w,
+          height: node.h,
+          rx: node.kind === "input" ? node.h / 2 : 6,
+        })
+      );
+      const text = svgEl("text", { class: "drd-node-label", x: node.w / 2, y: node.h / 2 });
+      text.textContent = truncateLabel(node.label);
+      g.appendChild(svgEl("title", {}, node.label));
+      g.appendChild(text);
+      nodesG.appendChild(g);
+    }
+    svg.appendChild(nodesG);
+
+    const wrap = el("div", { className: "table-scroll drd-wrap" }, svg);
+    return wrap;
   }
 
   function renderDefinitionTab() {

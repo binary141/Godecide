@@ -334,6 +334,45 @@ button.danger {
   background: var(--bg-alt);
 }
 
+/* DRD diagram */
+
+.drd-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.drd-svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.drd-node-shape {
+  fill: var(--bg-alt);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.drd-node-input .drd-node-shape {
+  stroke-dasharray: 4 2;
+}
+
+.drd-node-label {
+  font-size: 12px;
+  fill: currentColor;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.drd-edge {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.drd-arrowhead {
+  fill: var(--border);
+}
+
 @media (max-width: 720px) {
   .cockpit { flex-direction: column; }
   .cockpit-sidebar {
