@@ -16,9 +16,11 @@
     selected: null,      // full deployment row (with xml) for selectedId
     decisions: null,      // /decisions payload for selectedId
     history: null,        // { evaluations, total, limit, offset }
-    tab: "definition",    // definition | evaluate | history
+    tab: "definition",    // definition | evaluate | batch | history
     evalInputs: "",
     evalUserEdited: false,
+    batchInputs: "",
+    batchResults: null,
   };
 
   const PAGE_SIZE = 100;
@@ -147,6 +149,8 @@
     state.history = null;
     state.tab = "definition";
     state.evalUserEdited = false;
+    state.batchInputs = "";
+    state.batchResults = null;
     renderSidebar();
     renderMain();
 
@@ -173,6 +177,9 @@
       template[input.Name] = t === "number" ? 0 : t === "boolean" ? false : "";
     }
     state.evalInputs = JSON.stringify(template, null, 2);
+    if (!state.batchInputs) {
+      state.batchInputs = JSON.stringify([template], null, 2);
+    }
   }
 
   async function loadHistory(offset) {
@@ -214,7 +221,7 @@
     main.lastChild.lastChild.addEventListener("click", () => deleteSelected());
 
     const tabs = el("div", { className: "toolbar cockpit-tabs" });
-    for (const [id, label] of [["diagram", "Diagram"], ["definition", "Definition"], ["evaluate", "Evaluate"], ["history", "History"]]) {
+    for (const [id, label] of [["diagram", "Diagram"], ["definition", "Definition"], ["evaluate", "Evaluate"], ["batch", "Batch"], ["history", "History"]]) {
       const b = el("button", {
         className: "secondary" + (state.tab === id ? " active" : ""),
         textContent: label,
@@ -231,6 +238,7 @@
     if (state.tab === "diagram") main.appendChild(renderDiagramTab());
     else if (state.tab === "definition") main.appendChild(renderDefinitionTab());
     else if (state.tab === "evaluate") main.appendChild(renderEvaluateTab());
+    else if (state.tab === "batch") main.appendChild(renderBatchTab());
     else main.appendChild(renderHistoryTab());
   }
 
@@ -568,6 +576,132 @@
     wrap.appendChild(result);
     wrap.appendChild(tracePanel);
     return wrap;
+  }
+
+  function renderBatchTab() {
+    const wrap = el("div", {});
+    wrap.appendChild(
+      el("p", {
+        className: "hint",
+        textContent:
+          "Provide a JSON array of input objects, one per row, to evaluate them all against this deployed version. Each row is recorded to history individually.",
+      })
+    );
+    const textarea = el("textarea", { rows: 10, value: state.batchInputs });
+    textarea.addEventListener("input", () => {
+      state.batchInputs = textarea.value;
+    });
+    wrap.appendChild(textarea);
+
+    const toolbar = el("div", { className: "toolbar" });
+    const runBtn = el("button", { textContent: "Run batch" });
+    const status = el("span", { className: "hint" });
+    toolbar.appendChild(runBtn);
+    toolbar.appendChild(status);
+    wrap.appendChild(toolbar);
+
+    const resultsWrap = el("div", {});
+    if (state.batchResults) resultsWrap.appendChild(renderBatchResults(state.batchResults));
+    wrap.appendChild(resultsWrap);
+
+    runBtn.addEventListener("click", async () => {
+      let rows;
+      try {
+        rows = JSON.parse(state.batchInputs || "[]");
+        if (!Array.isArray(rows) || rows.length === 0) {
+          throw new Error("expected a non-empty JSON array of input objects");
+        }
+      } catch (e) {
+        status.className = "result error";
+        status.textContent = "Invalid rows JSON: " + e.message;
+        return;
+      }
+
+      runBtn.disabled = true;
+      status.className = "hint";
+      status.textContent = `Running ${rows.length} row(s)…`;
+      try {
+        const data = await getJSON(`/api/deployments/${state.selectedId}/evaluate/batch`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rows }),
+        });
+        state.batchResults = data.results;
+        const errCount = data.results.filter((r) => r.error).length;
+        status.className = "hint";
+        status.textContent = `${data.results.length} row(s) evaluated, ${errCount} error(s).`;
+        resultsWrap.innerHTML = "";
+        resultsWrap.appendChild(renderBatchResults(state.batchResults));
+        state.history = null; // invalidate so History tab refetches next visit
+      } catch (e) {
+        status.className = "result error";
+        status.textContent = "Request failed: " + e.message;
+      } finally {
+        runBtn.disabled = false;
+      }
+    });
+
+    return wrap;
+  }
+
+  function renderBatchResults(results) {
+    const wrap = el("div", {});
+    const downloadBtn = el("button", { className: "secondary", textContent: "Download CSV" });
+    downloadBtn.addEventListener("click", () => downloadBatchCSV(results));
+    wrap.appendChild(el("div", { className: "toolbar" }, downloadBtn));
+
+    const table = document.createElement("table");
+    table.appendChild(
+      el("tr", {}, el("th", { textContent: "#" }), el("th", { textContent: "Inputs" }), el("th", { textContent: "Result" }))
+    );
+    results.forEach((r, i) => {
+      const tr = document.createElement("tr");
+      tr.appendChild(el("td", { textContent: String(i + 1) }));
+      tr.appendChild(el("td", { textContent: truncate(JSON.stringify(r.inputs)) }));
+      const resultCell = el("td", {});
+      if (r.error) {
+        resultCell.appendChild(el("span", { className: "badge badge-error", textContent: "error" }));
+        resultCell.append(" " + truncate(r.error));
+      } else {
+        resultCell.appendChild(el("span", { className: "badge badge-ok", textContent: "ok" }));
+        resultCell.append(" " + truncate(JSON.stringify(r.outputs)));
+      }
+      tr.appendChild(resultCell);
+      table.appendChild(tr);
+    });
+    wrap.appendChild(el("div", { className: "table-scroll" }, table));
+    return wrap;
+  }
+
+  function downloadBatchCSV(results) {
+    const inputKeys = new Set();
+    const outputKeys = new Set();
+    for (const r of results) {
+      for (const k of Object.keys(r.inputs || {})) inputKeys.add(k);
+      for (const k of Object.keys(r.outputs || {})) outputKeys.add(k);
+    }
+    const headers = [...inputKeys, ...outputKeys, "error"];
+    const csvEscape = (v) => {
+      if (v == null) return "";
+      const s = typeof v === "string" ? v : JSON.stringify(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [headers.map(csvEscape).join(",")];
+    for (const r of results) {
+      const row = [
+        ...[...inputKeys].map((k) => csvEscape((r.inputs || {})[k])),
+        ...[...outputKeys].map((k) => csvEscape((r.outputs || {})[k])),
+        csvEscape(r.error || ""),
+      ];
+      lines.push(row.join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = el("a", { href: url, download: `batch-results-${state.selectedId}.csv` });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 
   function renderHistoryTab() {

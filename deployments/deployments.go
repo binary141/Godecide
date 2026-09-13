@@ -29,6 +29,29 @@ type evaluateResponse struct {
 	Error   string                 `json:"error,omitempty"`
 }
 
+// maxBatchSize caps how many rows a single batch evaluation request may
+// carry, so one request can't tie up the process (or the evaluations table)
+// evaluating an unbounded number of rows sequentially.
+const maxBatchSize = 500
+
+type batchEvaluateRequest struct {
+	Rows []map[string]any `json:"rows"`
+}
+
+// batchEvaluateResult is one row's outcome from a batch evaluation: the
+// inputs it was run with (echoed back so results can be matched to the row
+// that produced them) plus whatever a single /evaluate call would return.
+type batchEvaluateResult struct {
+	Inputs  map[string]any         `json:"inputs"`
+	Outputs map[string]any         `json:"outputs,omitempty"`
+	Trace   []engine.DecisionTrace `json:"trace,omitempty"`
+	Error   string                 `json:"error,omitempty"`
+}
+
+type batchEvaluateResponse struct {
+	Results []batchEvaluateResult `json:"results"`
+}
+
 // Create ingests a raw DMN XML document from the request body, parses and
 // validates it, and stores it as a new deployment.
 func Create(c *gin.Context) {
@@ -236,6 +259,66 @@ func Evaluate(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, evaluateResponse{Outputs: outputs, Trace: trace})
+}
+
+// BatchEvaluate loads a deployment's DMN once and evaluates it against each
+// row of inputs in the request body in turn, recording every row to the
+// evaluation history exactly like a single /evaluate call would. This is
+// the bulk equivalent of Evaluate: a way to re-run or test many rows against
+// one deployed version without a round trip per row.
+func BatchEvaluate(c *gin.Context) {
+	id, err := parseID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid deployment id"})
+		return
+	}
+
+	deployment, err := db.GetDeployment(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "deployment not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var req batchEvaluateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body: " + err.Error()})
+		return
+	}
+	if len(req.Rows) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "rows must contain at least one input set"})
+		return
+	}
+	if len(req.Rows) > maxBatchSize {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("rows must contain at most %d input sets", maxBatchSize)})
+		return
+	}
+
+	def, err := engine.Parse([]byte(deployment.XML))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "unable to parse stored dmn: " + err.Error()})
+		return
+	}
+
+	results := make([]batchEvaluateResult, len(req.Rows))
+	for i, inputs := range req.Rows {
+		outputs, trace, evalErr := def.EvaluateWithTraceTimeout(inputs, engine.DefaultEvaluationTimeout)
+
+		if err := db.RecordEvaluation(c.Request.Context(), deployment.ID, inputs, outputs, trace, evalErr); err != nil {
+			log.Printf("record evaluation for deployment %d: %v", deployment.ID, err)
+		}
+
+		result := batchEvaluateResult{Inputs: inputs, Outputs: outputs, Trace: trace}
+		if evalErr != nil {
+			result.Error = evalErr.Error()
+		}
+		results[i] = result
+	}
+
+	c.JSON(http.StatusOK, batchEvaluateResponse{Results: results})
 }
 
 // requirementView describes one edge into a decision: either an external
