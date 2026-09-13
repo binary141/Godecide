@@ -322,9 +322,10 @@ func BatchEvaluate(c *gin.Context) {
 }
 
 // requirementView describes one edge into a decision: either an external
-// input or another decision it depends on.
+// input, another decision it depends on, or (for authority requirements) a
+// knowledge source.
 type requirementView struct {
-	Type string `json:"type"` // "input" or "decision"
+	Type string `json:"type"` // "input", "decision", or "knowledgeSource"
 	Ref  string `json:"ref"`
 }
 
@@ -336,6 +337,12 @@ type decisionView struct {
 	Variable engine.Variable        `json:"variable"`
 	Requires []requirementView      `json:"requires"`
 	Tables   []engine.DecisionTable `json:"tables"`
+
+	// Governance metadata, shown read-only, never used in evaluation.
+	Authority                     []requirementView `json:"authority,omitempty"`
+	ImpactedPerformanceIndicators []string           `json:"impactedPerformanceIndicators,omitempty"`
+	DecisionMakers                []string           `json:"decisionMakers,omitempty"`
+	DecisionOwners                []string           `json:"decisionOwners,omitempty"`
 }
 
 // decisionsResponse is the payload for GET .../decisions: the parsed
@@ -346,6 +353,44 @@ type decisionsResponse struct {
 	Version   string             `json:"dmnVersion"`
 	InputData []engine.InputData `json:"inputData"`
 	Decisions []decisionView     `json:"decisions"`
+
+	// Governance/business-context DRG elements, for read-only display
+	// alongside the decisions that reference them.
+	KnowledgeSources      []engine.KnowledgeSource      `json:"knowledgeSources,omitempty"`
+	PerformanceIndicators []engine.PerformanceIndicator `json:"performanceIndicators,omitempty"`
+	OrganizationUnits     []engine.OrganizationUnit     `json:"organizationUnits,omitempty"`
+}
+
+// refIDs resolves a slice of DMN element references to their bare IDs.
+func refIDs(refs []engine.DMNElementReference) []string {
+	if len(refs) == 0 {
+		return nil
+	}
+	ids := make([]string, len(refs))
+	for i, r := range refs {
+		ids[i] = r.ResolvedID()
+	}
+	return ids
+}
+
+// authorityView resolves a decision or BKM's authorityRequirements into the
+// same {type, ref} shape used for information requirements.
+func authorityView(reqs []engine.AuthorityRequirement) []requirementView {
+	if len(reqs) == 0 {
+		return nil
+	}
+	var out []requirementView
+	for _, ar := range reqs {
+		switch {
+		case ar.RequiredInput != nil:
+			out = append(out, requirementView{Type: "input", Ref: ar.RequiredInput.ResolvedID()})
+		case ar.RequiredDecision != nil:
+			out = append(out, requirementView{Type: "decision", Ref: ar.RequiredDecision.ResolvedID()})
+		case ar.RequiredAuthority != nil:
+			out = append(out, requirementView{Type: "knowledgeSource", Ref: ar.RequiredAuthority.ResolvedID()})
+		}
+	}
+	return out
 }
 
 // Decisions parses a deployment's stored DMN XML and returns its decisions
@@ -387,20 +432,27 @@ func Decisions(c *gin.Context) {
 		}
 
 		decisions[i] = decisionView{
-			ID:       d.ID,
-			Name:     d.Name,
-			Variable: d.Variable,
-			Requires: requires,
-			Tables:   d.DecisionTables,
+			ID:                            d.ID,
+			Name:                          d.Name,
+			Variable:                      d.Variable,
+			Requires:                      requires,
+			Tables:                        d.DecisionTables,
+			Authority:                     authorityView(d.AuthorityRequirements),
+			ImpactedPerformanceIndicators: refIDs(d.ImpactedPerformanceIndicators),
+			DecisionMakers:                refIDs(d.DecisionMakers),
+			DecisionOwners:                refIDs(d.DecisionOwners),
 		}
 	}
 
 	c.JSON(http.StatusOK, decisionsResponse{
-		Name:      def.Name,
-		Namespace: def.Namespace,
-		Version:   def.Version,
-		InputData: def.InputData,
-		Decisions: decisions,
+		Name:                  def.Name,
+		Namespace:             def.Namespace,
+		Version:               def.Version,
+		InputData:             def.InputData,
+		Decisions:             decisions,
+		KnowledgeSources:      def.KnowledgeSources,
+		PerformanceIndicators: def.PerformanceIndicators,
+		OrganizationUnits:     def.OrganizationUnits,
 	})
 }
 

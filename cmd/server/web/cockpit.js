@@ -410,10 +410,21 @@
     return wrap;
   }
 
+  // Governance/business-context lookups shared by the definition tab: a
+  // knowledgeSource, performanceIndicator, or organizationUnit id resolves
+  // to its display name via these maps, falling back to the raw id.
+  function governanceNameMaps() {
+    const ks = Object.fromEntries((state.decisions.knowledgeSources || []).map((k) => [k.ID, k.Name || k.ID]));
+    const pi = Object.fromEntries((state.decisions.performanceIndicators || []).map((p) => [p.ID, p.Name || p.ID]));
+    const ou = Object.fromEntries((state.decisions.organizationUnits || []).map((o) => [o.ID, o.Name || o.ID]));
+    return { ks, pi, ou };
+  }
+
   function renderDefinitionTab() {
     const wrap = el("div", {});
     const decisions = state.decisions.decisions || [];
     const byId = Object.fromEntries(decisions.map((d) => [d.id, d]));
+    const { ks, pi, ou } = governanceNameMaps();
 
     for (const d of decisions) {
       const card = el("div", { className: "node-panel" });
@@ -433,6 +444,20 @@
         )
       );
 
+      const govBadges = [
+        ...(d.authority || []).map((a) =>
+          el("span", { className: "badge badge-outline badge-governance", textContent: "authority: " + (ks[a.ref] || a.ref) })
+        ),
+        ...(d.decisionMakers || []).map((id) => el("span", { className: "badge badge-outline badge-governance", textContent: "maker: " + (ou[id] || id) })),
+        ...(d.decisionOwners || []).map((id) => el("span", { className: "badge badge-outline badge-governance", textContent: "owner: " + (ou[id] || id) })),
+        ...(d.impactedPerformanceIndicators || []).map((id) =>
+          el("span", { className: "badge badge-outline badge-governance", textContent: "impacts: " + (pi[id] || id) })
+        ),
+      ];
+      if (govBadges.length > 0) {
+        card.appendChild(el("div", { className: "row node-governance" }, ...govBadges));
+      }
+
       for (const table of d.tables || []) {
         card.appendChild(renderReadOnlyTable(table, null));
       }
@@ -442,7 +467,75 @@
     if (decisions.length === 0) {
       wrap.appendChild(el("p", { className: "hint", textContent: "This deployment has no decision tables to display." }));
     }
+
+    const govPanel = renderGovernancePanel();
+    if (govPanel) wrap.appendChild(govPanel);
+
     return wrap;
+  }
+
+  // Renders top-level governance DRG elements (knowledgeSource,
+  // organizationUnit, performanceIndicator) that don't necessarily attach to
+  // any single decision card above - e.g. an organizationUnit is itself the
+  // list of decisions it makes/owns, not something a decision points back at.
+  function renderGovernancePanel() {
+    const knowledgeSources = state.decisions.knowledgeSources || [];
+    const orgUnits = state.decisions.organizationUnits || [];
+    const perfIndicators = state.decisions.performanceIndicators || [];
+    if (knowledgeSources.length === 0 && orgUnits.length === 0 && perfIndicators.length === 0) return null;
+
+    const decisionsById = Object.fromEntries((state.decisions.decisions || []).map((d) => [d.id, d.name || d.id]));
+    const { ks } = governanceNameMaps();
+    const panel = el("div", { className: "node-panel" });
+    panel.appendChild(el("div", { className: "row node-header" }, el("strong", { textContent: "Governance" })));
+
+    for (const k of knowledgeSources) {
+      const badges = (k.AuthorityRequirements || []).map((a) => {
+        const ref = a.RequiredAuthority ? a.RequiredAuthority.Href : a.RequiredDecision ? a.RequiredDecision.Href : a.RequiredInput ? a.RequiredInput.Href : "";
+        const id = (ref || "").replace(/^#/, "");
+        return el("span", { className: "badge badge-outline badge-governance", textContent: "depends on: " + (ks[id] || decisionsById[id] || id) });
+      });
+      panel.appendChild(
+        el(
+          "div",
+          { className: "row governance-row" },
+          el("span", { className: "badge badge-outline", textContent: "knowledge source" }),
+          el("strong", { textContent: k.Name || k.ID }),
+          k.Type ? el("span", { className: "hint", textContent: k.Type }) : null,
+          ...badges
+        )
+      );
+    }
+
+    for (const o of orgUnits) {
+      const made = (o.DecisionsMade || []).map((r) => decisionsById[r.Href.replace(/^#/, "")] || r.Href);
+      const owned = (o.DecisionsOwned || []).map((r) => decisionsById[r.Href.replace(/^#/, "")] || r.Href);
+      panel.appendChild(
+        el(
+          "div",
+          { className: "row governance-row" },
+          el("span", { className: "badge badge-outline", textContent: "organization unit" }),
+          el("strong", { textContent: o.Name || o.ID }),
+          ...made.map((name) => el("span", { className: "badge badge-outline badge-governance", textContent: "makes: " + name })),
+          ...owned.map((name) => el("span", { className: "badge badge-outline badge-governance", textContent: "owns: " + name }))
+        )
+      );
+    }
+
+    for (const p of perfIndicators) {
+      const impacting = (p.ImpactingDecisions || []).map((r) => decisionsById[r.Href.replace(/^#/, "")] || r.Href);
+      panel.appendChild(
+        el(
+          "div",
+          { className: "row governance-row" },
+          el("span", { className: "badge badge-outline", textContent: "performance indicator" }),
+          el("strong", { textContent: p.Name || p.ID }),
+          ...impacting.map((name) => el("span", { className: "badge badge-outline badge-governance", textContent: "impacted by: " + name }))
+        )
+      );
+    }
+
+    return panel;
   }
 
   // matchedRuleIndices, when given, is a Set of 1-based rule indices that

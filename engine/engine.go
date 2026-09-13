@@ -28,6 +28,9 @@ type Definitions struct {
 	ItemDefinition          []ItemDefinition         `xml:"itemDefinition"`
 	BusinessKnowledgeModels []BusinessKnowledgeModel `xml:"businessKnowledgeModel"`
 	DecisionServices        []DecisionService        `xml:"decisionService"`
+	KnowledgeSources        []KnowledgeSource        `xml:"knowledgeSource"`
+	PerformanceIndicators   []PerformanceIndicator   `xml:"performanceIndicator"`
+	OrganizationUnits       []OrganizationUnit       `xml:"organizationUnit"`
 	Version                 string
 }
 
@@ -51,6 +54,7 @@ type BusinessKnowledgeModel struct {
 	Variable              Variable               `xml:"variable"`
 	EncapsulatedLogic     EncapsulatedLogic      `xml:"encapsulatedLogic"`
 	KnowledgeRequirements []KnowledgeRequirement `xml:"knowledgeRequirement"`
+	AuthorityRequirements []AuthorityRequirement `xml:"authorityRequirement"`
 }
 
 // EncapsulatedLogic holds the parameters and expression body of a business knowledge model
@@ -110,7 +114,14 @@ type Decision struct {
 	Variable                Variable                 `xml:"variable"`
 	InformationRequirements []InformationRequirement `xml:"informationRequirement"`
 	KnowledgeRequirements   []KnowledgeRequirement   `xml:"knowledgeRequirement"`
-	DecisionTables          []DecisionTable          `xml:"decisionTable"`
+	AuthorityRequirements   []AuthorityRequirement   `xml:"authorityRequirement"`
+	// Governance/business-context links (DMN's "businessContextElement"
+	// annotations): who owns/makes the decision and which performance
+	// indicators it impacts. Rendered as read-only metadata, not evaluated.
+	ImpactedPerformanceIndicators []DMNElementReference `xml:"impactedPerformanceIndicator"`
+	DecisionMakers                []DMNElementReference `xml:"decisionMaker"`
+	DecisionOwners                []DMNElementReference `xml:"decisionOwner"`
+	DecisionTables                []DecisionTable       `xml:"decisionTable"`
 	LiteralExpression       *LiteralExpression       `xml:"literalExpression"`
 	Context                 *Context                 `xml:"context"`
 	FunctionDefinition      *FunctionDefinition      `xml:"functionDefinition"`
@@ -372,6 +383,73 @@ type RequiredKnowledge struct {
 // ("http://.../ns#_id") hrefs.
 func (r RequiredKnowledge) ResolvedID() string {
 	return resolveHrefID(r.Href)
+}
+
+// AuthorityRequirement is an edge from a decision, business knowledge model,
+// or knowledge source to the decision, input data, or knowledge source whose
+// authority it depends on. Purely a governance annotation - it plays no part
+// in evaluation.
+type AuthorityRequirement struct {
+	ID                string             `xml:"id,attr"`
+	RequiredDecision  *RequiredDecision  `xml:"requiredDecision"`
+	RequiredInput     *RequiredInput     `xml:"requiredInput"`
+	RequiredAuthority *RequiredAuthority `xml:"requiredAuthority"`
+}
+
+// RequiredAuthority holds the href reference to a knowledgeSource element
+type RequiredAuthority struct {
+	Href string `xml:"href,attr"`
+}
+
+// ResolvedID returns the fragment of the href (the part after the last "#"),
+// which is the raw element ID. Handles both local ("#_id") and fully-qualified
+// ("http://.../ns#_id") hrefs.
+func (r RequiredAuthority) ResolvedID() string {
+	return resolveHrefID(r.Href)
+}
+
+// KnowledgeSource is a top-level DRG element representing an authority
+// (person, organization, system, or reference document) that a decision,
+// business knowledge model, or another knowledge source relies on.
+type KnowledgeSource struct {
+	ID                    string                 `xml:"id,attr"`
+	Name                  string                 `xml:"name,attr"`
+	LocationURI           string                 `xml:"locationURI,attr"`
+	Type                  string                 `xml:"type"`
+	AuthorityRequirements []AuthorityRequirement `xml:"authorityRequirement"`
+}
+
+// DMNElementReference is a bare href pointer to another DRG element, used by
+// the governance/business-context links (impactedPerformanceIndicator,
+// decisionMaker, decisionOwner, decisionMade, decisionOwned, ...) that don't
+// need their own dedicated edge type.
+type DMNElementReference struct {
+	Href string `xml:"href,attr"`
+}
+
+// ResolvedID returns the fragment of the href (the part after the last "#"),
+// which is the raw element ID. Handles both local ("#_id") and fully-qualified
+// ("http://.../ns#_id") hrefs.
+func (r DMNElementReference) ResolvedID() string {
+	return resolveHrefID(r.Href)
+}
+
+// PerformanceIndicator and OrganizationUnit are DMN's two standard concrete
+// businessContextElement kinds: governance annotations on the DRD that
+// document an objective a decision serves, or who owns/makes it.
+type PerformanceIndicator struct {
+	ID                 string                `xml:"id,attr"`
+	Name               string                `xml:"name,attr"`
+	URI                string                `xml:"URI,attr"`
+	ImpactingDecisions []DMNElementReference `xml:"impactingDecision"`
+}
+
+type OrganizationUnit struct {
+	ID             string                `xml:"id,attr"`
+	Name           string                `xml:"name,attr"`
+	URI            string                `xml:"URI,attr"`
+	DecisionsMade  []DMNElementReference `xml:"decisionMade"`
+	DecisionsOwned []DMNElementReference `xml:"decisionOwned"`
 }
 
 type DecisionTable struct {

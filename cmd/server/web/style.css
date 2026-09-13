@@ -324,6 +324,23 @@ body.cockpit-active { max-width: 1400px; }
 
 .badge-ok { background: #2f9e58; }
 .badge-error { background: #d4453e; }
+.badge-governance { border-style: dashed; opacity: 0.85; }
+
+.node-governance {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.governance-row {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.governance-row:first-of-type { border-top: none; }
 
 button.danger {
   border-color: #d4453e;
