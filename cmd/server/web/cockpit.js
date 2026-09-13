@@ -205,6 +205,10 @@
     }
 
     const dep = state.selected;
+    const editBtn = el("button", { className: "secondary", textContent: "Edit in Builder" });
+    editBtn.addEventListener("click", () => editInBuilder());
+    const deleteBtn = el("button", { className: "secondary danger", textContent: "Delete this version" });
+    deleteBtn.addEventListener("click", () => deleteSelected());
     main.appendChild(
       el(
         "div",
@@ -212,13 +216,10 @@
         el("h2", { textContent: dep.name }),
         el("span", { className: "badge", textContent: "v" + dep.version }),
         el("span", { className: "hint", textContent: `Deployed ${fmtDate(dep.createdAt)} · DMN ${dep.dmnVersion || "?"}` }),
-        el(
-          "button",
-          { className: "secondary danger", textContent: "Delete this version" },
-          )
+        editBtn,
+        deleteBtn
       )
     );
-    main.lastChild.lastChild.addEventListener("click", () => deleteSelected());
 
     const tabs = el("div", { className: "toolbar cockpit-tabs" });
     for (const [id, label] of [["diagram", "Diagram"], ["definition", "Definition"], ["evaluate", "Evaluate"], ["batch", "Batch"], ["history", "History"]]) {
@@ -240,6 +241,88 @@
     else if (state.tab === "evaluate") main.appendChild(renderEvaluateTab());
     else if (state.tab === "batch") main.appendChild(renderBatchTab());
     else main.appendChild(renderHistoryTab());
+  }
+
+  // decisionsToSpec reconstructs a builder GraphSpec (see cmd/server/model.go
+  // GraphSpec / app.js collectSpec) from a deployment's parsed /decisions
+  // payload, so an existing deployment can be reopened in the Builder tab
+  // for editing rather than hand-edited as raw XML.
+  //
+  // Per-node output typeRef isn't preserved in the exported DMN (engine.Output
+  // has no typeRef - see buildDefinitions in model.go), so it's recovered
+  // from the decision's own Variable.TypeRef when there's exactly one output
+  // column, and defaulted to "string" otherwise.
+  function decisionsToSpec(dep, payload) {
+    const decisions = payload.decisions || [];
+    const varNameById = Object.fromEntries(
+      decisions.map((d) => [d.id, (d.variable && d.variable.Name) || d.name || d.id])
+    );
+
+    const nodes = decisions.map((d, idx) => {
+      const table = (d.tables || [])[0] || { Inputs: [], Output: [], Rules: [], HitPolicy: "UNIQUE", Aggregation: "" };
+      const decisionRequires = new Set((d.requires || []).filter((r) => r.type === "decision").map((r) => r.ref));
+
+      const inputs = (table.Inputs || []).map((input) => {
+        const text = (input.InputExpression || {}).Text || "";
+        const typeRef = (input.InputExpression || {}).TypeRef || "string";
+        let source = "";
+        for (const ref of decisionRequires) {
+          if (varNameById[ref] === text) {
+            source = ref;
+            break;
+          }
+        }
+        return { label: source ? "" : input.Label || text || "Input", typeRef, source };
+      });
+
+      const outputTypeRef = table.Output && table.Output.length === 1 ? (d.variable || {}).TypeRef || "string" : "string";
+      const outputs = (table.Output || []).map((o) => ({ name: o.Name || "Output", typeRef: outputTypeRef }));
+
+      const rules = (table.Rules || []).map((r) => ({
+        inputEntries: (r.InputEntries || []).map((ie) => ie.Text || ""),
+        outputEntries: (r.OutputEntries || []).map((oe) => oe.Text || ""),
+      }));
+
+      return {
+        id: d.id,
+        // The deployment's `name` (the versioning key - see db.CreateDeployment)
+        // becomes the exported DMN's root name from the *first* node's
+        // decisionName (see buildDefinitions in model.go). Forcing it here
+        // ensures redeploying this spec bumps this deployment's own version
+        // series instead of silently starting a new one.
+        decisionName: idx === 0 ? dep.name : d.name || d.id,
+        hitPolicy: table.HitPolicy || "UNIQUE",
+        aggregation: table.Aggregation || "",
+        inputs: inputs.length ? inputs : [{ label: "Input 1", typeRef: "string", source: "" }],
+        outputs: outputs.length ? outputs : [{ name: "Output", typeRef: "string" }],
+        rules: rules.length ? rules : [{ inputEntries: inputs.map(() => "-"), outputEntries: outputs.map(() => "") }],
+        authority: (d.authority || []).filter((a) => a.type === "knowledgeSource").map((a) => a.ref),
+        decisionMakers: d.decisionMakers || [],
+        decisionOwners: d.decisionOwners || [],
+        impactedPerformanceIndicators: d.impactedPerformanceIndicators || [],
+      };
+    });
+
+    const governance = {
+      knowledgeSources: (payload.knowledgeSources || []).map((k) => ({ id: k.ID, name: k.Name || k.ID, type: k.Type || "" })),
+      organizationUnits: (payload.organizationUnits || []).map((o) => ({ id: o.ID, name: o.Name || o.ID })),
+      performanceIndicators: (payload.performanceIndicators || []).map((p) => ({ id: p.ID, name: p.Name || p.ID })),
+    };
+
+    return { nodes, governance };
+  }
+
+  function editInBuilder() {
+    if (!window.Builder) return;
+    const decisions = (state.decisions && state.decisions.decisions) || [];
+    if (decisions.length === 0) {
+      alert("This deployment has no decision tables to edit.");
+      return;
+    }
+    const spec = decisionsToSpec(state.selected, state.decisions);
+    window.Builder.loadSpec(spec, { id: state.selected.id, name: state.selected.name, version: state.selected.version });
+    const builderTab = document.querySelector('.tab-btn[data-view="builder"]');
+    if (builderTab) builderTab.click();
   }
 
   async function deleteSelected() {

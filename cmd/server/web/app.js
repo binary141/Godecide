@@ -74,6 +74,37 @@
 
   const $ = (id) => document.getElementById(id);
 
+  // editingDeployment, when set, identifies the deployment this graph was
+  // loaded from via Cockpit's "Edit in Builder" (see loadSpec below). It
+  // suppresses deploySpec's name-uniquifying so redeploying bumps that
+  // deployment's own version series instead of creating an unrelated one.
+  let editingDeployment = null;
+
+  function renderEditingBanner() {
+    const banner = $("builderEditingBanner");
+    if (!banner) return;
+    if (!editingDeployment) {
+      banner.classList.add("hidden");
+      banner.innerHTML = "";
+      return;
+    }
+    banner.classList.remove("hidden");
+    banner.innerHTML = "";
+    banner.appendChild(
+      el(
+        "span",
+        {},
+        `Editing "${editingDeployment.name}" (currently v${editingDeployment.version}). Deploying will create a new version.`
+      )
+    );
+    const stopBtn = el("button", { className: "secondary", textContent: "Stop editing" });
+    stopBtn.addEventListener("click", () => {
+      editingDeployment = null;
+      renderEditingBanner();
+    });
+    banner.appendChild(stopBtn);
+  }
+
   function nodeOutputVar(n) {
     return n.outputs.length === 1 ? n.outputs[0].name : n.decisionName;
   }
@@ -452,6 +483,49 @@
     box.value = JSON.stringify(template, null, 2);
   }
 
+  // loadSpec replaces the whole graph with the given GraphSpec (the same
+  // shape collectSpec produces), for Cockpit's "Edit in Builder" flow.
+  // deploymentInfo, when given, marks this graph as editing that deployment
+  // (see editingDeployment above).
+  function loadSpec(spec, deploymentInfo) {
+    nodeCounter = 0;
+    governanceCounter = { knowledgeSources: 0, organizationUnits: 0, performanceIndicators: 0 };
+
+    state.nodes = (spec.nodes || []).map((n) =>
+      newNode({
+        id: n.id,
+        decisionName: n.decisionName,
+        hitPolicy: n.hitPolicy || "UNIQUE",
+        aggregation: n.aggregation || "",
+        inputs: n.inputs && n.inputs.length ? n.inputs : [{ label: "Input 1", typeRef: "string", source: "" }],
+        outputs: n.outputs && n.outputs.length ? n.outputs : [{ name: "Output", typeRef: "string" }],
+        rules:
+          n.rules && n.rules.length
+            ? n.rules
+            : [{ inputEntries: (n.inputs || []).map(() => "-"), outputEntries: (n.outputs || []).map(() => "") }],
+        authority: n.authority || [],
+        decisionMakers: n.decisionMakers || [],
+        decisionOwners: n.decisionOwners || [],
+        impactedPerformanceIndicators: n.impactedPerformanceIndicators || [],
+      })
+    );
+    if (state.nodes.length === 0) state.nodes.push(newNode());
+
+    state.governance = {
+      knowledgeSources: (spec.governance && spec.governance.knowledgeSources) || [],
+      organizationUnits: (spec.governance && spec.governance.organizationUnits) || [],
+      performanceIndicators: (spec.governance && spec.governance.performanceIndicators) || [],
+    };
+
+    editingDeployment = deploymentInfo || null;
+    renderEditingBanner();
+
+    $("inputsJSON").dataset.userEdited = "false";
+    render();
+  }
+
+  window.Builder = { loadSpec };
+
   function collectSpec() {
     return {
       nodes: state.nodes.map((n) => ({
@@ -557,10 +631,12 @@
   // programmatic API but not for the builder's "Deploy" button, where an
   // unchanged name is usually just a forgotten rename, not an intentional
   // redeploy. Uniquifying here makes every builder deploy its own new
-  // decision.
+  // decision - unless this graph came from Cockpit's "Edit in Builder"
+  // (editingDeployment set), where an unchanged name IS the intentional
+  // redeploy: it's what bumps the edited deployment's own version.
   function deploySpec() {
     const spec = collectSpec();
-    if (spec.nodes.length > 0) {
+    if (!editingDeployment && spec.nodes.length > 0) {
       const suffix = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
       spec.nodes[0] = { ...spec.nodes[0], decisionName: `${spec.nodes[0].decisionName}-${suffix}` };
     }
@@ -591,7 +667,13 @@
         showDeployResult(data.error || `HTTP ${res.status}`, true);
         return;
       }
-      showDeployResult(`Deployed "${data.name}" as a new decision (id ${data.id}).`, false);
+      if (editingDeployment) {
+        showDeployResult(`Deployed "${data.name}" as v${data.version} (id ${data.id}).`, false);
+        editingDeployment = { id: data.id, name: data.name, version: data.version };
+        renderEditingBanner();
+      } else {
+        showDeployResult(`Deployed "${data.name}" as a new decision (id ${data.id}).`, false);
+      }
     } catch (e) {
       showDeployResult("Request failed: " + e.message, true);
     }
