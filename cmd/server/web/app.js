@@ -544,6 +544,34 @@
     URL.revokeObjectURL(url);
   }
 
+  function showDeployResult(text, isError) {
+    const el = $("deployResult");
+    el.textContent = text;
+    el.className = isError ? "result error" : "result";
+  }
+
+  async function deployTable() {
+    const xml = await exportXML();
+    if (!xml) return;
+
+    showDeployResult("Deploying…", false);
+    try {
+      const res = await fetch("/api/deployments", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        showDeployResult(data.error || `HTTP ${res.status}`, true);
+        return;
+      }
+      showDeployResult(`Deployed "${data.name}" as version ${data.version} (id ${data.id}).`, false);
+    } catch (e) {
+      showDeployResult("Request failed: " + e.message, true);
+    }
+  }
+
   $("addNode").addEventListener("click", () => {
     state.nodes.push(newNode());
     render();
@@ -556,6 +584,7 @@
   $("runEval").addEventListener("click", runEval);
   $("exportXML").addEventListener("click", exportXML);
   $("downloadXML").addEventListener("click", downloadXML);
+  $("deployTable").addEventListener("click", deployTable);
 
   render();
 })();
