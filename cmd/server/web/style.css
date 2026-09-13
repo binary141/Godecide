@@ -326,6 +326,43 @@ body.cockpit-active { max-width: 1400px; }
 .badge-error { background: #d4453e; }
 .badge-governance { border-style: dashed; opacity: 0.85; }
 
+.governance-section { margin-bottom: 1rem; }
+.governance-section h3 { font-size: 0.95rem; margin: 0 0 0.5rem; }
+.governance-section:last-child { margin-bottom: 0; }
+
+.governance-entry-row {
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  align-items: center;
+}
+
+.node-governance-editor {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.governance-field { margin-top: 0.5rem; }
+
+.governance-field-label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.governance-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.governance-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
 .node-governance {
   flex-wrap: wrap;
   gap: 0.35rem;

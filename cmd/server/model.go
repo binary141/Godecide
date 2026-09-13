@@ -45,33 +45,79 @@ type RuleSpec struct {
 // web UI. ID is a client-assigned identifier (e.g. "n1") that doubles as
 // the exported decision's ID, so evaluation results and requiredDecision
 // edges can be keyed by it directly.
+//
+// The governance fields (Authority, DecisionMakers, DecisionOwners,
+// ImpactedPerformanceIndicators) are read-only annotations, not evaluated:
+// they reference IDs of entries in the graph's GovernanceSpec by client-
+// assigned ID (e.g. "ks1", "ou1", "pi1"), the same way InputSpec.Source
+// references another node.
 type NodeSpec struct {
-	ID           string       `json:"id"`
-	DecisionName string       `json:"decisionName"`
-	HitPolicy    string       `json:"hitPolicy"`
-	Aggregation  string       `json:"aggregation"`
-	Inputs       []InputSpec  `json:"inputs"`
-	Outputs      []OutputSpec `json:"outputs"`
-	Rules        []RuleSpec   `json:"rules"`
+	ID                            string       `json:"id"`
+	DecisionName                  string       `json:"decisionName"`
+	HitPolicy                     string       `json:"hitPolicy"`
+	Aggregation                   string       `json:"aggregation"`
+	Inputs                        []InputSpec  `json:"inputs"`
+	Outputs                       []OutputSpec `json:"outputs"`
+	Rules                         []RuleSpec   `json:"rules"`
+	Authority                     []string     `json:"authority"`
+	DecisionMakers                []string     `json:"decisionMakers"`
+	DecisionOwners                []string     `json:"decisionOwners"`
+	ImpactedPerformanceIndicators []string     `json:"impactedPerformanceIndicators"`
+}
+
+// KnowledgeSourceSpec, OrganizationUnitSpec, and PerformanceIndicatorSpec are
+// the governance/business-context DRG elements the builder UI can author,
+// mirroring engine.KnowledgeSource, engine.OrganizationUnit, and
+// engine.PerformanceIndicator but keyed by client-assigned ID so NodeSpec
+// governance fields can reference them before they're exported to XML.
+type KnowledgeSourceSpec struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
+type OrganizationUnitSpec struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type PerformanceIndicatorSpec struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// GovernanceSpec is the graph-wide pool of governance entities that nodes
+// can link to. An organization unit's/performance indicator's inverse edges
+// (decisionMade/decisionOwned/impactingDecision) aren't authored here - they
+// are derived in buildDefinitions from which nodes reference them.
+type GovernanceSpec struct {
+	KnowledgeSources      []KnowledgeSourceSpec      `json:"knowledgeSources"`
+	OrganizationUnits     []OrganizationUnitSpec     `json:"organizationUnits"`
+	PerformanceIndicators []PerformanceIndicatorSpec `json:"performanceIndicators"`
 }
 
 // GraphSpec is the whole decision graph as built in the web UI: one or more
 // decision table nodes, optionally wired to each other's outputs via
-// InputSpec.Source.
+// InputSpec.Source, plus a shared pool of governance entities nodes can
+// reference.
 type GraphSpec struct {
-	Nodes []NodeSpec `json:"nodes"`
+	Nodes      []NodeSpec     `json:"nodes"`
+	Governance GovernanceSpec `json:"governance"`
 }
 
 // exportDoc mirrors engine.Definitions but adds the xmlns attribute that
 // encoding/xml doesn't emit automatically from XMLName.Space alone.
 type exportDoc struct {
-	XMLName   xml.Name           `xml:"definitions"`
-	Xmlns     string             `xml:"xmlns,attr"`
-	ID        string             `xml:"id,attr"`
-	Name      string             `xml:"name,attr"`
-	Namespace string             `xml:"namespace,attr"`
-	Decisions []engine.Decision  `xml:"decision"`
-	InputData []engine.InputData `xml:"inputData"`
+	XMLName               xml.Name                      `xml:"definitions"`
+	Xmlns                 string                        `xml:"xmlns,attr"`
+	ID                    string                        `xml:"id,attr"`
+	Name                  string                        `xml:"name,attr"`
+	Namespace             string                        `xml:"namespace,attr"`
+	Decisions             []engine.Decision             `xml:"decision"`
+	InputData             []engine.InputData            `xml:"inputData"`
+	KnowledgeSources      []engine.KnowledgeSource      `xml:"knowledgeSource"`
+	OrganizationUnits     []engine.OrganizationUnit     `xml:"organizationUnit"`
+	PerformanceIndicators []engine.PerformanceIndicator `xml:"performanceIndicator"`
 }
 
 func slugify(s string) string {
@@ -180,6 +226,14 @@ func buildDefinitions(spec GraphSpec) engine.Definitions {
 		return id
 	}
 
+	// Governance entities are authored once in spec.Governance and linked to
+	// by node ID; their inverse edges (decisionMade/decisionOwned/
+	// impactingDecision) are derived here from which nodes reference them,
+	// rather than authored redundantly on both sides.
+	orgUnitDecisionsMade := map[string][]engine.DMNElementReference{}
+	orgUnitDecisionsOwned := map[string][]engine.DMNElementReference{}
+	piImpactingDecisions := map[string][]engine.DMNElementReference{}
+
 	decisions := make([]engine.Decision, len(spec.Nodes))
 	for ni, n := range spec.Nodes {
 		var infoReqs []engine.InformationRequirement
@@ -262,6 +316,27 @@ func buildDefinitions(spec GraphSpec) engine.Definitions {
 			}
 		}
 
+		var authReqs []engine.AuthorityRequirement
+		for _, ksID := range n.Authority {
+			authReqs = append(authReqs, engine.AuthorityRequirement{
+				RequiredAuthority: &engine.RequiredAuthority{Href: "#" + ksID},
+			})
+		}
+
+		var decisionMakers, decisionOwners, impactedPIs []engine.DMNElementReference
+		for _, ouID := range n.DecisionMakers {
+			decisionMakers = append(decisionMakers, engine.DMNElementReference{Href: "#" + ouID})
+			orgUnitDecisionsMade[ouID] = append(orgUnitDecisionsMade[ouID], engine.DMNElementReference{Href: "#" + n.ID})
+		}
+		for _, ouID := range n.DecisionOwners {
+			decisionOwners = append(decisionOwners, engine.DMNElementReference{Href: "#" + ouID})
+			orgUnitDecisionsOwned[ouID] = append(orgUnitDecisionsOwned[ouID], engine.DMNElementReference{Href: "#" + n.ID})
+		}
+		for _, piID := range n.ImpactedPerformanceIndicators {
+			impactedPIs = append(impactedPIs, engine.DMNElementReference{Href: "#" + piID})
+			piImpactingDecisions[piID] = append(piImpactingDecisions[piID], engine.DMNElementReference{Href: "#" + n.ID})
+		}
+
 		decisions[ni] = engine.Decision{
 			ID:   n.ID,
 			Name: n.DecisionName,
@@ -269,7 +344,11 @@ func buildDefinitions(spec GraphSpec) engine.Definitions {
 				Name:    outputVar[n.ID],
 				TypeRef: outputType[n.ID],
 			},
-			InformationRequirements: infoReqs,
+			InformationRequirements:       infoReqs,
+			AuthorityRequirements:         authReqs,
+			DecisionMakers:                decisionMakers,
+			DecisionOwners:                decisionOwners,
+			ImpactedPerformanceIndicators: impactedPIs,
 			DecisionTables: []engine.DecisionTable{
 				{
 					HitPolicy:   n.HitPolicy,
@@ -282,29 +361,59 @@ func buildDefinitions(spec GraphSpec) engine.Definitions {
 		}
 	}
 
+	knowledgeSources := make([]engine.KnowledgeSource, len(spec.Governance.KnowledgeSources))
+	for i, ks := range spec.Governance.KnowledgeSources {
+		knowledgeSources[i] = engine.KnowledgeSource{ID: ks.ID, Name: ks.Name, Type: ks.Type}
+	}
+
+	organizationUnits := make([]engine.OrganizationUnit, len(spec.Governance.OrganizationUnits))
+	for i, ou := range spec.Governance.OrganizationUnits {
+		organizationUnits[i] = engine.OrganizationUnit{
+			ID:             ou.ID,
+			Name:           ou.Name,
+			DecisionsMade:  orgUnitDecisionsMade[ou.ID],
+			DecisionsOwned: orgUnitDecisionsOwned[ou.ID],
+		}
+	}
+
+	performanceIndicators := make([]engine.PerformanceIndicator, len(spec.Governance.PerformanceIndicators))
+	for i, pi := range spec.Governance.PerformanceIndicators {
+		performanceIndicators[i] = engine.PerformanceIndicator{
+			ID:                 pi.ID,
+			Name:               pi.Name,
+			ImpactingDecisions: piImpactingDecisions[pi.ID],
+		}
+	}
+
 	name := "Decision Graph"
 	if len(spec.Nodes) > 0 {
 		name = spec.Nodes[0].DecisionName
 	}
 
 	return engine.Definitions{
-		ID:        "_" + slugify(name),
-		Name:      name,
-		Namespace: "https://dmn-builder.local/" + slugify(name),
-		Decisions: decisions,
-		InputData: externalInputData,
+		ID:                    "_" + slugify(name),
+		Name:                  name,
+		Namespace:             "https://dmn-builder.local/" + slugify(name),
+		Decisions:             decisions,
+		InputData:             externalInputData,
+		KnowledgeSources:      knowledgeSources,
+		OrganizationUnits:     organizationUnits,
+		PerformanceIndicators: performanceIndicators,
 	}
 }
 
 func toXML(d engine.Definitions) ([]byte, error) {
 	doc := exportDoc{
-		XMLName:   xml.Name{Local: "definitions"},
-		Xmlns:     dmnNamespace,
-		ID:        d.ID,
-		Name:      d.Name,
-		Namespace: d.Namespace,
-		Decisions: d.Decisions,
-		InputData: d.InputData,
+		XMLName:               xml.Name{Local: "definitions"},
+		Xmlns:                 dmnNamespace,
+		ID:                    d.ID,
+		Name:                  d.Name,
+		Namespace:             d.Namespace,
+		Decisions:             d.Decisions,
+		InputData:             d.InputData,
+		KnowledgeSources:      d.KnowledgeSources,
+		OrganizationUnits:     d.OrganizationUnits,
+		PerformanceIndicators: d.PerformanceIndicators,
 	}
 
 	body, err := xml.MarshalIndent(doc, "", "  ")

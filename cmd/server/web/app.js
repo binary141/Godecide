@@ -2,6 +2,7 @@
   const TYPES = ["string", "number", "boolean", "date"];
 
   let nodeCounter = 0;
+  let governanceCounter = { knowledgeSources: 0, organizationUnits: 0, performanceIndicators: 0 };
 
   function newNode(overrides) {
     nodeCounter += 1;
@@ -14,9 +15,27 @@
         inputs: [{ label: "Input 1", typeRef: "string", source: "" }],
         outputs: [{ name: "Output", typeRef: "string" }],
         rules: [{ inputEntries: ["-"], outputEntries: [""] }],
+        authority: [],
+        decisionMakers: [],
+        decisionOwners: [],
+        impactedPerformanceIndicators: [],
       },
       overrides
     );
+  }
+
+  const GOVERNANCE_KINDS = {
+    knowledgeSources: { prefix: "ks", label: "Knowledge source", plural: "Knowledge sources" },
+    organizationUnits: { prefix: "ou", label: "Organization unit", plural: "Organization units" },
+    performanceIndicators: { prefix: "pi", label: "Performance indicator", plural: "Performance indicators" },
+  };
+
+  function newGovernanceEntry(kind) {
+    governanceCounter[kind] += 1;
+    const id = GOVERNANCE_KINDS[kind].prefix + governanceCounter[kind];
+    const entry = { id, name: GOVERNANCE_KINDS[kind].label + " " + governanceCounter[kind] };
+    if (kind === "knowledgeSources") entry.type = "";
+    return entry;
   }
 
   const state = {
@@ -31,7 +50,27 @@
         ],
       }),
     ],
+    governance: {
+      knowledgeSources: [],
+      organizationUnits: [],
+      performanceIndicators: [],
+    },
   };
+
+  // removeGovernanceEntry drops an entry and un-links it from every node
+  // that referenced it, the same way removeNode clears dangling sources.
+  function removeGovernanceEntry(kind, id) {
+    state.governance[kind] = state.governance[kind].filter((e) => e.id !== id);
+    const nodeField = { knowledgeSources: "authority", organizationUnits: null, performanceIndicators: "impactedPerformanceIndicators" }[kind];
+    for (const n of state.nodes) {
+      if (nodeField) n[nodeField] = n[nodeField].filter((ref) => ref !== id);
+      if (kind === "organizationUnits") {
+        n.decisionMakers = n.decisionMakers.filter((ref) => ref !== id);
+        n.decisionOwners = n.decisionOwners.filter((ref) => ref !== id);
+      }
+    }
+    render();
+  }
 
   const $ = (id) => document.getElementById(id);
 
@@ -111,6 +150,88 @@
       }
     }
     render();
+  }
+
+  // checkboxList renders one checkbox per governance entry of a kind, toggling
+  // membership of that entry's id in the given node array field.
+  function checkboxList(kind, selectedIds, onToggle) {
+    const entries = state.governance[kind];
+    if (entries.length === 0) {
+      return el("span", { className: "hint", textContent: "None defined - add one in the Governance panel above." });
+    }
+    const wrap = el("div", { className: "governance-checkboxes" });
+    for (const entry of entries) {
+      const id = "gov_" + kind + "_" + entry.id + "_" + Math.random().toString(36).slice(2, 7);
+      const cb = el("input", { type: "checkbox", id, checked: selectedIds.includes(entry.id) });
+      cb.addEventListener("change", () => onToggle(entry.id, cb.checked));
+      wrap.appendChild(el("label", { className: "governance-check" }, cb, el("span", { textContent: entry.name || entry.id })));
+    }
+    return wrap;
+  }
+
+  // renderNodeGovernance renders the "Governance links" section of a node
+  // panel: which knowledge sources back it, which org units make/own it, and
+  // which performance indicators it impacts. Purely metadata - never
+  // evaluated - so it's rendered and collected independently of the table.
+  function renderNodeGovernance(node) {
+    const box = el("div", { className: "node-governance-editor" });
+    box.appendChild(el("div", { className: "hint", textContent: "Governance (read-only metadata, not evaluated):" }));
+
+    const row = (labelText, kind, field) =>
+      el(
+        "div",
+        { className: "governance-field" },
+        el("strong", { className: "governance-field-label", textContent: labelText }),
+        checkboxList(kind, node[field], (id, checked) => {
+          if (checked) node[field].push(id);
+          else node[field] = node[field].filter((x) => x !== id);
+        })
+      );
+
+    box.appendChild(row("Authority (knowledge sources)", "knowledgeSources", "authority"));
+    box.appendChild(row("Decision maker (org units)", "organizationUnits", "decisionMakers"));
+    box.appendChild(row("Decision owner (org units)", "organizationUnits", "decisionOwners"));
+    box.appendChild(row("Impacted performance indicators", "performanceIndicators", "impactedPerformanceIndicators"));
+
+    return box;
+  }
+
+  function renderGovernancePanel() {
+    const panel = el("div", { className: "panel" });
+    panel.appendChild(el("h2", { textContent: "Governance" }));
+    panel.appendChild(
+      el("p", {
+        className: "hint",
+        textContent: "Knowledge sources, organization units, and performance indicators are DRD metadata: link them to a decision node below to render authorityRequirement / decisionMaker / decisionOwner / impactedPerformanceIndicator in the exported DMN.",
+      })
+    );
+
+    for (const [kind, meta] of Object.entries(GOVERNANCE_KINDS)) {
+      const section = el("div", { className: "governance-section" });
+      section.appendChild(el("h3", { textContent: meta.plural }));
+
+      for (const entry of state.governance[kind]) {
+        const rowChildren = [
+          textInput(entry.name, (v) => (entry.name = v)),
+        ];
+        if (kind === "knowledgeSources") {
+          rowChildren.push(textInput(entry.type, (v) => (entry.type = v)));
+          rowChildren[rowChildren.length - 1].placeholder = "Type (optional)";
+        }
+        rowChildren.push(removeButton(() => removeGovernanceEntry(kind, entry.id), "Remove " + meta.label.toLowerCase()));
+        section.appendChild(el("div", { className: "row governance-entry-row" }, ...rowChildren));
+      }
+
+      const addBtn = el("button", { className: "secondary", textContent: "+ " + meta.label });
+      addBtn.addEventListener("click", () => {
+        state.governance[kind].push(newGovernanceEntry(kind));
+        render();
+      });
+      section.appendChild(addBtn);
+      panel.appendChild(section);
+    }
+
+    return panel;
   }
 
   function renderNodeTable(node) {
@@ -300,10 +421,16 @@
     scroll.appendChild(renderNodeTable(node));
     panel.appendChild(scroll);
 
+    panel.appendChild(renderNodeGovernance(node));
+
     return panel;
   }
 
   function render() {
+    const govContainer = $("governance");
+    govContainer.innerHTML = "";
+    govContainer.appendChild(renderGovernancePanel());
+
     const container = $("nodes");
     container.innerHTML = "";
     for (const node of state.nodes) {
@@ -335,7 +462,12 @@
         inputs: n.inputs,
         outputs: n.outputs,
         rules: n.rules,
+        authority: n.authority,
+        decisionMakers: n.decisionMakers,
+        decisionOwners: n.decisionOwners,
+        impactedPerformanceIndicators: n.impactedPerformanceIndicators,
       })),
+      governance: state.governance,
     };
   }
 
