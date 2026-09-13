@@ -334,6 +334,21 @@ button.danger {
   background: var(--bg-alt);
 }
 
+/* Matched-rule highlighting */
+
+.trace-heading {
+  margin-top: 0;
+}
+
+tr.matched-rule td {
+  background: rgba(47, 158, 88, 0.18);
+  font-weight: 600;
+}
+
+.matched-marker {
+  text-align: center;
+}
+
 /* DRD diagram */
 
 .drd-wrap {

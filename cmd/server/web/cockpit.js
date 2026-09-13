@@ -426,7 +426,7 @@
       );
 
       for (const table of d.tables || []) {
-        card.appendChild(renderReadOnlyTable(table));
+        card.appendChild(renderReadOnlyTable(table, null));
       }
       wrap.appendChild(card);
     }
@@ -437,7 +437,10 @@
     return wrap;
   }
 
-  function renderReadOnlyTable(table) {
+  // matchedRuleIndices, when given, is a Set of 1-based rule indices that
+  // fired for this table on the most recent evaluation; those rows get a
+  // "matched" highlight and marker instead of just being listed as text.
+  function renderReadOnlyTable(table, matchedRuleIndices) {
     const scroll = el("div", { className: "table-scroll" });
     const t = document.createElement("table");
     const head = document.createElement("tr");
@@ -455,20 +458,55 @@
     );
     t.appendChild(head);
 
-    for (const rule of table.Rules || []) {
-      const tr = document.createElement("tr");
+    (table.Rules || []).forEach((rule, i) => {
+      const matched = !!(matchedRuleIndices && matchedRuleIndices.has(i + 1));
+      const tr = el("tr", { className: matched ? "matched-rule" : "" });
       for (const ie of rule.InputEntries || []) {
         tr.appendChild(el("td", { textContent: ie.Text }));
       }
       for (const oe of rule.OutputEntries || []) {
         tr.appendChild(el("td", { textContent: oe.Text }));
       }
-      tr.appendChild(el("td", {}));
+      tr.appendChild(el("td", { className: "matched-marker" }, matched ? el("span", { className: "badge badge-ok", textContent: "matched" }) : null));
       t.appendChild(tr);
-    }
+    });
 
     scroll.appendChild(t);
     return scroll;
+  }
+
+  // Renders one card per decision in the evaluation trace, showing its
+  // decision table(s) with the rule(s) that actually fired highlighted
+  // in place, rather than just naming rule indices as text.
+  function renderTracePanel(trace) {
+    const wrap = el("div", {});
+    wrap.appendChild(el("h3", { textContent: "Matched rules", className: "trace-heading" }));
+    const decisionsById = Object.fromEntries((state.decisions.decisions || []).map((d) => [d.id, d]));
+
+    for (const t of trace) {
+      const decision = decisionsById[t.decisionId];
+      const matchedSet = new Set((t.matchedRules || []).map((r) => r.ruleIndex));
+      const card = el("div", { className: "node-panel" });
+      card.appendChild(
+        el(
+          "div",
+          { className: "row node-header" },
+          el("strong", { textContent: t.decisionName || t.decisionId }),
+          matchedSet.size === 0
+            ? el("span", { className: "badge badge-outline", textContent: "no rule matched" })
+            : null
+        )
+      );
+      if (decision) {
+        for (const table of decision.tables || []) {
+          card.appendChild(renderReadOnlyTable(table, matchedSet));
+        }
+      } else {
+        card.appendChild(el("p", { className: "hint", textContent: "rule(s) " + [...matchedSet].map((i) => "#" + i).join(", ") }));
+      }
+      wrap.appendChild(card);
+    }
+    return wrap;
   }
 
   function renderEvaluateTab() {
@@ -484,6 +522,7 @@
     const toolbar = el("div", { className: "toolbar" });
     const runBtn = el("button", { textContent: "Evaluate" });
     const result = el("pre", { className: "result" });
+    const tracePanel = el("div", {});
     runBtn.addEventListener("click", async () => {
       let inputs;
       try {
@@ -494,6 +533,7 @@
         return;
       }
       runBtn.disabled = true;
+      tracePanel.innerHTML = "";
       try {
         const res = await fetch(`/api/deployments/${state.selectedId}/evaluate`, {
           method: "POST",
@@ -508,16 +548,11 @@
           const lines = [];
           if (data.error) lines.push("Error: " + data.error);
           if (data.outputs) lines.push("Outputs:\n" + JSON.stringify(data.outputs, null, 2));
-          if (data.trace && data.trace.length) {
-            lines.push(
-              "\nMatched rules:\n" +
-                data.trace
-                  .map((t) => `${t.decisionName || t.decisionId}: rule(s) ${t.matchedRules.map((r) => "#" + r.ruleIndex).join(", ") || "(none)"}`)
-                  .join("\n")
-            );
-          }
           result.className = "result" + (data.error ? " error" : "");
           result.textContent = lines.join("\n");
+          if (data.trace && data.trace.length) {
+            tracePanel.appendChild(renderTracePanel(data.trace));
+          }
         }
         if (state.tab === "history") loadHistory(0);
         state.history = null; // invalidate so History tab refetches next visit
@@ -531,6 +566,7 @@
     toolbar.appendChild(runBtn);
     wrap.appendChild(toolbar);
     wrap.appendChild(result);
+    wrap.appendChild(tracePanel);
     return wrap;
   }
 
