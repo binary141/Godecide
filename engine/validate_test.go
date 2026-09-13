@@ -117,6 +117,141 @@ func TestValidateDefinitions(t *testing.T) {
 	}
 }
 
+func TestValidateDecisionTableAnyConflictingOutputs(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy: HitPolicyAny,
+		Inputs:    []Input{numberInput("Age")},
+		Output:    []Output{{Name: "Result"}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "\"minor\""}}},
+			{InputEntries: []InputEntry{{Text: "<= 20"}}, OutputEntries: []OutputEntry{{Text: "\"young\""}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 1 {
+		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
+	}
+}
+
+func TestValidateDecisionTableAnyAgreeingOutputs(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy: HitPolicyAny,
+		Inputs:    []Input{numberInput("Age")},
+		Output:    []Output{{Name: "Result"}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "\"minor\""}}},
+			{InputEntries: []InputEntry{{Text: "<= 20"}}, OutputEntries: []OutputEntry{{Text: "\"minor\""}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 0 {
+		t.Fatalf("expected no problems when overlapping rules agree, got %v", problems)
+	}
+}
+
+func TestValidateDecisionTablePriorityOutputNotDeclared(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy: HitPolicyPriority,
+		Inputs:    []Input{numberInput("Age")},
+		Output:    []Output{{Name: "Result", OutputValues: OutputValues{Text: `"low", "medium", "high"`}}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "\"low\""}}},
+			{InputEntries: []InputEntry{{Text: ">= 18"}}, OutputEntries: []OutputEntry{{Text: "\"extreme\""}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 1 {
+		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
+	}
+}
+
+func TestValidateDecisionTablePriorityOutputDeclared(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy: HitPolicyPriority,
+		Inputs:    []Input{numberInput("Age")},
+		Output:    []Output{{Name: "Result", OutputValues: OutputValues{Text: `"low", "medium", "high"`}}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "\"low\""}}},
+			{InputEntries: []InputEntry{{Text: ">= 18"}}, OutputEntries: []OutputEntry{{Text: "\"high\""}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 0 {
+		t.Fatalf("expected no problems, got %v", problems)
+	}
+}
+
+func TestValidateDecisionTablePriorityIgnoresUnparseableOutputValues(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy: HitPolicyPriority,
+		Inputs:    []Input{numberInput("Age")},
+		Output:    []Output{{Name: "Result", OutputValues: OutputValues{Text: `someFunc()`}}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "\"low\""}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 0 {
+		t.Fatalf("expected no problems for an unparseable output values list, got %v", problems)
+	}
+}
+
+func TestValidateDecisionTableCollectUnknownAggregation(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy:   HitPolicyCollect,
+		Aggregation: "AVERAGE",
+		Inputs:      []Input{numberInput("Age")},
+		Output:      []Output{{Name: "Result"}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "1"}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 1 {
+		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
+	}
+}
+
+func TestValidateDecisionTableCollectSumWithMultipleOutputs(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy:   HitPolicyCollect,
+		Aggregation: AggregationSum,
+		Inputs:      []Input{numberInput("Age")},
+		Output:      []Output{{Name: "A"}, {Name: "B"}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "1"}, {Text: "2"}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 1 {
+		t.Fatalf("expected 1 problem, got %d: %v", len(problems), problems)
+	}
+}
+
+func TestValidateDecisionTableCollectSumSingleOutput(t *testing.T) {
+	dt := DecisionTable{
+		HitPolicy:   HitPolicyCollect,
+		Aggregation: AggregationSum,
+		Inputs:      []Input{numberInput("Age")},
+		Output:      []Output{{Name: "Result"}},
+		Rules: []Rule{
+			{InputEntries: []InputEntry{{Text: "< 18"}}, OutputEntries: []OutputEntry{{Text: "1"}}},
+		},
+	}
+
+	problems := validateDecisionTable("Eligibility", 0, dt)
+	if len(problems) != 0 {
+		t.Fatalf("expected no problems, got %v", problems)
+	}
+}
+
 func requiresBKM(id string) KnowledgeRequirement {
 	return KnowledgeRequirement{RequiredKnowledge: &RequiredKnowledge{Href: "#" + id}}
 }

@@ -2,22 +2,26 @@ package engine
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 )
 
 // ValidateDefinitions performs static, deploy-time checks that go beyond
-// what XML parsing enforces. Today it flags decision tables with a UNIQUE
-// hit policy whose rules can provably both match the same input - the DMN
-// spec treats that as a runtime error (more than one rule matching), but
-// for numeric and discrete-value columns it's detectable up front, before
-// the table is ever evaluated.
+// what XML parsing enforces: decision tables whose hit policy the DMN spec
+// says can fail at evaluation time (more than one rule matching under
+// UNIQUE, conflicting outputs under ANY, an output outside its declared
+// values under PRIORITY/OUTPUT ORDER, a malformed COLLECT aggregation) are
+// checked up front, before the table is ever evaluated.
 //
-// This only reasons about numeric ranges/comparisons and discrete literal
-// sets (the common cases). Entries it can't confidently analyze - FEEL
-// function calls, "not(...)" tests, arbitrary expressions - are treated as
-// non-overlapping for that column rather than flagged, so unusual but
-// valid tables aren't rejected on a false positive.
+// The overlap analysis only reasons about numeric ranges/comparisons and
+// discrete literal sets (the common cases). Entries it can't confidently
+// analyze - FEEL function calls, "not(...)" tests, arbitrary expressions -
+// are treated as non-overlapping for that column rather than flagged, so
+// unusual but valid tables aren't rejected on a false positive. Output
+// literals are held to the same standard: only entries that are plainly a
+// quoted string, number, boolean, or bare name are checked against a
+// declared output values list.
 func ValidateDefinitions(d Definitions) []string {
 	var problems []string
 	for _, dec := range d.Decisions {
@@ -82,22 +86,178 @@ func validateDecisionTable(decisionName string, tableIndex int, dt DecisionTable
 	if hitPolicy == "" {
 		hitPolicy = HitPolicyUnique
 	}
-	if hitPolicy != HitPolicyUnique {
-		return nil
-	}
 
+	label := fmt.Sprintf("decision %q, decision table %d", decisionName, tableIndex+1)
+
+	var problems []string
+	switch hitPolicy {
+	case HitPolicyUnique, HitPolicyAny:
+		problems = append(problems, validateOverlaps(label, hitPolicy, dt)...)
+	case HitPolicyPriority, HitPolicyOutputOrder:
+		problems = append(problems, validateOutputValues(label, dt)...)
+	case HitPolicyCollect:
+		problems = append(problems, validateCollectAggregation(label, dt)...)
+	}
+	return problems
+}
+
+// validateOverlaps flags pairs of rules that can both match the same
+// input. Under UNIQUE that's always an error (the spec requires at most
+// one match); under ANY it's only an error if the overlapping rules
+// disagree on output, since ANY permits overlap as long as every matching
+// rule agrees.
+func validateOverlaps(label, hitPolicy string, dt DecisionTable) []string {
 	var problems []string
 	for i := 0; i < len(dt.Rules); i++ {
 		for j := i + 1; j < len(dt.Rules); j++ {
-			if rulesOverlap(dt, dt.Rules[i], dt.Rules[j]) {
+			if !rulesOverlap(dt, dt.Rules[i], dt.Rules[j]) {
+				continue
+			}
+			switch hitPolicy {
+			case HitPolicyUnique:
 				problems = append(problems, fmt.Sprintf(
-					"decision %q, decision table %d: rules %d and %d can both match the same input under hit policy UNIQUE",
-					decisionName, tableIndex+1, i+1, j+1,
+					"%s: rules %d and %d can both match the same input under hit policy UNIQUE",
+					label, i+1, j+1,
+				))
+			case HitPolicyAny:
+				if !rulesHaveSameOutputs(dt.Rules[i], dt.Rules[j]) {
+					problems = append(problems, fmt.Sprintf(
+						"%s: rules %d and %d can both match the same input but produce different outputs, which hit policy ANY forbids",
+						label, i+1, j+1,
+					))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+// rulesHaveSameOutputs reports whether two rules' output entries are
+// textually identical, column by column.
+func rulesHaveSameOutputs(a, b Rule) bool {
+	if len(a.OutputEntries) != len(b.OutputEntries) {
+		return false
+	}
+	for i := range a.OutputEntries {
+		if strings.TrimSpace(a.OutputEntries[i].Text) != strings.TrimSpace(b.OutputEntries[i].Text) {
+			return false
+		}
+	}
+	return true
+}
+
+// validateOutputValues flags rule output entries that aren't among their
+// column's declared output values list, for PRIORITY and OUTPUT ORDER hit
+// policies, where the declared list is what defines the priority ordering
+// (and, at evaluation time, an output outside it just sorts last rather
+// than erroring - so this is the only place such a mistake gets caught).
+func validateOutputValues(label string, dt DecisionTable) []string {
+	var problems []string
+	for oi, out := range dt.Output {
+		values, ok := parseOutputValueList(out.OutputValues.Text)
+		if !ok {
+			continue
+		}
+
+		colDesc := out.Name
+		if colDesc == "" {
+			colDesc = fmt.Sprintf("output column %d", oi+1)
+		}
+
+		for ri, rule := range dt.Rules {
+			if oi >= len(rule.OutputEntries) {
+				continue
+			}
+			text := strings.TrimSpace(rule.OutputEntries[oi].Text)
+			if isWildcardEntry(text) {
+				continue
+			}
+			lit, ok := parseOutputLiteral(text)
+			if !ok {
+				continue
+			}
+			if !slices.Contains(values, lit) {
+				problems = append(problems, fmt.Sprintf(
+					"%s: rule %d's %s is %q, which isn't in its declared output values (%s)",
+					label, ri+1, colDesc, lit, strings.Join(values, ", "),
 				))
 			}
 		}
 	}
 	return problems
+}
+
+// parseOutputValueList parses an output column's declared outputValues
+// text (a comma-separated list of literals) into its individual values. It
+// returns ok=false for an empty/undeclared list, or if any entry isn't a
+// literal it can confidently parse - in which case callers should skip
+// validation rather than risk a false positive.
+func parseOutputValueList(text string) ([]string, bool) {
+	text = strings.TrimSpace(text)
+	if text == "" {
+		return nil, false
+	}
+
+	parts := splitAlternatives(text)
+	values := make([]string, 0, len(parts))
+	for _, p := range parts {
+		lit, ok := parseOutputLiteral(strings.TrimSpace(p))
+		if !ok {
+			return nil, false
+		}
+		values = append(values, lit)
+	}
+	return values, true
+}
+
+// parseOutputLiteral reports the plain value of a decision table output
+// entry - a quoted string unquoted, or a number/boolean/bare name as-is -
+// when it's simple enough to compare with confidence. Anything else
+// (function calls, expressions) returns ok=false.
+func parseOutputLiteral(s string) (string, bool) {
+	if s == "" {
+		return "", false
+	}
+	if unquoted, err := strconv.Unquote(s); err == nil {
+		return unquoted, true
+	}
+	if _, err := strconv.ParseFloat(s, 64); err == nil {
+		return s, true
+	}
+	if s == "true" || s == "false" || s == "null" {
+		return s, true
+	}
+	if bareNameEntry.MatchString(s) {
+		return s, true
+	}
+	return "", false
+}
+
+// validateCollectAggregation flags a COLLECT hit policy's aggregation
+// attribute if it isn't one of the spec's recognized values, or if a
+// numeric aggregation (SUM/MIN/MAX) is paired with more than one output
+// column - evaluation can't reduce a per-rule record to a single number, so
+// it silently falls back to returning the raw list instead of aggregating.
+func validateCollectAggregation(label string, dt DecisionTable) []string {
+	switch dt.Aggregation {
+	case "", AggregationSum, AggregationMin, AggregationMax, AggregationCount:
+	default:
+		return []string{fmt.Sprintf(
+			"%s: unrecognized COLLECT aggregation %q (expected SUM, MIN, MAX, COUNT, or none)",
+			label, dt.Aggregation,
+		)}
+	}
+
+	if len(dt.Output) > 1 {
+		switch dt.Aggregation {
+		case AggregationSum, AggregationMin, AggregationMax:
+			return []string{fmt.Sprintf(
+				"%s: COLLECT aggregation %s needs a single numeric output column, but this table has %d",
+				label, dt.Aggregation, len(dt.Output),
+			)}
+		}
+	}
+	return nil
 }
 
 // rulesOverlap reports whether two rules of the same decision table could
