@@ -550,23 +550,48 @@
     el.className = isError ? "result error" : "result";
   }
 
-  async function deployTable() {
-    const xml = await exportXML();
-    if (!xml) return;
+  // deploySpec clones collectSpec() and gives the first node's decisionName
+  // a unique suffix. The deployed decision name is also its versioning key
+  // (see db.CreateDeployment): redeploying the same name bumps its version
+  // instead of creating a separate decision, which is right for the
+  // programmatic API but not for the builder's "Deploy" button, where an
+  // unchanged name is usually just a forgotten rename, not an intentional
+  // redeploy. Uniquifying here makes every builder deploy its own new
+  // decision.
+  function deploySpec() {
+    const spec = collectSpec();
+    if (spec.nodes.length > 0) {
+      const suffix = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
+      spec.nodes[0] = { ...spec.nodes[0], decisionName: `${spec.nodes[0].decisionName}-${suffix}` };
+    }
+    return spec;
+  }
 
+  async function deployTable() {
     showDeployResult("Deploying…", false);
     try {
+      const exportRes = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(deploySpec()),
+      });
+      const exportData = await exportRes.json();
+      if (!exportRes.ok || exportData.error) {
+        showDeployResult(exportData.error || `HTTP ${exportRes.status}`, true);
+        return;
+      }
+
       const res = await fetch("/api/deployments", {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
-        body: xml,
+        body: exportData.xml,
       });
       const data = await res.json();
       if (!res.ok || data.error) {
         showDeployResult(data.error || `HTTP ${res.status}`, true);
         return;
       }
-      showDeployResult(`Deployed "${data.name}" as version ${data.version} (id ${data.id}).`, false);
+      showDeployResult(`Deployed "${data.name}" as a new decision (id ${data.id}).`, false);
     } catch (e) {
       showDeployResult("Request failed: " + e.message, true);
     }
