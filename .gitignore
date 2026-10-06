@@ -1,4 +1,5 @@
 dmn_test_output
+dmn_tck_test_output
 
 tests/**
 tmp/
