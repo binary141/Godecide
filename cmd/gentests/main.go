@@ -309,7 +309,10 @@ func main() {
 			name := e.Name()
 			switch {
 			case strings.HasSuffix(name, ".dmn"):
-				dmnFile = filepath.Join(path, name)
+				// Prefer the main model (named after the folder) over imported models.
+				if dmnFile == "" || name == filepath.Base(path)+".dmn" {
+					dmnFile = filepath.Join(path, name)
+				}
 			case strings.HasSuffix(name, ".xml") && strings.Contains(name, "-test-"):
 				xmlFiles = append(xmlFiles, filepath.Join(path, name))
 			}
