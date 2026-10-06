@@ -4,3 +4,5 @@ dmn_tck_test_output
 tests/**
 tmp/
 .env
+tck_results.csv
+tck_results.properties

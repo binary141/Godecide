@@ -4,6 +4,8 @@ Generates Go tests for the engine from the [DMN TCK](https://github.com/dmn-tck/
 (Technology Compatibility Kit), which is vendored as the `testdata/tck` git
 submodule.
 
+See [TCK.md](../../TCK.md) for the end-to-end steps.
+
 ## Usage
 
 From the repo root:
@@ -44,6 +46,14 @@ Output files:
 
 Result nodes are matched to decisions by name, using the decision IDs from the
 model.
+
+## Submission results
+
+`make tck-test` also writes `tck_results.csv` in the repo root, in the format the
+dmn-tck repo expects under `TestResults/<vendor>/<version>/`: one row per test
+case, `"<dir>","<test file>","<case id>","SUCCESS|ERROR|IGNORED","<message>"`.
+Skipped tests are `IGNORED`. It's driven by the `TCK_RESULTS_CSV` env var, which
+the generated `TestMain` reads. `tck_results.properties` is written alongside it (override the `TCK_*` variables in the Makefile for vendor/product details).
 
 ## Skipped tests
 
