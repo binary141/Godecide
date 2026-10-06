@@ -30,7 +30,12 @@ type Definitions struct {
 	KnowledgeSources        []KnowledgeSource        `xml:"knowledgeSource"`
 	PerformanceIndicators   []PerformanceIndicator   `xml:"performanceIndicator"`
 	OrganizationUnits       []OrganizationUnit       `xml:"organizationUnit"`
+	Imports                 []Import                 `xml:"import"`
 	Version                 string
+
+	// imported holds the resolved model behind each import, by import name.
+	// Only populated by ParseWithResolver/ParseFile.
+	imported map[string]*Definitions
 }
 
 // DecisionService packages one or more decisions behind a callable interface:
@@ -585,6 +590,7 @@ type edge struct {
 }
 
 func (d *Definitions) TopologicalSort() {
+	ownNamespace := d.Namespace
 	nodes := map[string]node{}
 
 	edges := map[string][]edge{}
@@ -604,6 +610,10 @@ func (d *Definitions) TopologicalSort() {
 		hasDecision := false
 		for _, i := range d.InformationRequirements {
 			if i.RequiredDecision == nil {
+				continue
+			}
+
+			if isForeignHref(ownNamespace, i.RequiredDecision.Href) {
 				continue
 			}
 
@@ -2151,7 +2161,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 			}
 			included[id] = true
 			for _, ir := range dec.InformationRequirements {
-				if ir.RequiredDecision != nil {
+				if ir.RequiredDecision != nil && !isForeignHref(d.Namespace, ir.RequiredDecision.Href) {
 					visit(ir.RequiredDecision.ResolvedID())
 				}
 			}
@@ -2168,12 +2178,28 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 		d.Decisions = pruned
 	}
 
+	importScope, importedOutputs, importedItemDefs, err := d.evalImports(context, strict)
+	if err != nil {
+		return nil, err
+	}
+
 	itemDefinitionMap := make(map[string]ItemDefinition, 0)
+
+	ownNamespace := d.Namespace
 
 	d.TopologicalSort()
 
 	for _, v := range d.ItemDefinition {
 		itemDefinitionMap[v.Name] = v
+	}
+
+	for k, v := range importedItemDefs {
+		itemDefinitionMap[k] = v
+		// imported types are also visible unqualified from the imported
+		// model's own BKMs/decisions, unless the model defines one itself.
+		if _, taken := itemDefinitionMap[v.Name]; !taken {
+			itemDefinitionMap[v.Name] = v
+		}
 	}
 
 	bkmMap := make(map[string]BusinessKnowledgeModel, len(d.BusinessKnowledgeModels))
@@ -2208,6 +2234,9 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 	// gets re-used across all Decisions
 	ctx := map[string]any{}
 	decisionOutputs := map[string]any{}
+	for k, v := range importedOutputs {
+		decisionOutputs[k] = v
+	}
 
 	for _, d := range d.Decisions {
 		if v, seeded := seedDecisions[d.ID]; seeded {
@@ -2265,7 +2294,11 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 			}
 
 			if i.RequiredDecision != nil {
-				_, hasDecision := decisionOutputs[i.RequiredDecision.ResolvedID()]
+				decisionKey := i.RequiredDecision.ResolvedID()
+				if isForeignHref(ownNamespace, i.RequiredDecision.Href) {
+					decisionKey = i.RequiredDecision.Href
+				}
+				_, hasDecision := decisionOutputs[decisionKey]
 				if !hasDecision {
 					return nil, fmt.Errorf("%w: %s not found for decision: %v", ErrMissingInput, i.ID, d.ID)
 				}
@@ -2286,6 +2319,11 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 					continue
 				}
 
+				// Imported BKMs are reached through their import name's scope.
+				if isForeignHref(ownNamespace, kr.RequiredKnowledge.Href) {
+					continue
+				}
+
 				resolvedID := kr.RequiredKnowledge.ResolvedID()
 
 				if bkm, hasBKM := bkmMap[resolvedID]; hasBKM {
@@ -2299,6 +2337,15 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 				}
 
 				nativeScope[ds.Variable.Name] = decisionServiceFunc(root, ds, inputDataByID, itemDefinitionMap)
+			}
+		}
+
+		if len(importScope) > 0 {
+			if nativeScope == nil {
+				nativeScope = map[string]any{}
+			}
+			for k, v := range importScope {
+				nativeScope[k] = v
 			}
 		}
 
@@ -2447,6 +2494,10 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 			decisionOutputs[d.ID] = ret
 			ctx[d.Variable.Name] = ret
 		}
+	}
+
+	for k := range importedOutputs {
+		delete(decisionOutputs, k)
 	}
 
 	return decisionOutputs, nil
