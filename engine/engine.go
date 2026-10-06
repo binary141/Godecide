@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"log"
 	"maps"
 	"reflect"
 	"regexp"
@@ -1043,7 +1042,7 @@ func bkmFuncSeen(bkm BusinessKnowledgeModel, bkmMap map[string]BusinessKnowledge
 		}
 
 		if bkm.EncapsulatedLogic.DecisionTable != nil {
-			ret, _, err := evalDecisionTable(*bkm.EncapsulatedLogic.DecisionTable, argCtx, itemDefinitionMap)
+			ret, _, err := evalDecisionTable(*bkm.EncapsulatedLogic.DecisionTable, argCtx, itemDefinitionMap, fmt.Sprintf("business knowledge model %q (%s)", bkm.ID, bkm.Name))
 			return ret, err
 		}
 
@@ -1312,6 +1311,33 @@ func startsWithComparisonOperator(text string) bool {
 	return false
 }
 
+// hasTopLevelComma reports whether text has a comma outside any brackets or
+// string literal, i.e. whether it is a comma-separated list of unary tests
+// (e.g. "<18,>=60") rather than a single test.
+func hasTopLevelComma(text string) bool {
+	depth := 0
+	inString := false
+	for i := 0; i < len(text); i++ {
+		switch c := text[i]; {
+		case inString:
+			if c == '\\' {
+				i++
+			} else if c == '"' {
+				inString = false
+			}
+		case c == '"':
+			inString = true
+		case c == '(' || c == '[':
+			depth++
+		case c == ')' || c == ']':
+			depth--
+		case c == ',' && depth == 0:
+			return true
+		}
+	}
+	return false
+}
+
 // MatchedRule identifies a single decision-table rule that matched during
 // evaluation, so callers can show "which rule fired" (e.g. Camunda
 // Cockpit's per-evaluation trace) instead of only the final output.
@@ -1337,14 +1363,23 @@ type DecisionTrace struct {
 // inside a context entry. Also returns which rule(s) matched, in the order
 // they were evaluated (before any hit-policy-driven selection/ordering of
 // the final result).
-func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition) (any, []MatchedRule, error) {
+// errPrefix formats an optional decision/BKM label for prefixing a decision
+// table error, so the error names what was being evaluated when it failed.
+func errPrefix(label string) string {
+	if label == "" {
+		return ""
+	}
+	return fmt.Sprintf("%s: ", label)
+}
+
+func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap map[string]ItemDefinition, label string) (any, []MatchedRule, error) {
 	hitPolicy := dt.HitPolicy
 	if hitPolicy == "" {
 		// Blank/omitted hitPolicy defaults to "Unique" per spec.
 		hitPolicy = HitPolicyUnique
 	}
 	if !IsValidHitPolicy(hitPolicy) {
-		return nil, nil, fmt.Errorf("hit policy %s is not valid", hitPolicy)
+		return nil, nil, fmt.Errorf("%shit policy %s is not valid", errPrefix(label), hitPolicy)
 	}
 
 	var hitsList []any
@@ -1373,7 +1408,11 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 				switch resolvePrimitiveType(input.InputExpression.TypeRef, itemDefinitionMap) {
 				case "number":
 					text := strings.TrimSpace(ie.Text)
-					if startsWithComparisonOperator(text) {
+					if startsWithComparisonOperator(text) && hasTopLevelComma(text) {
+						// Several comma-separated tests, e.g. "<18,>=60": true
+						// when the input satisfies any of them.
+						expression = fmt.Sprintf("%s in (%s)", input.InputExpression.Text, text)
+					} else if startsWithComparisonOperator(text) {
 						expression = fmt.Sprintf("%s %s", input.InputExpression.Text, text)
 					} else {
 						// A bare number/expression with no comparison operator
@@ -1405,12 +1444,12 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 
 			ret, err := evalFEEL(expression, ctx, "", nil, itemDefinitionMap)
 			if err != nil {
-				log.Printf("err: %+v", err)
+				return nil, nil, fmt.Errorf("%srule %d: unable to eval input entry %q (expression %q): %w", errPrefix(label), ruleIndex+1, ie.Text, expression, err)
 			}
 
 			r, ok := ret.(bool)
 			if !ok {
-				return nil, nil, fmt.Errorf("expected ret to be a bool, got: %+v", ret)
+				return nil, nil, fmt.Errorf("%srule %d: expected input entry %q (expression %q) to evaluate to a bool, got: %+v", errPrefix(label), ruleIndex+1, ie.Text, expression, ret)
 			}
 
 			if hit {
@@ -1479,7 +1518,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 	switch hitPolicy {
 	case HitPolicyUnique:
 		if len(hitsList) > 1 {
-			return nil, nil, fmt.Errorf("decision table had more than one output for unique policy: %+v", hitsList)
+			return nil, nil, fmt.Errorf("%sdecision table had more than one output for unique policy: %+v", errPrefix(label), hitsList)
 		}
 		if len(hitsList) == 1 {
 			result = hitsList[0]
@@ -1493,7 +1532,7 @@ func evalDecisionTable(dt DecisionTable, ctx map[string]any, itemDefinitionMap m
 			result = hitsList[0]
 			for _, hit := range hitsList[1:] {
 				if !reflect.DeepEqual(hit, result) {
-					return nil, nil, fmt.Errorf("decision table had conflicting outputs for ANY policy: %+v", hitsList)
+					return nil, nil, fmt.Errorf("%sdecision table had conflicting outputs for ANY policy: %+v", errPrefix(label), hitsList)
 				}
 			}
 		}
@@ -1626,7 +1665,11 @@ func evalContext(c *Context, ctx map[string]any, itemDefinitionMap map[string]It
 		case entry.Context != nil:
 			val, err = evalContext(entry.Context, local, itemDefinitionMap, nativeScope)
 		case entry.DecisionTable != nil:
-			val, _, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap)
+			label := ""
+			if entry.Variable != nil {
+				label = fmt.Sprintf("context entry %q", entry.Variable.Name)
+			}
+			val, _, err = evalDecisionTable(*entry.DecisionTable, local, itemDefinitionMap, label)
 		case entry.LiteralExpression != nil:
 			val, err = evalFEEL(entry.LiteralExpression.Text, local, "", nativeScope, itemDefinitionMap)
 		case entry.Relation != nil:
@@ -1690,7 +1733,7 @@ func evalExpression(e Expression, ctx map[string]any, itemDefinitionMap map[stri
 	case e.Invocation != nil:
 		return evalFEEL(e.Invocation.FEELCallExpression(), ctx, "", nativeScope, itemDefinitionMap)
 	case e.DecisionTable != nil:
-		ret, _, err := evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap)
+		ret, _, err := evalDecisionTable(*e.DecisionTable, ctx, itemDefinitionMap, "")
 		return ret, err
 	case e.Relation != nil:
 		return evalRelation(e.Relation, ctx, itemDefinitionMap, nativeScope)
@@ -2348,7 +2391,7 @@ func (d Definitions) evaluate(context map[string]any, seedDecisions map[string]a
 
 		if len(d.DecisionTables) != 0 {
 			for _, dt := range d.DecisionTables {
-				result, matchedRules, err := evalDecisionTable(dt, ctx, itemDefinitionMap)
+				result, matchedRules, err := evalDecisionTable(dt, ctx, itemDefinitionMap, fmt.Sprintf("decision %q (%s)", d.ID, d.Name))
 				if err != nil {
 					return nil, err
 				}
