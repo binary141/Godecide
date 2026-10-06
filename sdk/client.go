@@ -12,10 +12,10 @@ import (
 	"strings"
 )
 
-// DefaultBaseURL matches the dmn server's default listen address.
+// DefaultBaseURL matches the Godecide server's default listen address.
 const DefaultBaseURL = "http://localhost:8080"
 
-// Client is a dmn HTTP API client. The zero value is not usable; construct
+// Client is a Godecide HTTP API client. The zero value is not usable; construct
 // one with New. A Client is safe for concurrent use.
 type Client struct {
 	baseURL    string
@@ -31,7 +31,7 @@ func WithHTTPClient(hc *http.Client) Option {
 	return func(c *Client) { c.httpClient = hc }
 }
 
-// New creates a Client for the dmn server at baseURL (e.g.
+// New creates a Client for the Godecide server at baseURL (e.g.
 // "http://localhost:8080"). Trailing slashes in baseURL are ignored.
 func New(baseURL string, opts ...Option) *Client {
 	c := &Client{
@@ -54,9 +54,9 @@ type APIError struct {
 
 func (e *APIError) Error() string {
 	if len(e.Problems) > 0 {
-		return fmt.Sprintf("dmn: %s (status %d): %s", e.Message, e.StatusCode, strings.Join(e.Problems, "; "))
+		return fmt.Sprintf("godecide: %s (status %d): %s", e.Message, e.StatusCode, strings.Join(e.Problems, "; "))
 	}
-	return fmt.Sprintf("dmn: %s (status %d)", e.Message, e.StatusCode)
+	return fmt.Sprintf("godecide: %s (status %d)", e.Message, e.StatusCode)
 }
 
 // errorBody mirrors the ad-hoc gin.H{"error": ..., "problems": ...} shape
@@ -84,7 +84,7 @@ func (c *Client) request(ctx context.Context, method, path string, query url.Val
 
 	req, err := http.NewRequestWithContext(ctx, method, u, bodyReader)
 	if err != nil {
-		return 0, nil, fmt.Errorf("dmn: build request: %w", err)
+		return 0, nil, fmt.Errorf("godecide: build request: %w", err)
 	}
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
@@ -92,13 +92,13 @@ func (c *Client) request(ctx context.Context, method, path string, query url.Val
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return 0, nil, fmt.Errorf("dmn: request failed: %w", err)
+		return 0, nil, fmt.Errorf("godecide: request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return 0, nil, fmt.Errorf("dmn: read response: %w", err)
+		return 0, nil, fmt.Errorf("godecide: read response: %w", err)
 	}
 
 	return resp.StatusCode, respBody, nil
@@ -121,7 +121,7 @@ func (c *Client) do(ctx context.Context, method, path string, query url.Values, 
 		return nil
 	}
 	if err := json.Unmarshal(respBody, out); err != nil {
-		return fmt.Errorf("dmn: decode response: %w", err)
+		return fmt.Errorf("godecide: decode response: %w", err)
 	}
 	return nil
 }

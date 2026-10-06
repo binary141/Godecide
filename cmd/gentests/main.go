@@ -478,7 +478,7 @@ func buildHelperSource() string {
 	sb.WriteString("package tests\n\n")
 	sb.WriteString("import (\n")
 	sb.WriteString("\t\"bufio\"\n\t\"os\"\n\t\"sort\"\n\t\"strings\"\n\t\"sync\"\n\t\"testing\"\n\n")
-	sb.WriteString("\t\"dmn/engine\"\n")
+	sb.WriteString("\t\"Godecide/engine\"\n")
 	sb.WriteString("\tfeel \"github.com/binary141/FEEL.go\"\n")
 	sb.WriteString(")\n\n")
 	sb.WriteString("// parseCache memoizes mustParse by path: many generated tests share the\n")

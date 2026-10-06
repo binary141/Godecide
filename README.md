@@ -1,4 +1,4 @@
-# dmn
+# Godecide
 
 A [DMN](https://www.omg.org/spec/DMN/) (Decision Model and Notation) engine
 written in Go, plus an HTTP API, a browser-based table builder, and a Go SDK
@@ -103,7 +103,7 @@ the table builder UI at `/` alongside the JSON API:
 ### Using the Go SDK
 
 ```go
-import "dmn/sdk"
+import "Godecide/sdk"
 
 client := sdk.New(sdk.DefaultBaseURL)
 

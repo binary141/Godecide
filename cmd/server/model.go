@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"dmn/engine"
+	"Godecide/engine"
 )
 
 // dmnNamespace is the DMN 1.5 model namespace. It's newer than the

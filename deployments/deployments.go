@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 
-	"dmn/db"
-	"dmn/engine"
+	"Godecide/db"
+	"Godecide/engine"
 
 	"github.com/gin-gonic/gin"
 )
@@ -340,9 +340,9 @@ type decisionView struct {
 
 	// Governance metadata, shown read-only, never used in evaluation.
 	Authority                     []requirementView `json:"authority,omitempty"`
-	ImpactedPerformanceIndicators []string           `json:"impactedPerformanceIndicators,omitempty"`
-	DecisionMakers                []string           `json:"decisionMakers,omitempty"`
-	DecisionOwners                []string           `json:"decisionOwners,omitempty"`
+	ImpactedPerformanceIndicators []string          `json:"impactedPerformanceIndicators,omitempty"`
+	DecisionMakers                []string          `json:"decisionMakers,omitempty"`
+	DecisionOwners                []string          `json:"decisionOwners,omitempty"`
 }
 
 // decisionsResponse is the payload for GET .../decisions: the parsed

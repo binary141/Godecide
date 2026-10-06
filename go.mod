@@ -1,4 +1,4 @@
-module dmn
+module Godecide
 
 go 1.26.2
 

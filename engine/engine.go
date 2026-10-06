@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"dmn/versions"
+	"Godecide/versions"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -126,17 +126,17 @@ type Decision struct {
 	DecisionMakers                []DMNElementReference `xml:"decisionMaker"`
 	DecisionOwners                []DMNElementReference `xml:"decisionOwner"`
 	DecisionTables                []DecisionTable       `xml:"decisionTable"`
-	LiteralExpression       *LiteralExpression       `xml:"literalExpression"`
-	Context                 *Context                 `xml:"context"`
-	FunctionDefinition      *FunctionDefinition      `xml:"functionDefinition"`
-	Invocation              *Invocation              `xml:"invocation"`
-	Relation                *Relation                `xml:"relation"`
-	List                    *List                    `xml:"list"`
-	Filter                  *Filter                  `xml:"filter"`
-	For                     *For                     `xml:"for"`
-	Conditional             *Conditional             `xml:"conditional"`
-	Some                    *Quantified              `xml:"some"`
-	Every                   *Quantified              `xml:"every"`
+	LiteralExpression             *LiteralExpression    `xml:"literalExpression"`
+	Context                       *Context              `xml:"context"`
+	FunctionDefinition            *FunctionDefinition   `xml:"functionDefinition"`
+	Invocation                    *Invocation           `xml:"invocation"`
+	Relation                      *Relation             `xml:"relation"`
+	List                          *List                 `xml:"list"`
+	Filter                        *Filter               `xml:"filter"`
+	For                           *For                  `xml:"for"`
+	Conditional                   *Conditional          `xml:"conditional"`
+	Some                          *Quantified           `xml:"some"`
+	Every                         *Quantified           `xml:"every"`
 }
 
 // Invocation represents a DMN <invocation> element: a call to a business

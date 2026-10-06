@@ -69,7 +69,9 @@ type EvaluationError struct {
 	Trace   []DecisionTrace
 }
 
-func (e *EvaluationError) Error() string { return fmt.Sprintf("dmn: evaluation failed: %s", e.Message) }
+func (e *EvaluationError) Error() string {
+	return fmt.Sprintf("godecide: evaluation failed: %s", e.Message)
+}
 
 // EvaluateDeployment evaluates inputs against a deployed DMN by id and
 // records the call in that deployment's evaluation history. It maps to
@@ -99,7 +101,7 @@ func (c *Client) EvaluateDeployment(ctx context.Context, id int64, inputs map[st
 	}
 	if status == http.StatusUnprocessableEntity || status == http.StatusGatewayTimeout {
 		if err := json.Unmarshal(respBody, &res); err != nil {
-			return EvaluationResult{}, fmt.Errorf("dmn: decode response: %w", err)
+			return EvaluationResult{}, fmt.Errorf("godecide: decode response: %w", err)
 		}
 		return EvaluationResult{Trace: res.Trace}, &EvaluationError{Message: res.Error, Trace: res.Trace}
 	}
@@ -108,7 +110,7 @@ func (c *Client) EvaluateDeployment(ctx context.Context, id int64, inputs map[st
 	}
 
 	if err := json.Unmarshal(respBody, &res); err != nil {
-		return EvaluationResult{}, fmt.Errorf("dmn: decode response: %w", err)
+		return EvaluationResult{}, fmt.Errorf("godecide: decode response: %w", err)
 	}
 	return EvaluationResult{Outputs: res.Outputs, Trace: res.Trace}, nil
 }

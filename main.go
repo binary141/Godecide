@@ -4,7 +4,7 @@
 package main
 
 import (
-	"dmn/engine"
+	"Godecide/engine"
 	"encoding/json"
 	"fmt"
 	"log"

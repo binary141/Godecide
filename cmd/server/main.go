@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
-	"dmn/db"
-	"dmn/deployments"
-	"dmn/engine"
+	"Godecide/db"
+	"Godecide/deployments"
+	"Godecide/engine"
 
 	"github.com/gin-gonic/gin"
 )

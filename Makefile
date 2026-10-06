@@ -16,7 +16,7 @@ up-d:
 
 # Unit tests for everything except the generated TCK suite in ./tests.
 test:
-	@go test -v $$(go list ./... | grep -v '^dmn/tests$$') 2>&1 | tee dmn_test_output; \
+	@go test -v $$(go list ./... | grep -v '^Godecide/tests$$') 2>&1 | tee dmn_test_output; \
 	passed=$$(grep -c "^--- PASS" dmn_test_output || true); \
 	failed=$$(grep -c "^--- FAIL" dmn_test_output || true); \
 	echo ""; \

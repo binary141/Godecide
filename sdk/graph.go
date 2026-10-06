@@ -36,7 +36,7 @@ func (c *Client) Evaluate(ctx context.Context, spec GraphSpec, inputs map[string
 	}
 	if status == http.StatusUnprocessableEntity || status == http.StatusGatewayTimeout {
 		if err := json.Unmarshal(respBody, &res); err != nil {
-			return nil, fmt.Errorf("dmn: decode response: %w", err)
+			return nil, fmt.Errorf("godecide: decode response: %w", err)
 		}
 		return nil, &EvaluationError{Message: res.Error}
 	}
@@ -45,7 +45,7 @@ func (c *Client) Evaluate(ctx context.Context, spec GraphSpec, inputs map[string
 	}
 
 	if err := json.Unmarshal(respBody, &res); err != nil {
-		return nil, fmt.Errorf("dmn: decode response: %w", err)
+		return nil, fmt.Errorf("godecide: decode response: %w", err)
 	}
 	return res.Outputs, nil
 }
