@@ -63,10 +63,10 @@ git submodule update --init
 ### Run the engine standalone
 
 ```sh
-go run . [path/to/file.dmn]
+go run . path/to/file.dmn [inputs.json]
 ```
 
-Defaults to a sample TCK file if no path is given.
+`inputs.json` is an optional JSON object of input values. The model path is required.
 
 ### Run the HTTP server + web UI
 
