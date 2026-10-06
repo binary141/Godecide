@@ -1,7 +1,7 @@
 // gentests walks testdata/tck/TestCases, finds every DMN+test-XML pair, and
-// writes generated_tck_test.go in the module root.
+// writes one generated_tck_<folder>_test.go per folder into ./tests.
 //
-// Run via: go generate (see //go:generate in main.go)
+// Run via: go generate (see //go:generate in main.go). See README.md.
 package main
 
 import (
